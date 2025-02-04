@@ -22,8 +22,8 @@ namespace EasySave
             //monSingleton.MonLogger.Info("Démarrage du programme.");
             //monSingleton.MonLogger.Debug("Debugging en cours...");
             //monSingleton.MonLogger.Warning("Attention, potentiel problème.");
-            //monSingleton.MonLogger.Error("Erreur détectée !");
-            //monSingleton.MonLogger.Trace("Trace du processus.");
+            monSingleton.MonLogger.Error("Erreur détectée !");
+            monSingleton.MonLogger.Trace("Trace du processus.");
 
             //Console.WriteLine("Logs écrits avec succès !");
 
