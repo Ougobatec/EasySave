@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using EasySave.Library;
+
+Logger logger = new Logger("Logtest.txt");
+
+logger.Info("test");

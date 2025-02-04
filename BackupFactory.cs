@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EasySave
+{
+    public class BackupFactory
+    {
+
+        public BackupFactory() { }
+        public void CreateBackup(string name, string source, string destination, string type) { }
+    }
+}
