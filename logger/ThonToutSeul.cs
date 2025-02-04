@@ -20,6 +20,15 @@ namespace EasySave
             chemin = Path.Combine(docPath, souschemin);
             Console.WriteLine(chemin);
             MonLogger = new Logger(chemin);
+
+
+
+
         }
+
+        QuandQuelqueChoseSePasse += Reaction;
+
+            // Déclenche l'événement, ce qui appelle la méthode Reaction
+            QuandQuelqueChoseSePasse?.Invoke();
     }
 }

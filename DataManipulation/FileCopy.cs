@@ -6,7 +6,20 @@ using System.Threading.Tasks;
 
 namespace EasySave.DataManipulation
 {
-    internal class FileCopy
+    internal class DataManipulation
     {
+        public static void Copy(string sourceFileName, string destFileName)
+        {
+            if (File.Exists(sourceFileName))
+            {
+                File.Copy(sourceFileName, destFileName, true);
+            }
+            else
+            {
+                throw new FileNotFoundException("Source file not found.", sourceFileName);
+            }
+        }
     }
+
 }
+
