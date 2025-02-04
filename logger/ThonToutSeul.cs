@@ -1,34 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 namespace EasySave
 {
-
-
-
-    class Singleton
+    public sealed class Singleton
     {
-        private string souschemin = "premiertruc.Json";
-        private string docPath = AppDomain.CurrentDomain.BaseDirectory;
-        string chemin;
-        public Logger MonLogger;
+        private static readonly Lazy<Singleton> instance = new Lazy<Singleton>(() => new Singleton());
+        public Logger MonLogger { get; private set; }
 
-        public Singleton()
+        // Déclaration de l'événement
+        public event EventHandler<string> LogEvent;
+
+        private Singleton()
         {
-            chemin = Path.Combine(docPath, souschemin);
-            Console.WriteLine(chemin);
-            MonLogger = new Logger(chemin);
+            MonLogger = new Logger("log.json");
 
-
-
-
+            // Abonnement à l'événement du logger
+            MonLogger.LogWritten += (sender, log) =>
+            {
+                Console.WriteLine($"[Event Capturé] Nouveau Log: {log}");
+                LogEvent?.Invoke(this, log);
+            };
         }
 
-        QuandQuelqueChoseSePasse += Reaction;
-
-            // Déclenche l'événement, ce qui appelle la méthode Reaction
-            QuandQuelqueChoseSePasse?.Invoke();
+        public static Singleton Instance => instance.Value;
     }
 }
