@@ -1,4 +1,4 @@
-using EasySave.Enum;
+using EasySave.Enumerations;
 
 namespace EasySave
 {
