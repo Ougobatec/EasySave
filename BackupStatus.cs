@@ -1,0 +1,1 @@
+public enum BackupStatus { Active, Inactive }
