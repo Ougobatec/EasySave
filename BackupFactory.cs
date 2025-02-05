@@ -5,4 +5,3 @@ public class BackupFactory
         return new BackupJob(name, source, target, type);
     }
 }
-
