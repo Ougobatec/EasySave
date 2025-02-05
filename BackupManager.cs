@@ -1,28 +1,31 @@
 using System;
 using System.Collections.Generic;
 
-public class BackupManager
+namespace EasySave
 {
-    private List<BackupJob> BackupManager_BackupJobs = new List<BackupJob>();
-
-    public void AddBackupJob(BackupJob job)
+    public class BackupManager
     {
-        BackupManager_BackupJobs.Add(job);
-    }
+        private List<BackupJob> BackupManager_BackupJobs = new List<BackupJob>();
 
-    public void RunAllBackups()
-    {
-        foreach (var job in BackupManager_BackupJobs)
+        public void AddBackupJob(BackupJob job)
         {
-            job.RunBackup();
+            BackupManager_BackupJobs.Add(job);
         }
-    }
 
-    public void DisplayStatus()
-    {
-        foreach (var job in BackupManager_BackupJobs)
+        public void RunAllBackups()
         {
-            Console.WriteLine($"Backup Job: {job.Name}, Status: {job.Status}");
+            foreach (var job in BackupManager_BackupJobs)
+            {
+                job.RunBackup();
+            }
+        }
+
+        public void DisplayStatus()
+        {
+            foreach (var job in BackupManager_BackupJobs)
+            {
+                Console.WriteLine($"Backup Job: {job.Name}, Status: {job.Status}");
+            }
         }
     }
 }

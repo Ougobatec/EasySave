@@ -1,7 +1,12 @@
-public class BackupFactory
+using EasySave.Enum;
+
+namespace EasySave
 {
-    public BackupJob CreateBackup(string name, string source, string target, BackupType type)
+    public class BackupFactory
     {
-        return new BackupJob(name, source, target, type);
+        public BackupJob CreateBackup(string name, string source, string target, BackupType type)
+        {
+            return new BackupJob(name, source, target, type);
+        }
     }
 }
