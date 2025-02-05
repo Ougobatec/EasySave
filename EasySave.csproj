@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="entree\" />
+    <Folder Include="sortie\" />
+  </ItemGroup>
+
 </Project>
