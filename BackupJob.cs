@@ -95,22 +95,19 @@ public static class DataManipulation
 {
     public static void Copy(string sourceFileName, string destFileName)
     {
-        Singleton monSingleton = Singleton.Instance;
+        
 
         // Abonnement à l'événement pour afficher les logs en temps réel
-        monSingleton.LogEvent += (sender, log) =>
-        {
-            Console.WriteLine($"[EVENT] Log reçu: {log}");
-        };
+
 
         if (File.Exists(sourceFileName))
         {
             File.Copy(sourceFileName, destFileName, true);
-            monSingleton.MonLogger.Info("Fichier copié avec succès.");
+
         }
         else
         {
-            monSingleton.MonLogger.Error("Erreur : fichier source introuvable.");
+
             throw new FileNotFoundException("Source file not found.", sourceFileName);
         }
     }
