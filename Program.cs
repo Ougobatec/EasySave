@@ -23,8 +23,9 @@ namespace EasySave
             {
                 Console.WriteLine("1. Ajouter une sauvegarde");
                 Console.WriteLine("2. Lancer toutes les sauvegardes");
-                Console.WriteLine("3. Afficher le statut");
-                Console.WriteLine("4. Quitter");
+                Console.WriteLine("3. Lancer une sauvegarde");
+                Console.WriteLine("4. Afficher le statut");
+                Console.WriteLine("5. Quitter");
                 Console.Write("Choisissez une option: ");
 
                 string choice = Console.ReadLine();
@@ -37,9 +38,12 @@ namespace EasySave
                         manager.RunAllBackups();
                         break;
                     case "3":
-                        manager.DisplayStatus();
+                        manager.RunABackups();
                         break;
                     case "4":
+                        manager.DisplayStatus();
+                        break;
+                    case "5":
                         return;
                     default:
                         Console.WriteLine("Choix invalide.");
