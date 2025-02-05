@@ -1,1 +1,0 @@
-public enum BackupStatus { Active, Inactive, InProgress,Completed, Failed }
