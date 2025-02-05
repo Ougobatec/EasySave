@@ -19,6 +19,8 @@ public class Logger
         return Logger_Instance;
     }
 
+
+
     public void Log(string backupName, string source, string destination, long size, TimeSpan duration)
     {
     }
