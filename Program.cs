@@ -11,15 +11,15 @@ class Program
         // Ajout de quelques tâches de sauvegarde
         BackupJob job1 = new BackupJob(
                     "Sauvegarde Documents",
-                    "C:\\Users\\axelc\\Desktop\\dev\\EasySave\\DataManipulation\\Source1",
-                    "C:\\Users\\axelc\\Desktop\\dev\\EasySave\\DataManipulation\\Backup1",
+                    ".\\DataManipulation\\Source1",
+                    ".\\DataManipulation\\Backup1",
                     BackupType.Complete
                 );
 
         BackupJob job2 = new BackupJob(
             "Sauvegarde Images",
-            "C:\\Users\\axelc\\Desktop\\dev\\EasySave\\DataManipulation\\Source2",
-            "C:\\Users\\axelc\\Desktop\\dev\\EasySave\\DataManipulation\\Backup2",
+            ".\\DataManipulation\\Source2",
+            ".\\DataManipulation\\Backup2",
             BackupType.Differential
         );
 
