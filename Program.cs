@@ -21,7 +21,7 @@ namespace EasySave
         {
             while (true)
             {
-                Console.WriteLine("1. Ajouter une sauvegarde");
+                Console.WriteLine("1. Ajouter un job/travail sauvegarde");
                 Console.WriteLine("2. Lancer toutes les sauvegardes");
                 Console.WriteLine("3. Lancer une sauvegarde");
                 Console.WriteLine("4. Afficher le statut");
