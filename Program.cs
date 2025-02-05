@@ -4,39 +4,65 @@ using EasySave.Enumerations;
 
 namespace EasySave
 {
-
     class Program
     {
         static void Main()
         {
-            BackupManager manager = new BackupManager();
-
-            // Ajout de quelques t�ches de sauvegarde
-            BackupJob job1 = new BackupJob(
-                        "Sauvegarde Documents",
-                        ".\\..\\..\\..\\DataManipulation\\Source1",
-                        ".\\..\\..\\..\\DataManipulation\\Backup1",
-                        BackupType.Complete
-                    );
-
-            BackupJob job2 = new BackupJob(
-                "Sauvegarde Images",
-                ".\\..\\..\\..\\DataManipulation\\Source2",
-                ".\\..\\..\\..\\DataManipulation\\Backup2",
-                BackupType.Differential
-            );
-
-
-
-            manager.AddBackupJob(job1);
-            manager.AddBackupJob(job2);
-
-            // Ex�cution de toutes les sauvegardes
-            manager.RunAllBackups();
-
-            // Affichage du statut des sauvegardes
-            manager.DisplayStatus();
+            CLIInterface cli = new CLIInterface();
+            cli.Start();
         }
     }
 
+    class CLIInterface
+    {
+        private BackupManager manager = new BackupManager();
+
+        public void Start()
+        {
+            while (true)
+            {
+                Console.WriteLine("1. Ajouter une sauvegarde");
+                Console.WriteLine("2. Lancer toutes les sauvegardes");
+                Console.WriteLine("3. Afficher le statut");
+                Console.WriteLine("4. Quitter");
+                Console.Write("Choisissez une option: ");
+
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        AddBackupJob();
+                        break;
+                    case "2":
+                        manager.RunAllBackups();
+                        break;
+                    case "3":
+                        manager.DisplayStatus();
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.WriteLine("Choix invalide.");
+                        break;
+                }
+            }
+        }
+
+        private void AddBackupJob()
+        {
+            Console.Write("Nom de la sauvegarde: ");
+            string name = Console.ReadLine();
+            Console.Write("Source: ");
+            string source = Console.ReadLine();
+            Console.Write("Destination: ");
+            string destination = Console.ReadLine();
+            Console.Write("Type (Complete/Differential): ");
+            string type = Console.ReadLine();
+
+            BackupType backupType = type.ToLower() == "complete" ? BackupType.Complete : BackupType.Differential;
+            BackupJob job = new BackupJob(name, source, destination, backupType);
+            manager.AddBackupJob(job);
+            Console.WriteLine("Sauvegarde ajoutée.");
+        }
+    }
 }
