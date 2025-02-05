@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using EasySave.Interfaces;
-using EasySave.Enum;
+using EasySave.Enumerations;
 
 namespace EasySave
 {
