@@ -1,21 +1,28 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EasySave.Interface;
-namespace EasySave
+
+public class BackupManager
 {
-    public class BackupManager
+    private List<BackupJob> BackupManager_BackupJobs = new List<BackupJob>();
+
+    public void AddBackupJob(BackupJob job)
     {
-        List<IBackupJob> _backup = new List<IBackupJob> ();
-        public BackupManager() { }
-        public void AddBackup(IBackupJob iBackupJob) 
+        BackupManager_BackupJobs.Add(job);
+    }
+
+    public void RunAllBackups()
+    {
+        foreach (var job in BackupManager_BackupJobs)
         {
-            Console.ReadLine("");
-            _backup.Add(iBackupJob);
-            Console.WriteLine($"AddBackup : {iBackupJob}");
+            job.RunBackup();
         }
-        public void ExecuteBackup(string name) { }
+    }
+
+    public void DisplayStatus()
+    {
+        foreach (var job in BackupManager_BackupJobs)
+        {
+            Console.WriteLine($"Backup Job: {job.Name}, Status: {job.Status}");
+        }
     }
 }

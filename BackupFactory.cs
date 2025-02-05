@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EasySave
+public class BackupFactory
 {
-    public class BackupFactory
+    public BackupJob CreateBackup(string name, string source, string target, BackupType type)
     {
-
-        public BackupFactory() { }
-        public void CreateBackup(string name, string source, string destination, string type) { }
+        return new BackupJob(name, source, target, type);
     }
 }
