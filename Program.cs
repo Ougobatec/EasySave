@@ -8,17 +8,19 @@ namespace EasySave
 {
     class Program
     {
-        //public string HashFromFile(FileInfo file)
-        //{
-        //    byte[] firstHash = MD5.Create().ComputeHash(file.OpenRead());
 
-        //    return Encoding.Default.GetString(firstHash);
-        //}
+        static string HashFromFile(FileInfo file)
+        {
+            byte[] firstHash = MD5.Create().ComputeHash(file.OpenRead());
+
+            return Encoding.Default.GetString(firstHash);
+        }
+
         //recuper le hash d'un fichier
 
         static void Main()
         {
-            //Console.WriteLine(HashFromFile(new FileInfo("fichier.txt")));
+            Console.WriteLine(HashFromFile(new FileInfo("fichier.txt")));
             //afficher le hash d'un fichier
 
             CLIInterface cli = new CLIInterface();
