@@ -1,17 +1,35 @@
 using System;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 using EasySave.Enumerations;
 
 namespace EasySave
 {
     class Program
     {
+        public string HashFromFile(FileInfo file)
+        {
+            byte[] firstHash = MD5.Create().ComputeHash(file.OpenRead());
+
+            return Encoding.Default.GetString(firstHash);
+        }
+
+
         static void Main()
         {
+            Console.WriteLine(HashFromFile(new FileInfo("fichier.txt")));
+            ;
+
             CLIInterface cli = new CLIInterface();
             cli.Start();
         }
     }
+
+
+            
+
+
 
     class CLIInterface
     {
