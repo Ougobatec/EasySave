@@ -9,7 +9,14 @@
 
   <ItemGroup>
     <Folder Include="entree\" />
+    <Folder Include="Libraries\" />
     <Folder Include="sortie\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Logger">
+      <HintPath>Libraries\Logger.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
