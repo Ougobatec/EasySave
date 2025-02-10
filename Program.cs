@@ -1,5 +1,14 @@
-﻿using EasySave.Library;
+using System;
+using EasySave.Views;
 
-Logger logger = new Logger("Logtest.txt");
-
-logger.Info("test");
+namespace EasySave
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ViewCLI view = new();
+            view.Run();
+        }
+    }
+}

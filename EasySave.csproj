@@ -8,7 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="View\" />
+    <Compile Remove="entree\**" />
+    <Compile Remove="sortie\**" />
+    <EmbeddedResource Remove="entree\**" />
+    <EmbeddedResource Remove="sortie\**" />
+    <None Remove="entree\**" />
+    <None Remove="sortie\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Libraries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Logger">
+      <HintPath>Libraries\Logger.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
