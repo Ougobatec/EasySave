@@ -1,6 +1,6 @@
 using Logger;
 
-namespace EasySave.Modeles
+namespace EasySave.Models
 {
     public class ModelLog : ILogModel
     {
