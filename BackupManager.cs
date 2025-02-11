@@ -78,47 +78,21 @@ namespace EasySave
             }
 
             await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
-
             await CopyDirectoryAsync(job.SourceDirectory, job.TargetDirectory, job.Name);
-
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
 
             Console.WriteLine($"Backup job '{job.Name}' executed.");
-        }
-
-        public async Task ExecuteAllBackupJobsAsync()
-        {
-            foreach (var job in config.BackupJobs)
-            {
-                var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
-
-                if (!Directory.Exists(job.SourceDirectory))
-                {
-                    Console.WriteLine($"Source directory not found for '{job.Name}': {job.SourceDirectory}");
-                    continue;
-                }
-
-                await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
-
-                await CopyDirectoryAsync(job.SourceDirectory, job.TargetDirectory, job.Name);
-
-                await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
-
-                Console.WriteLine($"Backup job '{job.Name}' executed.");
-            }
         }
 
         private async Task CopyDirectoryAsync(string sourceDir, string destDir, string backupName)
         {
             var state = backupStates.FirstOrDefault(s => s.Name == backupName);
 
-            // Create all directories
             foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
             {
                 Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
             }
 
-            // Copy all the files
             foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
             {
                 string destPath = newPath.Replace(sourceDir, destDir);
@@ -130,7 +104,6 @@ namespace EasySave
                 var endTime = DateTime.Now;
                 var transferTime = endTime - startTime;
 
-                // Log the file copy operation
                 logger.Log(new ModelLog
                 {
                     Timestamp = DateTime.Now,
@@ -141,23 +114,12 @@ namespace EasySave
                     TransfertTime = transferTime
                 });
 
-                // Update state
                 state.SourceFilePath = newPath;
                 state.TargetFilePath = destPath;
                 state.NbFilesLeftToDo--;
                 state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
                 await SaveStatesAsync();
             }
-        }
-
-        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
-        {
-            state.State = newState;
-            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
-            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
-            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
-            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveStatesAsync();
         }
 
         private async Task LoadConfigAsync()
@@ -201,6 +163,16 @@ namespace EasySave
         {
             var json = JsonSerializer.Serialize(backupStates, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(StateFilePath, json);
+        }
+
+        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
+        {
+            state.State = newState;
+            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
+            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
+            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
+            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
+            await SaveStatesAsync();
         }
     }
 }

@@ -2,9 +2,9 @@
   "Language": "en",
   "BackupJobs": [
     {
-      "Name": "erhgzr",
-      "SourceDirectory": "dfshg",
-      "TargetDirectory": "dfngf",
+      "Name": "Backup1",
+      "SourceDirectory": "test",
+      "TargetDirectory": "test",
       "Type": 0
     },
     {

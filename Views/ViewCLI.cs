@@ -123,7 +123,10 @@ namespace EasySave.Views
             string input = Console.ReadLine();
             if (input.ToLower() == "all")
             {
-                await backupManager.ExecuteAllBackupJobsAsync();
+                for (int i = 0; i < backupManager.config.BackupJobs.Count; i++)
+                {
+                    await ExecuteBackupJobByIndex(backupManager, i);
+                }
             }
             else
             {
