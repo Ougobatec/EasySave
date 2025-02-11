@@ -148,7 +148,7 @@ namespace EasySave
                 state.TargetFilePath = destPath;
                 state.NbFilesLeftToDo--;
                 state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                await SaveBackupStatesAsync();
+                await SaveStatesAsync();
             }
         }
 
@@ -159,10 +159,10 @@ namespace EasySave
             state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
             state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
             state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveBackupStatesAsync();
+            await SaveStatesAsync();
         }
 
-        private async Task LoadBackupJobsAsync()
+        private async Task LoadConfigAsync()
         {
             if (File.Exists(ConfigFilePath))
             {
