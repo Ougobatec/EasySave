@@ -12,13 +12,13 @@ namespace EasySave
 {
     public class BackupManager
     {
-        private List<ModelJob> backupJobs = new List<ModelJob>();
-        public List<ModelJob> BackupJobs => backupJobs;
-
         private const string ConfigFilePath = "..\\..\\..\\config.json";
         private const string StateFilePath = "..\\..\\..\\state.json";
         private readonly Logger<ModelLog> logger = Logger<ModelLog>.GetInstance();
         private List<ModelState> backupStates = new List<ModelState>();
+
+        private ModelConfig config;
+        public ModelConfig Config => config;
 
         public BackupManager()
         {
@@ -28,17 +28,17 @@ namespace EasySave
 
         public async Task AddBackupJobAsync(ModelJob job)
         {
-            if (backupJobs.Count >= 5)
+            if (config.BackupJobs.Count >= 5)
             {
                 throw new Exception("Cannot add more than 5 backup jobs.");
             }
 
-            if (backupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
+            if (config.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new Exception("A backup job with the same name already exists.");
             }
 
-            backupJobs.Add(job);
+            config.BackupJobs.Add(job);
             backupStates.Add(new ModelState { Name = job.Name });
             await SaveConfigAsync();
             await SaveStatesAsync();
@@ -46,9 +46,9 @@ namespace EasySave
 
         public async Task UpdateBackupJobAsync(int index, ModelJob updatedJob)
         {
-            var existingJob = backupJobs[index];
+            var existingJob = config.BackupJobs[index];
 
-            if (backupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
+            if (config.BackupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
                 throw new Exception("A backup job with the same name already exists.");
             }
@@ -70,7 +70,7 @@ namespace EasySave
 
         public async Task ExecuteBackupJobAsync(int index)
         {
-            var job = backupJobs[index];
+            var job = config.BackupJobs[index];
             var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
 
             if (!Directory.Exists(job.SourceDirectory))
@@ -90,7 +90,7 @@ namespace EasySave
 
         public async Task ExecuteAllBackupJobsAsync()
         {
-            foreach (var job in backupJobs)
+            foreach (var job in config.BackupJobs)
             {
                 var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
 
@@ -169,26 +169,24 @@ namespace EasySave
                 try
                 {
                     var json = await File.ReadAllTextAsync(ConfigFilePath);
-                    var config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
+                    config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                         ReadCommentHandling = JsonCommentHandling.Skip,
                         AllowTrailingCommas = true
-                    });
-
-                    backupJobs = config?.BackupJobs ?? new List<ModelJob>();
+                    }) ?? new ModelConfig { BackupJobs = new List<ModelJob>() };
                 }
                 catch (JsonException ex)
                 {
                     Console.WriteLine($"Error deserializing JSON: {ex.Message}");
-                    backupJobs = new List<ModelJob>();
+                    config = new ModelConfig { BackupJobs = new List<ModelJob>() };
                 }
             }
         }
 
         private async Task SaveConfigAsync()
         {
-            var json = JsonSerializer.Serialize(backupJobs, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(ConfigFilePath, json);
         }
 

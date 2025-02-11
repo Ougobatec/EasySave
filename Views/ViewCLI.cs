@@ -83,7 +83,7 @@ namespace EasySave.Views
             DisplayBackupJobs(backupManager);
 
             Console.Write("Choose the backup job to update: ");
-            if (int.TryParse(Console.ReadLine(), out int index) && index >= 0 && index < backupManager.BackupJobs.Count)
+            if (int.TryParse(Console.ReadLine(), out int index) && index >= 0 && index < backupManager.Config.BackupJobs.Count)
             {
                 string name = GetValidInput("New job name: ", "Job name cannot be empty.");
                 string sourceDirectory = GetValidInput("New source directory: ", "Source directory cannot be empty.");
@@ -157,7 +157,7 @@ namespace EasySave.Views
 
         private async Task ExecuteBackupJobByIndex(BackupManager backupManager, int index)
         {
-            if (index < 0 || index >= backupManager.BackupJobs.Count)
+            if (index < 0 || index >= backupManager.Config.BackupJobs.Count)
             {
                 Console.WriteLine($"Invalid backup job index: {index}");
                 return;
@@ -168,9 +168,9 @@ namespace EasySave.Views
         private void DisplayBackupJobs(BackupManager backupManager)
         {
             Console.WriteLine("Existing backup jobs:");
-            for (int i = 0; i < backupManager.BackupJobs.Count; i++)
+            for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
             {
-                var job = backupManager.BackupJobs[i];
+                var job = backupManager.Config.BackupJobs[i];
                 Console.WriteLine($"{i}. Name: {job.Name}, Source: {job.SourceDirectory}, Target: {job.TargetDirectory}, Type: {job.Type}");
             }
         }
