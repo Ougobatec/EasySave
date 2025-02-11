@@ -1,14 +1,17 @@
-[
-  {
-    "Name": "Backup1",
-    "SourceDirectory": "test",
-    "TargetDirectory": "test",
-    "Type": 0
-  },
-  {
-    "Name": "Backup2",
-    "SourceDirectory": "test",
-    "TargetDirectory": "test",
-    "Type": 0
-  }
-]
+{
+  "Language": "en",
+  "BackupJobs": [
+    {
+      "Name": "Backup1",
+      "SourceDirectory": "test",
+      "TargetDirectory": "test",
+      "Type": 0
+    },
+    {
+      "Name": "Backup2",
+      "SourceDirectory": "test",
+      "TargetDirectory": "test",
+      "Type": 0
+    }
+  ]
+}

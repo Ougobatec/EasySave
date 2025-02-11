@@ -165,8 +165,23 @@ namespace EasySave
         {
             if (File.Exists(ConfigFilePath))
             {
-                var json = await File.ReadAllTextAsync(ConfigFilePath);
-                backupJobs = JsonSerializer.Deserialize<List<ModelJob>>(json) ?? new List<ModelJob>();
+                try
+                {
+                    var json = await File.ReadAllTextAsync(ConfigFilePath);
+                    var config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        ReadCommentHandling = JsonCommentHandling.Skip,
+                        AllowTrailingCommas = true
+                    });
+
+                    backupJobs = config?.BackupJobs ?? new List<ModelJob>();
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+                    backupJobs = new List<ModelJob>();
+                }
             }
         }
 
