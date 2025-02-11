@@ -12,13 +12,11 @@ namespace EasySave
 {
     public class BackupManager
     {
+        public ModelConfig config { get; private set; }
         private const string ConfigFilePath = "..\\..\\..\\config.json";
         private const string StateFilePath = "..\\..\\..\\state.json";
         private readonly Logger<ModelLog> logger = Logger<ModelLog>.GetInstance();
         private List<ModelState> backupStates = new List<ModelState>();
-
-        private ModelConfig config;
-        public ModelConfig Config => config;
 
         public BackupManager()
         {
