@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EasySave.Models;
@@ -21,8 +22,8 @@ namespace EasySave
 
         public BackupManager()
         {
-            LoadBackupJobsAsync().Wait();
-            LoadBackupStatesAsync().Wait();
+            LoadConfigAsync().Wait();
+            LoadStatesAsync().Wait();
         }
 
         public async Task AddBackupJobAsync(ModelJob job)
@@ -39,8 +40,8 @@ namespace EasySave
 
             backupJobs.Add(job);
             backupStates.Add(new ModelState { Name = job.Name });
-            await SaveBackupJobsAsync();
-            await SaveBackupStatesAsync();
+            await SaveConfigAsync();
+            await SaveStatesAsync();
         }
 
         public async Task UpdateBackupJobAsync(int index, ModelJob updatedJob)
@@ -63,8 +64,8 @@ namespace EasySave
             existingJob.TargetDirectory = updatedJob.TargetDirectory;
             existingJob.Type = updatedJob.Type;
 
-            await SaveBackupJobsAsync();
-            await SaveBackupStatesAsync();
+            await SaveConfigAsync();
+            await SaveStatesAsync();
         }
 
         public async Task ExecuteBackupJobAsync(int index)
@@ -185,13 +186,13 @@ namespace EasySave
             }
         }
 
-        private async Task SaveBackupJobsAsync()
+        private async Task SaveConfigAsync()
         {
             var json = JsonSerializer.Serialize(backupJobs, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(ConfigFilePath, json);
         }
 
-        private async Task LoadBackupStatesAsync()
+        private async Task LoadStatesAsync()
         {
             if (File.Exists(StateFilePath))
             {
@@ -200,7 +201,7 @@ namespace EasySave
             }
         }
 
-        private async Task SaveBackupStatesAsync()
+        private async Task SaveStatesAsync()
         {
             var json = JsonSerializer.Serialize(backupStates, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(StateFilePath, json);
