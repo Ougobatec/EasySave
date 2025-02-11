@@ -22,7 +22,8 @@ namespace EasySave.Views
                 Console.WriteLine("1. Add a backup job");
                 Console.WriteLine("2. Update a backup job");
                 Console.WriteLine("3. Execute backups");
-                Console.WriteLine("4. Quit\n");
+                Console.WriteLine("4. Change settings");
+                Console.WriteLine("5. Quit\n");
                 Console.Write("Choose an option: ");
                 var choice = Console.ReadKey(true).KeyChar;
 
@@ -41,6 +42,10 @@ namespace EasySave.Views
                         ExecuteBackupJobs(backupManager).Wait();
                         break;
                     case '4':
+                        Console.Clear();
+                        ChangeSettings(backupManager).Wait();
+                        break;
+                    case '5':
                         exit = true;
                         break;
                     default:
@@ -49,6 +54,7 @@ namespace EasySave.Views
                 }
             }
         }
+
 
         private async Task AddBackupJob(BackupManager backupManager)
         {
@@ -80,9 +86,9 @@ namespace EasySave.Views
 
         private async Task UpdateBackupJob(BackupManager backupManager)
         {
+            Console.WriteLine("Choose the backup job to update: ");
             DisplayBackupJobs(backupManager);
-
-            Console.Write("Choose the backup job to update: ");
+            Console.Write("Choose an option: ");
             if (int.TryParse(Console.ReadLine(), out int index) && index >= 0 && index < backupManager.config.BackupJobs.Count)
             {
                 string name = GetValidInput("New job name: ", "Job name cannot be empty.");
@@ -120,6 +126,7 @@ namespace EasySave.Views
         {
             Console.WriteLine("Choose the backups to execute (separated by commas or a dash) or type 'all' to execute all:");
             DisplayBackupJobs(backupManager);
+            Console.Write("Choose an option: ");
             string input = Console.ReadLine();
             if (input.ToLower() == "all")
             {
@@ -156,6 +163,64 @@ namespace EasySave.Views
             }
 
             ReturnToMenu();
+        }
+
+        private async Task ChangeSettings(BackupManager backupManager)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("----- Change Settings -----");
+                Console.WriteLine("1. Change language");
+                Console.WriteLine("2. Change log format");
+                Console.WriteLine("3. Save and return to menu\n");
+                Console.Write("Choose an option: ");
+                var choice = Console.ReadKey(true).KeyChar;
+
+                switch (choice)
+                {
+                    case '1':
+                        // Change language
+                        Console.Write("Choose language (en/fr): ");
+                        string language = Console.ReadLine().ToLower();
+                        if (language == "en" || language == "fr")
+                        {
+                            backupManager.config.Language = language;
+                            Console.WriteLine($"Language set to {language}.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid language option.");
+                        }
+                        break;
+
+                    case '2':
+                        // Change log format
+                        Console.Write("Choose log format (json/xml): ");
+                        string logFormat = Console.ReadLine().ToLower();
+                        if (logFormat == "json" || logFormat == "xml")
+                        {
+                            backupManager.config.LogFormat = logFormat;
+                            Console.WriteLine($"Log format set to {logFormat}.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid log format option.");
+                        }
+                        break;
+
+                    case '3':
+                        await backupManager.SaveConfigAsync();
+                        Console.WriteLine("Settings saved.");
+                        ReturnToMenu();
+                        return;
+
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+                ReturnToMenu();
+            }
         }
 
         private async Task ExecuteBackupJobByIndex(BackupManager backupManager, int index)
@@ -213,7 +278,7 @@ namespace EasySave.Views
         private void ReturnToMenu()
         {
             Console.WriteLine();
-            Console.WriteLine("----- Press Enter to return to the menu. -----");
+            Console.WriteLine("----- Press Enter to continue. -----");
             Console.ReadLine();
         }
     }

@@ -144,13 +144,13 @@ namespace EasySave
             }
         }
 
-        private async Task SaveConfigAsync()
+        public async Task SaveConfigAsync()
         {
             var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(ConfigFilePath, json);
         }
 
-        private async Task LoadStatesAsync()
+        public async Task LoadStatesAsync()
         {
             if (File.Exists(StateFilePath))
             {

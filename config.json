@@ -1,5 +1,6 @@
 {
   "Language": "en",
+  "LogFormat": "json",
   "BackupJobs": [
     {
       "Name": "Backup1",
