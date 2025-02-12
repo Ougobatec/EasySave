@@ -1,11 +1,11 @@
 {
-  "Language": "en",
+  "Language": "fr",
   "LogFormat": "json",
   "BackupJobs": [
     {
       "Name": "Backup1",
-      "SourceDirectory": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Source",
-      "TargetDirectory": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Destination",
+      "SourceDirectory": "C:\\Users\\hugob\\Desktop\\Source",
+      "TargetDirectory": "C:\\Users\\hugob\\Desktop\\Destination",
       "Type": 1
     },
     {

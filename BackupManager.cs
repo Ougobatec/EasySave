@@ -36,14 +36,9 @@ namespace EasySave
 
         public async Task AddBackupJobAsync(ModelJob job)
         {
-            if (backupJobs.Count >= 5)
-            {
-                throw new Exception(resourceManager.GetString("Error_MaxBackupJobs"));
-            }
-
             if (backupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new Exception(resourceManager.GetString("Error_DuplicateBackupJob"));
+                throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
             backupJobs.Add(job);
@@ -58,7 +53,7 @@ namespace EasySave
 
             if (backupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
-                throw new Exception(resourceManager.GetString("Error_DuplicateBackupJob"));
+                throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
             var state = backupStates.FirstOrDefault(s => s.Name == existingJob.Name);
@@ -143,9 +138,11 @@ namespace EasySave
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string destDir = Path.Combine(baseDestDir, timestamp);
             Directory.CreateDirectory(destDir);
+
+            var backupStartTime = DateTime.Now;
+
             if (job.Type == BackupTypes.Full)
             {
-                
                 // Sauvegarde complète : copier tous les fichiers
                 foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
                 {
@@ -169,7 +166,7 @@ namespace EasySave
                         BackupName = job.Name,
                         Source = newPath,
                         Destination = destPath,
-                        FileSize = fileInfo.Length,
+                        Size = fileInfo.Length,
                         TransfertTime = transferTime
                     });
 
@@ -184,7 +181,6 @@ namespace EasySave
             {
                 // Trouver tous les sous-dossiers de sauvegarde
                 var backupDirs = Directory.GetDirectories(baseDestDir).OrderBy(d => d).ToList();
-                
 
                 // Sauvegarde différentielle : copier uniquement les fichiers modifiés ou nouveaux
                 foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
@@ -194,7 +190,7 @@ namespace EasySave
 
                 foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
                 {
-                    string relativePath = newPath.Substring(sourceDir.Length + 1);
+                    string relativePath = newPath[(sourceDir.Length + 1)..];
                     string destPath = Path.Combine(destDir, relativePath);
                     var fileInfo = new FileInfo(newPath);
 
@@ -224,7 +220,7 @@ namespace EasySave
                             BackupName = job.Name,
                             Source = newPath,
                             Destination = destPath,
-                            FileSize = fileInfo.Length,
+                            Size = fileInfo.Length,
                             TransfertTime = transferTime
                         });
 
@@ -236,8 +232,21 @@ namespace EasySave
                     }
                 }
             }
-        }
 
+            var backupEndTime = DateTime.Now;
+            var totalBackupTime = backupEndTime - backupStartTime;
+            long totalSize = Directory.GetFiles(destDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
+
+            logger.Log(new ModelLog
+            {
+                Timestamp = DateTime.Now,
+                BackupName = job.Name,
+                Source = sourceDir,
+                Destination = destDir,
+                Size = totalSize,
+                TransfertTime = totalBackupTime
+            });
+        }
 
         private async Task LoadConfigAsync()
         {

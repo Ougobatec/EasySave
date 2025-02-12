@@ -1,11 +1,11 @@
 [
   {
     "Name": "Backup1",
-    "SourceFilePath": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Source\\Test.txt",
-    "TargetFilePath": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Destination\\20250212033629\\Test.txt",
+    "SourceFilePath": "C:\\Users\\hugob\\Desktop\\Source\\uzvisqhbd - Copie.txt",
+    "TargetFilePath": "C:\\Users\\hugob\\Desktop\\Destination\\20250212094245\\uzvisqhbd - Copie.txt",
     "State": "END",
-    "TotalFilesToCopy": 7,
-    "TotalFilesSize": 13,
+    "TotalFilesToCopy": 5,
+    "TotalFilesSize": 65,
     "NbFilesLeftToDo": 0,
     "Progression": 100
   },
