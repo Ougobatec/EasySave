@@ -8,5 +8,15 @@
     "TotalFilesSize": 13,
     "NbFilesLeftToDo": 0,
     "Progression": 100
+  },
+  {
+    "Name": "test",
+    "SourceFilePath": "C:\\Users\\eloia\\Documents\\Maxime\\Source\\dsfsdf.txt",
+    "TargetFilePath": "C:\\Users\\eloia\\Documents\\Maxime\\Destination\\20250212091022\\dsfsdf.txt",
+    "State": "END",
+    "TotalFilesToCopy": 1,
+    "TotalFilesSize": 13,
+    "NbFilesLeftToDo": 0,
+    "Progression": 100
   }
 ]

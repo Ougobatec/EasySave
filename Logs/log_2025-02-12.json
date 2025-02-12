@@ -2270,5 +2270,29 @@
     "Destination": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Destination\\20250212033629\\Test.txt",
     "FileSize": 13,
     "TransfertTime": "00:00:00.0015533"
+  },
+  {
+    "Timestamp": "2025-02-12T09:09:31.6904829+01:00",
+    "BackupName": "test",
+    "Source": "C:\\Users\\eloia\\Documents\\Maxime\\Source\\dsfsdf.txt",
+    "Destination": "C:\\Users\\eloia\\Documents\\Maxime\\Destination\\20250212090931\\dsfsdf.txt",
+    "FileSize": 13,
+    "TransfertTime": "00:00:00.0043303"
+  },
+  {
+    "Timestamp": "2025-02-12T09:10:00.3109873+01:00",
+    "BackupName": "test",
+    "Source": "C:\\Users\\eloia\\Documents\\Maxime\\Source\\dsfsdf.txt",
+    "Destination": "C:\\Users\\eloia\\Documents\\Maxime\\Destination\\20250212091000\\dsfsdf.txt",
+    "FileSize": 25,
+    "TransfertTime": "00:00:00.0087073"
+  },
+  {
+    "Timestamp": "2025-02-12T09:10:22.895698+01:00",
+    "BackupName": "test",
+    "Source": "C:\\Users\\eloia\\Documents\\Maxime\\Source\\dsfsdf.txt",
+    "Destination": "C:\\Users\\eloia\\Documents\\Maxime\\Destination\\20250212091022\\dsfsdf.txt",
+    "FileSize": 13,
+    "TransfertTime": "00:00:00.0066134"
   }
 ]

@@ -7,6 +7,12 @@
       "SourceDirectory": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Source",
       "TargetDirectory": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Destination",
       "Type": 1
+    },
+    {
+      "Name": "test",
+      "SourceDirectory": "C:\\Users\\eloia\\Documents\\Maxime\\Source",
+      "TargetDirectory": "C:\\Users\\eloia\\Documents\\Maxime\\Destination",
+      "Type": 1
     }
   ]
 }

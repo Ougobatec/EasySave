@@ -142,11 +142,10 @@ namespace EasySave
             string baseDestDir = job.TargetDirectory;
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string destDir = Path.Combine(baseDestDir, timestamp);
-
             Directory.CreateDirectory(destDir);
-
             if (job.Type == BackupTypes.Full)
             {
+                
                 // Sauvegarde complète : copier tous les fichiers
                 foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
                 {
@@ -183,8 +182,9 @@ namespace EasySave
             }
             else if (job.Type == BackupTypes.Differential)
             {
-                // Trouver le dernier sous-dossier de sauvegarde
-                var lastBackupDir = Directory.GetDirectories(baseDestDir).OrderByDescending(d => d).LastOrDefault();
+                // Trouver tous les sous-dossiers de sauvegarde
+                var backupDirs = Directory.GetDirectories(baseDestDir).OrderBy(d => d).ToList();
+                
 
                 // Sauvegarde différentielle : copier uniquement les fichiers modifiés ou nouveaux
                 foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
@@ -195,11 +195,21 @@ namespace EasySave
                 foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
                 {
                     string relativePath = newPath.Substring(sourceDir.Length + 1);
-                    string lastBackupFilePath = lastBackupDir != null ? Path.Combine(lastBackupDir, relativePath) : null;
                     string destPath = Path.Combine(destDir, relativePath);
                     var fileInfo = new FileInfo(newPath);
 
-                    if (lastBackupFilePath == null || !File.Exists(lastBackupFilePath) || fileInfo.LastWriteTime > File.GetLastWriteTime(lastBackupFilePath))
+                    bool fileModified = true;
+                    foreach (var backupDir in backupDirs)
+                    {
+                        string backupFilePath = Path.Combine(backupDir, relativePath);
+                        if (File.Exists(backupFilePath) && fileInfo.LastWriteTime <= File.GetLastWriteTime(backupFilePath))
+                        {
+                            fileModified = false;
+                            break;
+                        }
+                    }
+
+                    if (fileModified)
                     {
                         var startTime = DateTime.Now;
 
@@ -227,6 +237,7 @@ namespace EasySave
                 }
             }
         }
+
 
         private async Task LoadConfigAsync()
         {
