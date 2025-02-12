@@ -20,6 +20,7 @@ namespace EasySave
 
         public BackupManager()
         {
+            Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "easysave"));
             LoadConfigAsync().Wait();
             Config ??= new ModelConfig { Language = "en", LogFormat = "json", BackupJobs = [] };
             backupJobs = Config.BackupJobs;
