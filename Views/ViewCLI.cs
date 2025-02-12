@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using EasySave.Models;
@@ -10,7 +13,8 @@ namespace EasySave.Views
 {
     public class ViewCLI
     {
-        private BackupManager backupManager = new BackupManager();
+        private readonly BackupManager backupManager = new();
+        private ResourceManager ResourceManager => backupManager.resourceManager;
         private bool exit = false;
 
         public void Run()
@@ -18,52 +22,51 @@ namespace EasySave.Views
             while (!exit)
             {
                 Console.Clear();
-                Console.WriteLine("----- MENU -----");
-                Console.WriteLine("1. Add a backup job");
-                Console.WriteLine("2. Update a backup job");
-                Console.WriteLine("3. Execute backups");
-                Console.WriteLine("4. Change settings");
-                Console.WriteLine("5. Quit\n");
-                Console.Write("Choose an option: ");
+                Console.WriteLine(ResourceManager.GetString("Title_Menu"));
+                Console.WriteLine("1. " + ResourceManager.GetString("Menu_AddBackupJob"));
+                Console.WriteLine("2. " + ResourceManager.GetString("Menu_UpdateBackupJob"));
+                Console.WriteLine("3. " + ResourceManager.GetString("Menu_ExecuteBackups"));
+                Console.WriteLine("4. " + ResourceManager.GetString("Menu_ChangeSettings"));
+                Console.WriteLine("5. " + ResourceManager.GetString("Menu_Quit"));
+                Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
                 var choice = Console.ReadKey(true).KeyChar;
 
                 switch (choice)
                 {
                     case '1':
                         Console.Clear();
-                        AddBackupJob(backupManager).Wait();
+                        AddBackupJob().Wait();
                         break;
                     case '2':
                         Console.Clear();
-                        UpdateBackupJob(backupManager).Wait();
+                        UpdateBackupJob().Wait();
                         break;
                     case '3':
                         Console.Clear();
-                        ExecuteBackupJobs(backupManager).Wait();
+                        ExecuteBackupJobs().Wait();
                         break;
                     case '4':
                         Console.Clear();
-                        ChangeSettings(backupManager).Wait();
+                        ChangeSettings().Wait();
                         break;
                     case '5':
                         exit = true;
                         break;
                     default:
-                        Console.WriteLine("Invalid option. Please try again.");
                         break;
                 }
             }
         }
 
-
-        private async Task AddBackupJob(BackupManager backupManager)
+        private async Task AddBackupJob()
         {
-            string name = GetValidInput("Job name: ", "Job name cannot be empty.");
-            string sourceDirectory = GetValidInput("Source directory: ", "Source directory cannot be empty.");
-            string targetDirectory = GetValidInput("Target directory: ", "Target directory cannot be empty.");
+            Console.WriteLine(ResourceManager.GetString("Title_AddBackupJob"));
+            string name = GetValidInput(ResourceManager.GetString("Prompt_JobName"), ResourceManager.GetString("Error_Empty"));
+            string sourceDirectory = GetValidInput(ResourceManager.GetString("Prompt_SourceDirectory"), ResourceManager.GetString("Error_Empty"));
+            string targetDirectory = GetValidInput(ResourceManager.GetString("Prompt_TargetDirectory"), ResourceManager.GetString("Error_Empty"));
             BackupTypes type = GetValidBackupType();
 
-            ModelJob job = new ModelJob
+            ModelJob job = new()
             {
                 Name = name,
                 SourceDirectory = sourceDirectory,
@@ -74,7 +77,7 @@ namespace EasySave.Views
             try
             {
                 await backupManager.AddBackupJobAsync(job);
-                Console.WriteLine("Backup job added.");
+                Console.WriteLine(ResourceManager.GetString("Message_BackupJobAdded"), job.Name);
             }
             catch (Exception ex)
             {
@@ -84,19 +87,20 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
-        private async Task UpdateBackupJob(BackupManager backupManager)
+        private async Task UpdateBackupJob()
         {
-            Console.WriteLine("Choose the backup job to update: ");
-            DisplayBackupJobs(backupManager);
-            Console.Write("Choose an option: ");
-            if (int.TryParse(Console.ReadLine(), out int index) && index >= 0 && index < backupManager.config.BackupJobs.Count)
+            Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobToUpdate"));
+            DisplayBackupJobs();
+            Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out int index) && index >= 0 && index < backupManager.Config.BackupJobs.Count)
             {
-                string name = GetValidInput("New job name: ", "Job name cannot be empty.");
-                string sourceDirectory = GetValidInput("New source directory: ", "Source directory cannot be empty.");
-                string targetDirectory = GetValidInput("New target directory: ", "Target directory cannot be empty.");
+                string name = GetValidInput(ResourceManager.GetString("Prompt_JobName"), ResourceManager.GetString("Error_Empty"));
+                string sourceDirectory = GetValidInput(ResourceManager.GetString("Prompt_SourceDirectory"), ResourceManager.GetString("Error_Empty"));
+                string targetDirectory = GetValidInput(ResourceManager.GetString("Prompt_TargetDirectory"), ResourceManager.GetString("Error_Empty"));
                 BackupTypes type = GetValidBackupType();
 
-                ModelJob updatedJob = new ModelJob
+                ModelJob updatedJob = new()
                 {
                     Name = name,
                     SourceDirectory = sourceDirectory,
@@ -107,7 +111,7 @@ namespace EasySave.Views
                 try
                 {
                     await backupManager.UpdateBackupJobAsync(index, updatedJob);
-                    Console.WriteLine("Backup job updated.");
+                    Console.WriteLine(ResourceManager.GetString("Message_BackupJobUpdated"), updatedJob.Name);
                 }
                 catch (Exception ex)
                 {
@@ -116,23 +120,23 @@ namespace EasySave.Views
             }
             else
             {
-                Console.WriteLine("Invalid index.");
+                Console.WriteLine(ResourceManager.GetString("Error_InvalidIndex"), input);
             }
 
             ReturnToMenu();
         }
 
-        private async Task ExecuteBackupJobs(BackupManager backupManager)
+        private async Task ExecuteBackupJobs()
         {
-            Console.WriteLine("Choose the backups to execute (separated by commas or a dash) or type 'all' to execute all:");
-            DisplayBackupJobs(backupManager);
-            Console.Write("Choose an option: ");
-            string input = Console.ReadLine();
-            if (input.ToLower() == "all")
+            Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobsToExecute"));
+            DisplayBackupJobs();
+            Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
+            var input = Console.ReadLine();
+            if (input.Equals("all", StringComparison.CurrentCultureIgnoreCase))
             {
-                for (int i = 0; i < backupManager.config.BackupJobs.Count; i++)
+                for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
                 {
-                    await ExecuteBackupJobByIndex(backupManager, i);
+                    await ExecuteBackupJobByIndex(i);
                 }
             }
             else
@@ -147,17 +151,17 @@ namespace EasySave.Views
                         {
                             for (int i = start; i <= end; i++)
                             {
-                                await ExecuteBackupJobByIndex(backupManager, i);
+                                await ExecuteBackupJobByIndex(i);
                             }
                         }
                     }
                     else if (int.TryParse(indexStr, out int index))
                     {
-                        await ExecuteBackupJobByIndex(backupManager, index);
+                        await ExecuteBackupJobByIndex(index);
                     }
                     else
                     {
-                        Console.WriteLine($"Invalid backup job index: {indexStr}");
+                        Console.WriteLine(string.Format(ResourceManager.GetString("Error_InvalidIndex"), indexStr));
                     }
                 }
             }
@@ -165,85 +169,84 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
-        private async Task ChangeSettings(BackupManager backupManager)
+        private async Task ChangeSettings()
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("----- Change Settings -----");
-                Console.WriteLine("1. Change language");
-                Console.WriteLine("2. Change log format");
-                Console.WriteLine("3. Save and return to menu\n");
-                Console.Write("Choose an option: ");
+                Console.WriteLine(ResourceManager.GetString("Title_ChangeSettings"));
+                Console.WriteLine("1. " + ResourceManager.GetString("Menu_ChangeLanguage"));
+                Console.WriteLine("2. " + ResourceManager.GetString("Menu_ChangeLogFormat"));
+                Console.WriteLine("3. " + ResourceManager.GetString("Menu_SaveAndReturn"));
+                Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
                 var choice = Console.ReadKey(true).KeyChar;
 
                 switch (choice)
                 {
                     case '1':
-                        // Change language
-                        Console.Write("Choose language (en/fr): ");
+                        Console.Write(ResourceManager.GetString("Prompt_ChooseLanguage"));
                         string language = Console.ReadLine().ToLower();
                         if (language == "en" || language == "fr")
                         {
-                            backupManager.config.Language = language;
-                            Console.WriteLine($"Language set to {language}.");
+                            backupManager.Config.Language = language;
+                            backupManager.SetCulture(language);
+                            Console.WriteLine(string.Format(ResourceManager.GetString("Message_LanguageSet"), language));
                         }
                         else
                         {
-                            Console.WriteLine("Invalid language option.");
+                            Console.WriteLine(ResourceManager.GetString("Error_InvalidOption"));
                         }
                         break;
 
                     case '2':
-                        // Change log format
-                        Console.Write("Choose log format (json/xml): ");
+                        Console.Write(ResourceManager.GetString("Prompt_ChooseLogFormat"));
                         string logFormat = Console.ReadLine().ToLower();
                         if (logFormat == "json" || logFormat == "xml")
                         {
-                            backupManager.config.LogFormat = logFormat;
-                            Console.WriteLine($"Log format set to {logFormat}.");
+                            backupManager.Config.LogFormat = logFormat;
+                            Console.WriteLine(string.Format(ResourceManager.GetString("Message_LogFormatSet"), logFormat));
                         }
                         else
                         {
-                            Console.WriteLine("Invalid log format option.");
+                            Console.WriteLine(ResourceManager.GetString("Error_InvalidOption"));
                         }
                         break;
 
                     case '3':
                         await backupManager.SaveConfigAsync();
-                        Console.WriteLine("Settings saved.");
+                        Console.WriteLine(ResourceManager.GetString("Message_SettingsSaved"));
                         ReturnToMenu();
                         return;
 
                     default:
-                        Console.WriteLine("Invalid option. Please try again.");
+                        Console.WriteLine(ResourceManager.GetString("Error_InvalidOption"));
                         break;
                 }
                 ReturnToMenu();
             }
         }
 
-        private async Task ExecuteBackupJobByIndex(BackupManager backupManager, int index)
+        private async Task ExecuteBackupJobByIndex(int index)
         {
-            if (index < 0 || index >= backupManager.config.BackupJobs.Count)
+            if (index < 0 || index >= backupManager.Config.BackupJobs.Count)
             {
-                Console.WriteLine($"Invalid backup job index: {index}");
+                Console.WriteLine(string.Format(ResourceManager.GetString("Error_InvalidIndex"), index));
                 return;
             }
             await backupManager.ExecuteBackupJobAsync(index);
         }
 
-        private void DisplayBackupJobs(BackupManager backupManager)
+        private void DisplayBackupJobs()
         {
-            Console.WriteLine("Existing backup jobs:");
-            for (int i = 0; i < backupManager.config.BackupJobs.Count; i++)
+            Console.WriteLine();
+            for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
             {
-                var job = backupManager.config.BackupJobs[i];
-                Console.WriteLine($"{i}. Name: {job.Name}, Source: {job.SourceDirectory}, Target: {job.TargetDirectory}, Type: {job.Type}");
+                var job = backupManager.Config.BackupJobs[i];
+                Console.WriteLine(string.Format(ResourceManager.GetString("Message_BackupJobDetails"), i, job.Name, job.SourceDirectory, job.TargetDirectory, job.Type));
             }
         }
 
-        private string GetValidInput(string prompt, string errorMessage)
+        private static string GetValidInput(string prompt, string errorMessage)
         {
             string input;
             do
@@ -262,7 +265,7 @@ namespace EasySave.Views
         {
             while (true)
             {
-                Console.Write("Backup type (Full/Differential): ");
+                Console.Write(ResourceManager.GetString("Prompt_BackupType"));
                 string typeInput = Console.ReadLine();
                 if (Enum.TryParse(typeof(BackupTypes), typeInput, true, out var parsedType))
                 {
@@ -270,15 +273,14 @@ namespace EasySave.Views
                 }
                 else
                 {
-                    Console.WriteLine("Invalid backup type.");
+                    Console.WriteLine(ResourceManager.GetString("Error_InvalidBackupType"));
                 }
             }
         }
 
         private void ReturnToMenu()
         {
-            Console.WriteLine();
-            Console.WriteLine("----- Press Enter to continue. -----");
+            Console.WriteLine("\n" + ResourceManager.GetString("Message_PressEnterToContinue"));
             Console.ReadLine();
         }
     }

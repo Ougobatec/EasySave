@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EasySave.Models;
@@ -12,31 +14,43 @@ namespace EasySave
 {
     public class BackupManager
     {
-        public ModelConfig config { get; private set; }
+        public ModelConfig Config { get; private set; }
+        public ResourceManager resourceManager;
+        private List<ModelState> backupStates = [];
+        private readonly List<ModelJob> backupjobs;
+        private readonly Logger<ModelLog> logger = Logger<ModelLog>.GetInstance();
         private const string ConfigFilePath = "..\\..\\..\\config.json";
         private const string StateFilePath = "..\\..\\..\\state.json";
-        private readonly Logger<ModelLog> logger = Logger<ModelLog>.GetInstance();
-        private List<ModelState> backupStates = new List<ModelState>();
 
         public BackupManager()
         {
             LoadConfigAsync().Wait();
+            SetCulture(Config?.Language ?? "en");
             LoadStatesAsync().Wait();
+            backupjobs = Config?.BackupJobs ?? [];
+        }
+
+        public void SetCulture(string cultureName)
+        {
+            CultureInfo culture = new(cultureName);
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            resourceManager = new ResourceManager("EasySave.Resource", Assembly.GetExecutingAssembly());
         }
 
         public async Task AddBackupJobAsync(ModelJob job)
         {
-            if (config.BackupJobs.Count >= 5)
+            if (backupjobs.Count >= 5)
             {
-                throw new Exception("Cannot add more than 5 backup jobs.");
+                throw new Exception(resourceManager.GetString("Error_MaxBackupJobs"));
             }
 
-            if (config.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
+            if (backupjobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new Exception("A backup job with the same name already exists.");
+                throw new Exception(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
-            config.BackupJobs.Add(job);
+            backupjobs.Add(job);
             backupStates.Add(new ModelState { Name = job.Name });
             await SaveConfigAsync();
             await SaveStatesAsync();
@@ -44,11 +58,11 @@ namespace EasySave
 
         public async Task UpdateBackupJobAsync(int index, ModelJob updatedJob)
         {
-            var existingJob = config.BackupJobs[index];
+            var existingJob = backupjobs[index];
 
-            if (config.BackupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
+            if (backupjobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
-                throw new Exception("A backup job with the same name already exists.");
+                throw new Exception(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
             var state = backupStates.FirstOrDefault(s => s.Name == existingJob.Name);
@@ -68,12 +82,12 @@ namespace EasySave
 
         public async Task ExecuteBackupJobAsync(int index)
         {
-            var job = config.BackupJobs[index];
+            var job = backupjobs[index];
             var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
 
             if (!Directory.Exists(job.SourceDirectory))
             {
-                Console.WriteLine($"Source directory not found for '{job.Name}': {job.SourceDirectory}");
+                Console.WriteLine(string.Format(resourceManager.GetString("Error_SourceDirectoryNotFound"), job.Name, job.SourceDirectory));
                 return;
             }
 
@@ -81,7 +95,7 @@ namespace EasySave
             await CopyDirectoryAsync(job.SourceDirectory, job.TargetDirectory, job.Name);
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
 
-            Console.WriteLine($"Backup job '{job.Name}' executed.");
+            Console.WriteLine(string.Format(resourceManager.GetString("Message_BackupJobExecuted"), job.Name));
         }
 
         private async Task CopyDirectoryAsync(string sourceDir, string destDir, string backupName)
@@ -129,24 +143,24 @@ namespace EasySave
                 try
                 {
                     var json = await File.ReadAllTextAsync(ConfigFilePath);
-                    config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
+                    Config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                         ReadCommentHandling = JsonCommentHandling.Skip,
                         AllowTrailingCommas = true
-                    }) ?? new ModelConfig { BackupJobs = new List<ModelJob>() };
+                    }) ?? new ModelConfig { BackupJobs = [] };
                 }
                 catch (JsonException ex)
                 {
                     Console.WriteLine($"Error deserializing JSON: {ex.Message}");
-                    config = new ModelConfig { BackupJobs = new List<ModelJob>() };
+                    Config = new ModelConfig { BackupJobs = [] };
                 }
             }
         }
 
         public async Task SaveConfigAsync()
         {
-            var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(Config, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(ConfigFilePath, json);
         }
 
@@ -155,7 +169,7 @@ namespace EasySave
             if (File.Exists(StateFilePath))
             {
                 var json = await File.ReadAllTextAsync(StateFilePath);
-                backupStates = JsonSerializer.Deserialize<List<ModelState>>(json) ?? new List<ModelState>();
+                backupStates = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
             }
         }
 
