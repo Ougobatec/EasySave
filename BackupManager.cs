@@ -22,8 +22,8 @@ namespace EasySave
         {
             LoadConfigAsync().Wait();
             Config ??= new ModelConfig { Language = "en", LogFormat = "json", BackupJobs = new List<ModelJob>() };
-            backupJobs = Config?.BackupJobs ?? [];
-            SetCulture(Config?.Language ?? "en");
+            backupJobs = Config.BackupJobs;
+            SetCulture(Config.Language);
             LoadStatesAsync().Wait();
             logger = Logger<ModelLog>.GetInstance(Config.LogFormat);
         }
