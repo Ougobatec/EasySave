@@ -14,7 +14,7 @@ namespace EasySave
         public ResourceManager resourceManager;
         private List<ModelState> backupStates = [];
         private readonly List<ModelJob> backupJobs;
-        private readonly Logger<ModelLog> logger = Logger<ModelLog>.GetInstance();
+        private readonly Logger<ModelLog> logger;
         private const string ConfigFilePath = "..\\..\\..\\config.json";
         private const string StateFilePath = "..\\..\\..\\state.json";
 
@@ -24,6 +24,7 @@ namespace EasySave
             SetCulture(Config?.Language ?? "en");
             LoadStatesAsync().Wait();
             backupJobs = Config?.BackupJobs ?? [];
+            logger = Logger<ModelLog>.GetInstance(Config.LogFormat);
         }
 
         public void SetCulture(string cultureName)
@@ -31,7 +32,7 @@ namespace EasySave
             CultureInfo culture = new(cultureName);
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
-            resourceManager = new ResourceManager("EasySave.Resource", Assembly.GetExecutingAssembly());
+            resourceManager = new ResourceManager("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
         }
 
         public async Task AddBackupJobAsync(ModelJob job)
@@ -160,7 +161,7 @@ namespace EasySave
                     var endTime = DateTime.Now;
                     var transferTime = endTime - startTime;
 
-                    logger.Log(new ModelLog
+                    await logger.Log(new ModelLog
                     {
                         Timestamp = DateTime.Now,
                         BackupName = job.Name,
@@ -168,7 +169,7 @@ namespace EasySave
                         Destination = destPath,
                         Size = fileInfo.Length,
                         TransfertTime = transferTime
-                    });
+                    }, Config.LogFormat);
 
                     state.SourceFilePath = newPath;
                     state.TargetFilePath = destPath;
@@ -214,7 +215,7 @@ namespace EasySave
                         var endTime = DateTime.Now;
                         var transferTime = endTime - startTime;
 
-                        logger.Log(new ModelLog
+                        await logger.Log(new ModelLog
                         {
                             Timestamp = DateTime.Now,
                             BackupName = job.Name,
@@ -222,7 +223,7 @@ namespace EasySave
                             Destination = destPath,
                             Size = fileInfo.Length,
                             TransfertTime = transferTime
-                        });
+                        }, Config.LogFormat);
 
                         state.SourceFilePath = newPath;
                         state.TargetFilePath = destPath;
@@ -237,7 +238,7 @@ namespace EasySave
             var totalBackupTime = backupEndTime - backupStartTime;
             long totalSize = Directory.GetFiles(destDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
 
-            logger.Log(new ModelLog
+            await logger.Log(new ModelLog
             {
                 Timestamp = DateTime.Now,
                 BackupName = job.Name,
@@ -245,7 +246,7 @@ namespace EasySave
                 Destination = destDir,
                 Size = totalSize,
                 TransfertTime = totalBackupTime
-            });
+            }, Config.LogFormat);
         }
 
         private async Task LoadConfigAsync()
