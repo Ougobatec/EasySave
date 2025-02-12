@@ -1,14 +1,18 @@
-[
-  {
-    "Name": "Backup1",
-    "SourceDirectory": "test",
-    "TargetDirectory": "test",
-    "Type": 0
-  },
-  {
-    "Name": "Backup2",
-    "SourceDirectory": "test",
-    "TargetDirectory": "test",
-    "Type": 0
-  }
-]
+{
+  "Language": "fr",
+  "LogFormat": "json",
+  "BackupJobs": [
+    {
+      "Name": "Backup1",
+      "SourceDirectory": "C:\\Users\\hugob\\Desktop\\Source",
+      "TargetDirectory": "C:\\Users\\hugob\\Desktop\\Destination",
+      "Type": 1
+    },
+    {
+      "Name": "test",
+      "SourceDirectory": "C:\\Users\\eloia\\Documents\\Maxime\\Source",
+      "TargetDirectory": "C:\\Users\\eloia\\Documents\\Maxime\\Destination",
+      "Type": 1
+    }
+  ]
+}
