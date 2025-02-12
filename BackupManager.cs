@@ -15,15 +15,16 @@ namespace EasySave
         private List<ModelState> backupStates = [];
         private readonly List<ModelJob> backupJobs;
         private readonly Logger<ModelLog> logger;
-        private const string ConfigFilePath = "..\\..\\..\\config.json";
-        private const string StateFilePath = "..\\..\\..\\state.json";
+        private static readonly string ConfigFilePath = Path.Join(Path.GetTempPath(), "easysave\\config.json");
+        private static readonly string StateFilePath = Path.Join(Path.GetTempPath(), "easysave\\state.json");
 
         public BackupManager()
         {
             LoadConfigAsync().Wait();
+            Config ??= new ModelConfig { Language = "en", LogFormat = "json", BackupJobs = new List<ModelJob>() };
+            backupJobs = Config?.BackupJobs ?? [];
             SetCulture(Config?.Language ?? "en");
             LoadStatesAsync().Wait();
-            backupJobs = Config?.BackupJobs ?? [];
             logger = Logger<ModelLog>.GetInstance(Config.LogFormat);
         }
 
