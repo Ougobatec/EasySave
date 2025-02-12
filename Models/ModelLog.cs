@@ -8,7 +8,7 @@ namespace EasySave.Models
         public string BackupName { get; set; } = string.Empty;
         public string Source { get; set; } = string.Empty;
         public string Destination { get; set; } = string.Empty;
-        public long FileSize { get; set; }
+        public long Size { get; set; }
         public TimeSpan TransfertTime { get; set; }
     }
 }
