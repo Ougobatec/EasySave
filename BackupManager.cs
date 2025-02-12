@@ -22,7 +22,7 @@ namespace EasySave
         public BackupManager()
         {
             Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "easysave"));
-            LoadConfigAsync().Wait();
+            LoadConfigAsync();
             Config ??= new ModelConfig { Language = "en", LogFormat = "json", BackupJobs = [] };
             backupJobs = Config.BackupJobs;
             SetCulture(Config.Language);
@@ -252,13 +252,13 @@ namespace EasySave
             }, Config.LogFormat);
         }
 
-        private async Task LoadConfigAsync()
+        private void LoadConfigAsync()
         {
             if (File.Exists(ConfigFilePath))
             {
                 try
                 {
-                    var json = await File.ReadAllTextAsync(ConfigFilePath);
+                    var json = File.ReadAllText(ConfigFilePath);
                     Config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
