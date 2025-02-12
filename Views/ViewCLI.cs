@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
-using EasySave.Models;
+﻿using System.Resources;
 using EasySave.Enumerations;
+using EasySave.Models;
 
 namespace EasySave.Views
 {
@@ -26,8 +19,9 @@ namespace EasySave.Views
                 Console.WriteLine("1. " + ResourceManager.GetString("Menu_AddBackupJob"));
                 Console.WriteLine("2. " + ResourceManager.GetString("Menu_UpdateBackupJob"));
                 Console.WriteLine("3. " + ResourceManager.GetString("Menu_ExecuteBackups"));
-                Console.WriteLine("4. " + ResourceManager.GetString("Menu_ChangeSettings"));
-                Console.WriteLine("5. " + ResourceManager.GetString("Menu_Quit"));
+                Console.WriteLine("4. " + ResourceManager.GetString("Menu_DeleteBackupJob"));
+                Console.WriteLine("5. " + ResourceManager.GetString("Menu_ChangeSettings"));
+                Console.WriteLine("6. " + ResourceManager.GetString("Menu_Quit"));
                 Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
                 var choice = Console.ReadKey(true).KeyChar;
 
@@ -47,9 +41,13 @@ namespace EasySave.Views
                         break;
                     case '4':
                         Console.Clear();
-                        ChangeSettings().Wait();
+                        DeleteBackupJob().Wait();
                         break;
                     case '5':
+                        Console.Clear();
+                        ChangeSettings().Wait();
+                        break;
+                    case '6':
                         exit = true;
                         break;
                     default:
@@ -60,7 +58,7 @@ namespace EasySave.Views
 
         private async Task AddBackupJob()
         {
-            Console.WriteLine(ResourceManager.GetString("Title_AddBackupJob"));
+            Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobToAdd"));
             string name = GetValidInput(ResourceManager.GetString("Prompt_JobName"), ResourceManager.GetString("Error_Empty"));
             string sourceDirectory = GetValidInput(ResourceManager.GetString("Prompt_SourceDirectory"), ResourceManager.GetString("Error_Empty"));
             string targetDirectory = GetValidInput(ResourceManager.GetString("Prompt_TargetDirectory"), ResourceManager.GetString("Error_Empty"));
@@ -110,7 +108,7 @@ namespace EasySave.Views
 
                 try
                 {
-                    await backupManager.UpdateBackupJobAsync(index, updatedJob);
+                    await backupManager.UpdateBackupJobAsync(updatedJob, index);
                     Console.WriteLine(ResourceManager.GetString("Message_BackupJobUpdated"), updatedJob.Name);
                 }
                 catch (Exception ex)
@@ -169,12 +167,41 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
+        private async Task DeleteBackupJob()
+        {
+            Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobToDelete"));
+            DisplayBackupJobs();
+            Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out int index) && index >= 0 && index < backupManager.Config.BackupJobs.Count)
+            {
+                try
+                {
+                    await backupManager.DeleteBackupJobAsync(index);
+                    Console.WriteLine(ResourceManager.GetString("Message_BackupJobDeleted"), index);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine(ResourceManager.GetString("Error_InvalidIndex"), input);
+            }
+
+            ReturnToMenu();
+        }
+
         private async Task ChangeSettings()
         {
+            string language = null;
+            string logFormat = null;
+
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine(ResourceManager.GetString("Title_ChangeSettings"));
+                Console.WriteLine(ResourceManager.GetString("Title_ChooseSettingToChange"));
                 Console.WriteLine("1. " + ResourceManager.GetString("Menu_ChangeLanguage"));
                 Console.WriteLine("2. " + ResourceManager.GetString("Menu_ChangeLogFormat"));
                 Console.WriteLine("3. " + ResourceManager.GetString("Menu_SaveAndReturn"));
@@ -185,35 +212,28 @@ namespace EasySave.Views
                 {
                     case '1':
                         Console.Write(ResourceManager.GetString("Prompt_ChooseLanguage"));
-                        string language = Console.ReadLine().ToLower();
-                        if (language == "en" || language == "fr")
-                        {
-                            backupManager.Config.Language = language;
-                            backupManager.SetCulture(language);
-                            Console.WriteLine(string.Format(ResourceManager.GetString("Message_LanguageSet"), language));
-                        }
-                        else
+                        language = Console.ReadLine().ToLower();
+                        if (language != "en" && language != "fr")
                         {
                             Console.WriteLine(ResourceManager.GetString("Error_InvalidOption"));
+                            language = null;
                         }
+                        ReturnToMenu();
                         break;
 
                     case '2':
                         Console.Write(ResourceManager.GetString("Prompt_ChooseLogFormat"));
-                        string logFormat = Console.ReadLine().ToLower();
-                        if (logFormat == "json" || logFormat == "xml")
-                        {
-                            backupManager.Config.LogFormat = logFormat;
-                            Console.WriteLine(string.Format(ResourceManager.GetString("Message_LogFormatSet"), logFormat));
-                        }
-                        else
+                        logFormat = Console.ReadLine().ToLower();
+                        if (logFormat != "json" && logFormat != "xml")
                         {
                             Console.WriteLine(ResourceManager.GetString("Error_InvalidOption"));
+                            logFormat = null;
                         }
+                        ReturnToMenu();
                         break;
 
                     case '3':
-                        await backupManager.SaveConfigAsync();
+                        await backupManager.ChangeSettingsAsync(language, logFormat);
                         Console.WriteLine(ResourceManager.GetString("Message_SettingsSaved"));
                         ReturnToMenu();
                         return;
@@ -222,7 +242,6 @@ namespace EasySave.Views
                         Console.WriteLine(ResourceManager.GetString("Error_InvalidOption"));
                         break;
                 }
-                ReturnToMenu();
             }
         }
 

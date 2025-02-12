@@ -139,7 +139,7 @@
     <value>Modifier un travail de sauvegarde</value>
   </data>
   <data name="Prompt_BackupType" xml:space="preserve">
-    <value>Type (Full/Diffrential) : </value>
+    <value>Type (Full/Differential) : </value>
   </data>
   <data name="Prompt_JobName" xml:space="preserve">
     <value>Nom de sauvegarde : </value>
@@ -171,7 +171,7 @@
   <data name="Message_BackupJobDetails" xml:space="preserve">
     <value>{0}: Nom : {1}, Source : {2}, Cible : {3}, Type: {4}.</value>
   </data>
-  <data name="Title_AddBackupJob" xml:space="preserve">
+  <data name="Title_ChooseBackupJobToAdd" xml:space="preserve">
     <value>----- Ajouter un travail de sauvegarde -----</value>
   </data>
   <data name="Error_InvalidIndex" xml:space="preserve">
@@ -180,7 +180,7 @@
   <data name="Error_InvalidBackupType" xml:space="preserve">
     <value>Type invalide !</value>
   </data>
-  <data name="Title_ChangeSettings" xml:space="preserve">
+  <data name="Title_ChooseSettingToChange" xml:space="preserve">
     <value>----- Modifier les paramètres -----</value>
   </data>
   <data name="Menu_ChangeLanguage" xml:space="preserve">
@@ -221,5 +221,14 @@
   </data>
   <data name="Message_LogFormatSet" xml:space="preserve">
     <value>Format de log défini sur '{0}'.</value>
+  </data>
+  <data name="Menu_DeleteBackupJob" xml:space="preserve">
+    <value>Supprimer un travail de sauvegarde</value>
+  </data>
+  <data name="Title_ChooseBackupJobToDelete" xml:space="preserve">
+    <value>----- Supprimer un travail de sauvegarde -----</value>
+  </data>
+  <data name="Message_BackupJobDeleted" xml:space="preserve">
+    <value>Travail de sauvegarde '{0}' supprimé.</value>
   </data>
 </root>

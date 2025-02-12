@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Reflection;
 using System.Resources;
 using System.Text.Json;
-using System.Threading.Tasks;
+using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
 
@@ -17,7 +13,7 @@ namespace EasySave
         public ModelConfig Config { get; private set; }
         public ResourceManager resourceManager;
         private List<ModelState> backupStates = [];
-        private readonly List<ModelJob> backupjobs;
+        private readonly List<ModelJob> backupJobs;
         private readonly Logger<ModelLog> logger = Logger<ModelLog>.GetInstance();
         private const string ConfigFilePath = "..\\..\\..\\config.json";
         private const string StateFilePath = "..\\..\\..\\state.json";
@@ -27,7 +23,7 @@ namespace EasySave
             LoadConfigAsync().Wait();
             SetCulture(Config?.Language ?? "en");
             LoadStatesAsync().Wait();
-            backupjobs = Config?.BackupJobs ?? [];
+            backupJobs = Config?.BackupJobs ?? [];
         }
 
         public void SetCulture(string cultureName)
@@ -40,27 +36,27 @@ namespace EasySave
 
         public async Task AddBackupJobAsync(ModelJob job)
         {
-            if (backupjobs.Count >= 5)
+            if (backupJobs.Count >= 5)
             {
                 throw new Exception(resourceManager.GetString("Error_MaxBackupJobs"));
             }
 
-            if (backupjobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
+            if (backupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new Exception(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
-            backupjobs.Add(job);
+            backupJobs.Add(job);
             backupStates.Add(new ModelState { Name = job.Name });
             await SaveConfigAsync();
             await SaveStatesAsync();
         }
 
-        public async Task UpdateBackupJobAsync(int index, ModelJob updatedJob)
+        public async Task UpdateBackupJobAsync(ModelJob updatedJob, int index)
         {
-            var existingJob = backupjobs[index];
+            var existingJob = backupJobs[index];
 
-            if (backupjobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
+            if (backupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
                 throw new Exception(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
@@ -82,7 +78,7 @@ namespace EasySave
 
         public async Task ExecuteBackupJobAsync(int index)
         {
-            var job = backupjobs[index];
+            var job = backupJobs[index];
             var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
 
             if (!Directory.Exists(job.SourceDirectory))
@@ -92,47 +88,143 @@ namespace EasySave
             }
 
             await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
-            await CopyDirectoryAsync(job.SourceDirectory, job.TargetDirectory, job.Name);
+            await CopyDirectoryAsync(job);
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
 
             Console.WriteLine(string.Format(resourceManager.GetString("Message_BackupJobExecuted"), job.Name));
         }
 
-        private async Task CopyDirectoryAsync(string sourceDir, string destDir, string backupName)
+        public async Task DeleteBackupJobAsync(int index)
         {
-            var state = backupStates.FirstOrDefault(s => s.Name == backupName);
+            var job = backupJobs[index];
+            backupJobs.RemoveAt(index);
 
-            foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
+            var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
+            if (state != null)
             {
-                Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
+                backupStates.Remove(state);
             }
 
-            foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
+            await SaveConfigAsync();
+            await SaveStatesAsync();
+        }
+
+        public async Task ChangeSettingsAsync(string language, string logFormat)
+        {
+            if (!string.IsNullOrEmpty(language))
             {
-                string destPath = newPath.Replace(sourceDir, destDir);
-                var fileInfo = new FileInfo(newPath);
-                var startTime = DateTime.Now;
+                Config.Language = language;
+                SetCulture(language);
+            }
 
-                await Task.Run(() => File.Copy(newPath, destPath, true));
+            if (!string.IsNullOrEmpty(logFormat))
+            {
+                Config.LogFormat = logFormat;
+            }
 
-                var endTime = DateTime.Now;
-                var transferTime = endTime - startTime;
+            await SaveConfigAsync();
+        }
 
-                logger.Log(new ModelLog
+        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
+        {
+            state.State = newState;
+            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
+            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
+            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
+            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
+            await SaveStatesAsync();
+        }
+
+        private async Task CopyDirectoryAsync(ModelJob job)
+        {
+            var state = backupStates.FirstOrDefault(s => s.Name == job.Name);
+            string sourceDir = job.SourceDirectory;
+            string baseDestDir = job.TargetDirectory;
+            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string destDir = Path.Combine(baseDestDir, timestamp);
+
+            Directory.CreateDirectory(destDir);
+
+            if (job.Type == BackupTypes.Full)
+            {
+                // Sauvegarde complète : copier tous les fichiers
+                foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
                 {
-                    Timestamp = DateTime.Now,
-                    BackupName = backupName,
-                    Source = newPath,
-                    Destination = destPath,
-                    FileSize = fileInfo.Length,
-                    TransfertTime = transferTime
-                });
+                    Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
+                }
 
-                state.SourceFilePath = newPath;
-                state.TargetFilePath = destPath;
-                state.NbFilesLeftToDo--;
-                state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                await SaveStatesAsync();
+                foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
+                {
+                    string destPath = newPath.Replace(sourceDir, destDir);
+                    var fileInfo = new FileInfo(newPath);
+                    var startTime = DateTime.Now;
+
+                    await Task.Run(() => File.Copy(newPath, destPath, true));
+
+                    var endTime = DateTime.Now;
+                    var transferTime = endTime - startTime;
+
+                    logger.Log(new ModelLog
+                    {
+                        Timestamp = DateTime.Now,
+                        BackupName = job.Name,
+                        Source = newPath,
+                        Destination = destPath,
+                        FileSize = fileInfo.Length,
+                        TransfertTime = transferTime
+                    });
+
+                    state.SourceFilePath = newPath;
+                    state.TargetFilePath = destPath;
+                    state.NbFilesLeftToDo--;
+                    state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
+                    await SaveStatesAsync();
+                }
+            }
+            else if (job.Type == BackupTypes.Differential)
+            {
+                // Trouver le dernier sous-dossier de sauvegarde
+                var lastBackupDir = Directory.GetDirectories(baseDestDir).OrderByDescending(d => d).LastOrDefault();
+
+                // Sauvegarde différentielle : copier uniquement les fichiers modifiés ou nouveaux
+                foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
+                }
+
+                foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
+                {
+                    string relativePath = newPath.Substring(sourceDir.Length + 1);
+                    string lastBackupFilePath = lastBackupDir != null ? Path.Combine(lastBackupDir, relativePath) : null;
+                    string destPath = Path.Combine(destDir, relativePath);
+                    var fileInfo = new FileInfo(newPath);
+
+                    if (lastBackupFilePath == null || !File.Exists(lastBackupFilePath) || fileInfo.LastWriteTime > File.GetLastWriteTime(lastBackupFilePath))
+                    {
+                        var startTime = DateTime.Now;
+
+                        await Task.Run(() => File.Copy(newPath, destPath, true));
+
+                        var endTime = DateTime.Now;
+                        var transferTime = endTime - startTime;
+
+                        logger.Log(new ModelLog
+                        {
+                            Timestamp = DateTime.Now,
+                            BackupName = job.Name,
+                            Source = newPath,
+                            Destination = destPath,
+                            FileSize = fileInfo.Length,
+                            TransfertTime = transferTime
+                        });
+
+                        state.SourceFilePath = newPath;
+                        state.TargetFilePath = destPath;
+                        state.NbFilesLeftToDo--;
+                        state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
+                        await SaveStatesAsync();
+                    }
+                }
             }
         }
 
@@ -158,13 +250,13 @@ namespace EasySave
             }
         }
 
-        public async Task SaveConfigAsync()
+        private async Task SaveConfigAsync()
         {
             var json = JsonSerializer.Serialize(Config, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(ConfigFilePath, json);
         }
 
-        public async Task LoadStatesAsync()
+        private async Task LoadStatesAsync()
         {
             if (File.Exists(StateFilePath))
             {
@@ -177,16 +269,6 @@ namespace EasySave
         {
             var json = JsonSerializer.Serialize(backupStates, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(StateFilePath, json);
-        }
-
-        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
-        {
-            state.State = newState;
-            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
-            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
-            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
-            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveStatesAsync();
         }
     }
 }

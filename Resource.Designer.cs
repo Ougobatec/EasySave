@@ -160,6 +160,15 @@ namespace EasySave {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Delete a backup job.
+        /// </summary>
+        internal static string Menu_DeleteBackupJob {
+            get {
+                return ResourceManager.GetString("Menu_DeleteBackupJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Execute a backup.
         /// </summary>
         internal static string Menu_ExecuteBackups {
@@ -201,6 +210,15 @@ namespace EasySave {
         internal static string Message_BackupJobAdded {
             get {
                 return ResourceManager.GetString("Message_BackupJobAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup job &apos;{0}&apos; deleted..
+        /// </summary>
+        internal static string Message_BackupJobDeleted {
+            get {
+                return ResourceManager.GetString("Message_BackupJobDeleted", resourceCulture);
             }
         }
         
@@ -331,24 +349,6 @@ namespace EasySave {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Add a backup job -----.
-        /// </summary>
-        internal static string Title_AddBackupJob {
-            get {
-                return ResourceManager.GetString("Title_AddBackupJob", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Change settings -----.
-        /// </summary>
-        internal static string Title_ChangeSettings {
-            get {
-                return ResourceManager.GetString("Title_ChangeSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à ----- Choose backups to execute (e.g., 1,2,3 or 1-3 or all) -----.
         /// </summary>
         internal static string Title_ChooseBackupJobsToExecute {
@@ -358,11 +358,38 @@ namespace EasySave {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à ----- Add a backup job -----.
+        /// </summary>
+        internal static string Title_ChooseBackupJobToAdd {
+            get {
+                return ResourceManager.GetString("Title_ChooseBackupJobToAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à ----- Delete a backup job -----.
+        /// </summary>
+        internal static string Title_ChooseBackupJobToDelete {
+            get {
+                return ResourceManager.GetString("Title_ChooseBackupJobToDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à ----- Choose backup to update -----.
         /// </summary>
         internal static string Title_ChooseBackupJobToUpdate {
             get {
                 return ResourceManager.GetString("Title_ChooseBackupJobToUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à ----- Change settings -----.
+        /// </summary>
+        internal static string Title_ChooseSettingToChange {
+            get {
+                return ResourceManager.GetString("Title_ChooseSettingToChange", resourceCulture);
             }
         }
         

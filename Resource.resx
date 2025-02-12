@@ -171,7 +171,7 @@
   <data name="Message_BackupJobDetails" xml:space="preserve">
     <value>{0}: Name: {1}, Source: {2}, Target: {3}, Type: {4}.</value>
   </data>
-  <data name="Title_AddBackupJob" xml:space="preserve">
+  <data name="Title_ChooseBackupJobToAdd" xml:space="preserve">
     <value>----- Add a backup job -----</value>
   </data>
   <data name="Error_InvalidIndex" xml:space="preserve">
@@ -180,7 +180,7 @@
   <data name="Error_InvalidBackupType" xml:space="preserve">
     <value>Invalid type!</value>
   </data>
-  <data name="Title_ChangeSettings" xml:space="preserve">
+  <data name="Title_ChooseSettingToChange" xml:space="preserve">
     <value>----- Change settings -----</value>
   </data>
   <data name="Menu_ChangeLanguage" xml:space="preserve">
@@ -221,5 +221,14 @@
   </data>
   <data name="Message_LogFormatSet" xml:space="preserve">
     <value>Log format set to '{0}'.</value>
+  </data>
+  <data name="Menu_DeleteBackupJob" xml:space="preserve">
+    <value>Delete a backup job</value>
+  </data>
+  <data name="Title_ChooseBackupJobToDelete" xml:space="preserve">
+    <value>----- Delete a backup job -----</value>
+  </data>
+  <data name="Message_BackupJobDeleted" xml:space="preserve">
+    <value>Backup job '{0}' deleted.</value>
   </data>
 </root>

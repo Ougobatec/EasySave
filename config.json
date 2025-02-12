@@ -4,15 +4,9 @@
   "BackupJobs": [
     {
       "Name": "Backup1",
-      "SourceDirectory": "test",
-      "TargetDirectory": "test",
-      "Type": 0
-    },
-    {
-      "Name": "Backup2",
-      "SourceDirectory": "test",
-      "TargetDirectory": "test",
-      "Type": 0
+      "SourceDirectory": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Source",
+      "TargetDirectory": "C:\\Users\\hugob\\OneDrive - Association Cesi Viacesi mail\\A3 CI - 24_25\\Bloc 3 - G\u00E9nie logiciel\\EasySave\\DataManipulation\\Destination",
+      "Type": 1
     }
   ]
 }
