@@ -1,69 +1,25 @@
 ﻿<Window x:Class="EasySave.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Gestion des Sauvegardes" MinWidth="1000" MinHeight="450">
+        Title="EasySave" MinWidth="1000" MinHeight="450">
+
     <Grid>
-        <TextBlock Text="Choisissez les sauvegardes que vous souhaitez modifier ou exécuter."
-                   FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-        <StackPanel Orientation="Vertical">
-            <!-- Conteneur pour ListView et le bouton Créer -->
-            <DockPanel Margin="10,40,10,5">
-                <!-- La ListView occupe tout l'espace restant -->
-                <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn x:Name="colName" Header="Nom de sauvegarde" Width="150">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="colSource" Header="Emplacement source" Width="200">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding SourceDirectory}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="colTarget" Header="Emplacement cible" Width="200">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding TargetDirectory}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="colType" Header="Type" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Type}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="colModify" Header="Modifier" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Modifier" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
 
-
-                <!-- Bouton Créer à droite des titres, en dehors de la Grid -->
-            
-            </DockPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5">
-                <Button Content="Créer une sauvegarde" Background="Blue" Foreground="White" Padding="5,2" Margin="5,10"/>
-                <Button Content="Exécuter les sauvegardes" Background="Green" Foreground="White" Padding="5,2" Margin="5,10"/>
-                <Button Content="Supprimer les sauvegardes" Background="Red" Foreground="White" Padding="5,2" Margin="5,10"/>
-            </StackPanel>
-        </StackPanel>
-        <TextBox Name="ErrorTextBox" Height="30" Margin="10,0,10,50" Background="LightCoral" Foreground="White"
-                 Visibility="Collapsed" IsReadOnly="True" HorizontalAlignment="Stretch"/>
-
-        
+        <!-- Bouton Quitter en bas à droite -->
+        <Button x:Name="QuitButton" Content="Quitter"
+            Background="Red" Foreground="White" Padding="5,3"
+            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+            Margin="10,0,0,10"
+            Click="CloseApp" Width="60"/>
+        <!-- Bouton Accueil -->
+        <Button x:Name="HomeButton" Content="Accueil" Width="59" Height="23"
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,15" Click="HomeButton_Click"/>
+        <!-- Bouton Paramètres -->
+        <Button x:Name="Settings" Content="Settings" Width="59" Height="23"
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,82,15" Click="Settings_Click"/>
+        <!-- Bouton Logs -->
+        <Button x:Name="Logs" Content="Logs" Width="59" Height="23"
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,152,15" Click="Logs_Click"/>
     </Grid>
 </Window>

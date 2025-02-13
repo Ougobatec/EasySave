@@ -29,9 +29,8 @@ namespace EasySave
             InitializeComponent();
             DataContext = this;
             DisplayBackupJobs();
+            MainFrame.NavigationService.Navigate(new ManageBackupJobs()); // Charger la première page au démarrage
         }
-
-
 
         //afficher les jobs de backup dans le datagrid
         private void DisplayBackupJobs()
@@ -55,24 +54,34 @@ namespace EasySave
             // Si vous avez une liaison de données dans XAML, vous devrez peut-être rafraîchir l'interface utilisateur
             // Exemple : dataGrid.ItemsSource = BackupJobs;
         }
-
-        private void BackupJobsListView_SizeChanged(object sender, SizeChangedEventArgs e)
+        /// <summary>
+        /// Go back to the main page
+        /// </summary>
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (BackupJobsListView.View is GridView gridView)
-            {
-                double totalWidth = BackupJobsListView.ActualWidth - SystemParameters.VerticalScrollBarWidth; // Largeur disponible
-                double proportion1 = 0.2;  // 20% pour "Nom de sauvegarde"
-                double proportion2 = 0.3;  // 30% pour "Emplacement source"
-                double proportion3 = 0.3;  // 30% pour "Emplacement cible"
-                double proportion4 = 0.1;  // 10% pour "Type"
-                double fixedWidth = 100;   // Largeur fixe pour "Modifier"
+            MainFrame.NavigationService.Navigate(new ManageBackupJobs());
 
-                gridView.Columns[0].Width = totalWidth * proportion1;
-                gridView.Columns[1].Width = totalWidth * proportion2;
-                gridView.Columns[2].Width = totalWidth * proportion3;
-                gridView.Columns[3].Width = totalWidth * proportion4;
-                gridView.Columns[4].Width = fixedWidth;
-            }
+        }
+        /// <summary>
+        /// Go to the settings page
+        /// </summary>
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new Settings());
+        }
+        /// <summary>
+        /// Go to the settings page
+        /// </summary>
+        private void Logs_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new Logs());
+        }
+        /// <summary>
+        /// Close the software
+        /// </summary>
+        private void CloseApp(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

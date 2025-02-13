@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Logger">
       <HintPath>Libraries\Logger.dll</HintPath>
     </Reference>
