@@ -1,6 +1,9 @@
-﻿using System;
+﻿using EasySave.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +23,15 @@ namespace EasySave
     /// </summary>
     public partial class ManageBackupJobs : Page
     {
+        private readonly BackupManager backupManager = new();
+        private ResourceManager ResourceManager => backupManager.resourceManager;
+        private bool exit = false;
+        public ObservableCollection<ModelJob> BackupJobs { get; set; }
         public ManageBackupJobs()
         {
             InitializeComponent();
+            DataContext = this;
+            DisplayBackupJobs();
         }
 
         private void BackupJobsListView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -65,6 +74,29 @@ namespace EasySave
         {
             AddBackUpJob addBackUpJob = new AddBackUpJob();
             this.NavigationService.Navigate(addBackUpJob);
+        }
+
+        //afficher les jobs de backup dans le datagrid
+        private void DisplayBackupJobs()
+        {
+            
+            BackupJobs = new ObservableCollection<ModelJob>();
+
+            for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
+            {
+                var job = backupManager.Config.BackupJobs[i];
+               
+                BackupJobs.Add(new ModelJob
+                {
+                    Name = job.Name,
+                    SourceDirectory = job.SourceDirectory,
+                    TargetDirectory = job.TargetDirectory,
+                    Type = job.Type
+                });
+            }
+
+            // Si vous avez une liaison de données dans XAML, vous devrez peut-être rafraîchir l'interface utilisateur
+            // Exemple : dataGrid.ItemsSource = BackupJobs;
         }
     }
 }
