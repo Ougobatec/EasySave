@@ -6,8 +6,7 @@ namespace EasySave.Views
 {
     public class ViewCLI
     {
-        private readonly BackupManager backupManager = new();
-        private ResourceManager ResourceManager => backupManager.resourceManager;
+        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         private bool exit = false;
 
         public void Run()
@@ -74,7 +73,7 @@ namespace EasySave.Views
 
             try
             {
-                await backupManager.AddBackupJobAsync(job);
+                await BackupManager.GetInstance().AddBackupJobAsync(job);
                 Console.WriteLine(ResourceManager.GetString("Message_BackupJobAdded"), job.Name);
             }
             catch (Exception ex)
@@ -91,7 +90,7 @@ namespace EasySave.Views
             DisplayBackupJobs();
             Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
             var input = Console.ReadLine();
-            if (int.TryParse(input, out int index) && index >= 0 && index < backupManager.Config.BackupJobs.Count)
+            if (int.TryParse(input, out int index) && index >= 0 && index < BackupManager.GetInstance().Config.BackupJobs.Count)
             {
                 string name = GetValidInput(ResourceManager.GetString("Prompt_JobName"), ResourceManager.GetString("Error_Empty"));
                 string sourceDirectory = GetValidInput(ResourceManager.GetString("Prompt_SourceDirectory"), ResourceManager.GetString("Error_Empty"));
@@ -108,7 +107,7 @@ namespace EasySave.Views
 
                 try
                 {
-                    await backupManager.UpdateBackupJobAsync(updatedJob, index);
+                    await BackupManager.GetInstance().UpdateBackupJobAsync(updatedJob, index);
                     Console.WriteLine(ResourceManager.GetString("Message_BackupJobUpdated"), updatedJob.Name);
                 }
                 catch (Exception ex)
@@ -132,7 +131,7 @@ namespace EasySave.Views
             var input = Console.ReadLine();
             if (input.Equals("all", StringComparison.CurrentCultureIgnoreCase))
             {
-                for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
+                for (int i = 0; i < BackupManager.GetInstance().Config.BackupJobs.Count; i++)
                 {
                     await ExecuteBackupJobByIndex(i);
                 }
@@ -173,12 +172,12 @@ namespace EasySave.Views
             DisplayBackupJobs();
             Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
             var input = Console.ReadLine();
-            if (int.TryParse(input, out int index) && index >= 0 && index < backupManager.Config.BackupJobs.Count)
+            if (int.TryParse(input, out int index) && index >= 0 && index < BackupManager.GetInstance().Config.BackupJobs.Count)
             {
                 try
                 {
 
-                    await backupManager.DeleteBackupJobAsync(index);
+                    await BackupManager.GetInstance().DeleteBackupJobAsync(index);
                     Console.WriteLine(ResourceManager.GetString("Message_BackupJobDeleted"), index);
                 }
                 catch (Exception ex)
@@ -234,7 +233,7 @@ namespace EasySave.Views
                         break;
 
                     case '3':
-                        await backupManager.ChangeSettingsAsync(language, logFormat);
+                        await BackupManager.GetInstance().ChangeSettingsAsync(language, logFormat);
                         Console.WriteLine(ResourceManager.GetString("Message_SettingsSaved"));
                         ReturnToMenu();
                         return;
@@ -248,20 +247,20 @@ namespace EasySave.Views
 
         private async Task ExecuteBackupJobByIndex(int index)
         {
-            if (index < 0 || index >= backupManager.Config.BackupJobs.Count)
+            if (index < 0 || index >= BackupManager.GetInstance().Config.BackupJobs.Count)
             {
                 Console.WriteLine(string.Format(ResourceManager.GetString("Error_InvalidIndex"), index));
                 return;
             }
-            await backupManager.ExecuteBackupJobAsync(index);
+            await BackupManager.GetInstance().ExecuteBackupJobAsync(index);
         }
 
         private void DisplayBackupJobs()
         {
             Console.WriteLine();
-            for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
+            for (int i = 0; i < BackupManager.GetInstance().Config.BackupJobs.Count; i++)
             {
-                var job = backupManager.Config.BackupJobs[i];
+                var job = BackupManager.GetInstance().Config.BackupJobs[i];
                 Console.WriteLine(string.Format(ResourceManager.GetString("Message_BackupJobDetails"), i, job.Name, job.SourceDirectory, job.TargetDirectory, job.Type));
             }
         }

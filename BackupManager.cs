@@ -14,11 +14,18 @@ namespace EasySave
         public ResourceManager resourceManager;
         public ModelConfig Config { get; private set; }
         private List<ModelState> BackupStates = [];
+        private static BackupManager BackupManager_Instance = null;
         private static readonly string ConfigFilePath = "config.json";
         private static readonly string StateFilePath = "state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
-        public BackupManager()
+        public static BackupManager GetInstance()
+        {
+            BackupManager_Instance ??= new BackupManager();
+            return BackupManager_Instance;
+        }
+
+        private BackupManager()
         {
             Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "easysave"));
             LoadConfigAsync();
