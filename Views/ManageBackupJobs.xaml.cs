@@ -1,21 +1,10 @@
 ﻿using EasySave.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
 using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace EasySave
 {
@@ -77,7 +66,7 @@ namespace EasySave
                     BackupManager.GetInstance().Config.BackupJobs.Remove(job);
                     BackupManager.GetInstance().DeleteBackupJobAsync(index);
                 }
-                
+
             }
 
             //// Sauvegarder les modifications
@@ -100,6 +89,16 @@ namespace EasySave
         /// </summary>
         private void CreateBackupJob_Click(object sender, RoutedEventArgs e)
         {
+            if (sender != null)
+            {
+                Button button = sender as Button;
+                if (button != null && button.DataContext is ModelJob selectedJob)
+                {
+                    // Navigation vers la page de modification avec les données
+                    NavigationService.Navigate(new AddBackUpJob(selectedJob));
+                }
+            }
+            // Sert à naviguer vers la page AddBackUpJob
             AddBackUpJob addBackUpJob = new AddBackUpJob();
             this.NavigationService.Navigate(addBackUpJob);
         }

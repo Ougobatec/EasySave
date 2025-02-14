@@ -1,16 +1,4 @@
-﻿using EasySave.Models;
-using System.Collections.ObjectModel;
-using System.Resources;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace EasySave
 {
@@ -19,25 +7,24 @@ namespace EasySave
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-        
-
         public MainWindow()
         {
-            InitializeComponent();
-            
-            
-            MainFrame.NavigationService.Navigate(new ManageBackupJobs()); // Charger la première page au démarrage
+            try
+            {
+                InitializeComponent();
+                MainFrame.NavigationService.Navigate(new ManageBackupJobs()); // Charger la première page au démarrage
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erreur lors du chargement : {ex.Message}");
+            }
         }
-
-        
         /// <summary>
         /// Go back to the main page
         /// </summary>
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new ManageBackupJobs());
-
         }
         /// <summary>
         /// Go to the settings page
