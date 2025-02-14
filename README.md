@@ -8,7 +8,7 @@
 [![GitHub release date](https://img.shields.io/github/release-date/Ougobatec/EasySave)](#)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Ougobatec/EasySave)](#)
 
-[![getting started](https://img.shields.io/badge/getting_started-guide-1D76DB)]([https://docs.abblix.com/docs/getting-started-guide](http://easysave.axel-cal.fr/))
+[![getting started](https://img.shields.io/badge/getting_started-guide-1D76DB)](http://easysave.axel-cal.fr/)
 [![Free](https://img.shields.io/badge/free_for_non_commercial_use-brightgreen)](#-license)
 
 </div>
