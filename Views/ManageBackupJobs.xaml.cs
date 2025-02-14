@@ -98,18 +98,18 @@ namespace EasySave
         {
             if (sender != null)
             {
+                // Sert à naviguer vers la page AddBackUpJob
+                AddBackUpJob addBackUpJob = new AddBackUpJob();
+                this.NavigationService.Navigate(addBackUpJob);
                 Button button = sender as Button;
                 if (button != null && button.DataContext is ModelJob selectedJob)
                 {
                     // Navigation vers la page de modification avec les données
                     NavigationService.Navigate(new AddBackUpJob(selectedJob));
+
                 }
             }
-            // Sert à naviguer vers la page AddBackUpJob
-            AddBackUpJob addBackUpJob = new AddBackUpJob();
-            this.NavigationService.Navigate(addBackUpJob);
         }
-
         // Afficher les jobs de backup dans le ListView
         private void DisplayBackupJobs()
         {

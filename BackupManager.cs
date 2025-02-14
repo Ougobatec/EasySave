@@ -15,8 +15,8 @@ namespace EasySave
         public ModelConfig Config { get; private set; }
         private List<ModelState> BackupStates = [];
         private static BackupManager BackupManager_Instance = null;
-        private static readonly string ConfigFilePath = "Config\\config.json";
-        private static readonly string StateFilePath = "Config\\state.json";
+        private static readonly string ConfigFilePath = "config.json";
+        private static readonly string StateFilePath = "state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
         public static BackupManager GetInstance()

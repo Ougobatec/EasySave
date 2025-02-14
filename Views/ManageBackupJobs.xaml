@@ -46,8 +46,8 @@
                             </GridViewColumn>
                             <GridViewColumn Header="Modify" Width="100">
                                 <GridViewColumn.CellTemplate >
-                                    <DataTemplate >
-                                        <Button Content="Modify" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"  HorizontalAlignment="Center" VerticalAlignment="Center"     />
+                                    <DataTemplate>
+                                        <Button Content="Modify" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"  HorizontalAlignment="Center" VerticalAlignment="Center" Click="CreateBackupJob_Click"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
