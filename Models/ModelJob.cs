@@ -8,5 +8,6 @@ namespace EasySave.Models
         public string SourceDirectory { get; set; }
         public string TargetDirectory { get; set; }
         public BackupTypes Type { get; set; }
+        public string Key { get; set; }
     }
 }

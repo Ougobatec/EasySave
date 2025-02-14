@@ -10,9 +10,8 @@ namespace EasySave
     /// </summary>
     public partial class AddBackUpJob : Page
     {
-        private ModelJob ?Job = null;
+        private readonly ModelJob? Job = null;
         private int Index;
-        private static readonly string ConfigFilePath = Path.Join(Path.GetTempPath(), "easysave\\config.json");
         public ModelConfig Config { get; private set; }
         public AddBackUpJob(ModelJob? job = null)
         {

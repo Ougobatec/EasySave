@@ -3,20 +3,22 @@ using System.IO;
 using System.Reflection;
 using System.Resources;
 using System.Text.Json;
+using System.Security.Cryptography;
 using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
+using CryptoSoft;
 
 namespace EasySave
 {
     public class BackupManager
     {
-        public ResourceManager resourceManager = new ResourceManager("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
+        public ResourceManager resourceManager = new("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
         public ModelConfig Config { get; private set; }
         private List<ModelState> BackupStates = [];
         private static BackupManager BackupManager_Instance = null;
-        private static readonly string ConfigFilePath = "config.json";
-        private static readonly string StateFilePath = "state.json";
+        private static readonly string ConfigFilePath = "Config\\config.json";
+        private static readonly string StateFilePath = "Config\\state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
         public static BackupManager GetInstance()
@@ -33,7 +35,7 @@ namespace EasySave
             SetCulture(Config.Language);
         }
 
-        public void SetCulture(string cultureName)
+        public static void SetCulture(string cultureName)
         {
             CultureInfo culture = new(cultureName);
             CultureInfo.DefaultThreadCurrentCulture = culture;
@@ -47,6 +49,7 @@ namespace EasySave
                 throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
+            job.Key = GenerateKey(64);
             Config.BackupJobs.Add(job);
             BackupStates.Add(new ModelState { Name = job.Name });
             await SaveJSONAsync(Config, ConfigFilePath);
@@ -281,7 +284,7 @@ namespace EasySave
 
             Config.Language ??= "en";
             Config.LogFormat ??= "json";
-            Config.BackupJobs ??= new List<ModelJob>();
+            Config.BackupJobs ??= [];
         }
 
         private void LoadStatesAsync()
@@ -293,7 +296,7 @@ namespace EasySave
             }
         }
 
-        private async Task SaveJSONAsync<T>(T data, string filePath)
+        private static async Task SaveJSONAsync<T>(T data, string filePath)
         {
             var directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
@@ -303,6 +306,16 @@ namespace EasySave
 
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(filePath, json);
+        }
+
+        private static string GenerateKey(int bits)
+        {
+            byte[] key = new byte[bits/8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(key);
+            }
+            return Convert.ToBase64String(key);
         }
     }
 }
