@@ -1,44 +1,56 @@
-# EasySave - Solution de Sauvegarde Automatisée
+
+[![Abblix OIDC Server](https://resources.abblix.com/imgs/jpg/abblix-oidc-server-github-banner.jpg)](https://www.abblix.com/abblix-oidc-server)
+[![.NET](https://img.shields.io/badge/.NET-6.0%2C%207.0%2C%208.0%2C%209.0-512BD4)](https://docs.abblix.com/docs/technical-requirements)
+[![language](https://img.shields.io/badge/language-C%23-239120)](https://learn.microsoft.com/ru-ru/dotnet/csharp/tour-of-csharp/overview)
+[![GitHub release](https://img.shields.io/github/v/release/Abblix/Oidc.Server)](#)
+[![GitHub release date](https://img.shields.io/github/release-date/Abblix/Oidc.Server)](#)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Abblix/Oidc.Server)](#)
+
+
+[![getting started](https://img.shields.io/badge/getting_started-guide-1D76DB)](https://docs.abblix.com/docs/getting-started-guide)
+[![Free](https://img.shields.io/badge/free_for_non_commercial_use-brightgreen)](#-license)
+
+# EasySave - Solution de Sauvegarde AutomatisÃ©e
 
 ## Description
-EasySave est une application de sauvegarde permettant aux utilisateurs de définir et d'exécuter des travaux de sauvegarde de fichiers et dossiers. Conçue initialement en mode console, elle évolue en une application graphique avec des fonctionnalités avancées de gestion de sauvegarde, de cryptage et de supervision à distance.
+EasySave est une application de sauvegarde permettant aux utilisateurs de dÃ©finir et d'exÃ©cuter des travaux de sauvegarde de fichiers et dossiers. ConÃ§ue initialement en mode console, elle Ã©volue en une application graphique avec des fonctionnalitÃ©s avancÃ©es de gestion de sauvegarde, de cryptage et de supervision Ã  distance.
 
 ## Versions et Evolutions
 
 ### Version 1.0
-- Application Console développée en .NET Core.
-- Gestion jusqu'à 5 travaux de sauvegarde (complète ou différentielle).
-- Compatibilité multilingue (Anglais/Français).
-- Exécution des sauvegardes via ligne de commande.
-- Prise en charge des disques locaux, externes et lecteurs réseaux.
+- Application Console dÃ©veloppÃ©e en .NET Core.
+- Gestion jusqu'Ã  5 travaux de sauvegarde (complÃ¨te ou diffÃ©rentielle).
+- CompatibilitÃ© multilingue (Anglais/FranÃ§ais).
+- ExÃ©cution des sauvegardes via ligne de commande.
+- Prise en charge des disques locaux, externes et lecteurs rÃ©seaux.
 - Fichier log journalier au format JSON enregistrant les actions de sauvegarde.
-- Enregistrement en temps réel de l'état des travaux dans un fichier JSON.
+- Enregistrement en temps rÃ©el de l'Ã©tat des travaux dans un fichier JSON.
 - Dynamic Link Library (DLL) pour la gestion des logs.
 
 ### Version 1.1
-- Ajout de la possibilité de choisir le format des fichiers logs (JSON ou XML).
+- Ajout de la possibilitÃ© de choisir le format des fichiers logs (JSON ou XML).
 
 ### Version 2.0
-- Passage à une interface graphique en WPF ou Avalonia.
-- Nombre de travaux de sauvegarde illimité.
-- Intégration de la fonctionnalité de cryptage via CryptoSoft.
+- Passage Ã  une interface graphique en WPF ou Avalonia.
+- Nombre de travaux de sauvegarde illimitÃ©.
+- IntÃ©gration de la fonctionnalitÃ© de cryptage via CryptoSoft.
 - Ajout du temps de cryptage dans le fichier log.
-- Blocage des sauvegardes si un logiciel métier est détecté.
+- Blocage des sauvegardes si un logiciel mÃ©tier est dÃ©tectÃ©.
 
 ### Version 3.0
-- Sauvegarde en parallèle des fichiers.
-- Gestion des fichiers prioritaires (les fichiers prioritaires sont sauvegardés en premier).
-- Limitation des transferts simultanés de fichiers volumineux pour optimiser la bande passante.
-- Interaction temps réel avec chaque travail de sauvegarde (Pause, Play, Stop).
-- Mise en pause automatique des sauvegardes si un logiciel métier est en cours d'exécution.
-- Supervision à distance via une console déportée utilisant des sockets.
+- Sauvegarde en parallÃ¨le des fichiers.
+- Gestion des fichiers prioritaires (les fichiers prioritaires sont sauvegardÃ©s en premier).
+- Limitation des transferts simultanÃ©s de fichiers volumineux pour optimiser la bande passante.
+- Interaction temps rÃ©el avec chaque travail de sauvegarde (Pause, Play, Stop).
+- Mise en pause automatique des sauvegardes si un logiciel mÃ©tier est en cours d'exÃ©cution.
+- Supervision Ã  distance via une console dÃ©portÃ©e utilisant des sockets.
 - Modification de CryptoSoft pour le rendre mono-instance.
-- Réduction dynamique des travaux parallèles en fonction de la charge réseau.
+- RÃ©duction dynamique des travaux parallÃ¨les en fonction de la charge rÃ©seau.
 
 ## Fichiers de Logs
-- **Log journalier:** Contient l'historique des sauvegardes effectuées.
-- **Fichier d'état:** Contient l'état actuel des sauvegardes en cours.
-- **Format:** JSON ou XML en fonction du paramétrage utilisateur.
+- **Log journalier:** Contient l'historique des sauvegardes effectuÃ©es.
+- **Fichier d'Ã©tat:** Contient l'Ã©tat actuel des sauvegardes en cours.
+- **Format:** JSON ou XML en fonction du paramÃ©trage utilisateur.
 
 ## Auteurs
 - [Axel Calendreau](https://github.com/calaxo)
