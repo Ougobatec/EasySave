@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="CryptoSoft">
+      <HintPath>Libraries\CryptoSoft.dll</HintPath>
+    </Reference>
     <Reference Include="Logger">
       <HintPath>Libraries\Logger.dll</HintPath>
     </Reference>
