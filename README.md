@@ -2,8 +2,8 @@
 
 [![EasySave](https://github.com/Ougobatec/EasySave/blob/team1/Assets/logo.svg)](https://github.com/Ougobatec/EasySave)
  
-[![.NET](https://img.shields.io/badge/-.NET%208.0-blueviolet?logo=dotnet)](https://docs.abblix.com/docs/technical-requirements)
-[![language](https://img.shields.io/badge/language-C%23-239120)](https://learn.microsoft.com/ru-ru/dotnet/csharp/tour-of-csharp/overview)
+[![.NET](https://img.shields.io/badge/-.NET%208.0-blueviolet?logo=dotnet)](http://easysave.axel-cal.fr/)
+[![language](https://img.shields.io/badge/language-C%23-239120)](https://learn.microsoft.com/fr-fr/dotnet/csharp/tour-of-csharp/overview)
 [![GitHub release](https://img.shields.io/github/v/release/Ougobatec/EasySave)](#)
 [![GitHub release date](https://img.shields.io/github/release-date/Ougobatec/EasySave)](#)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Ougobatec/EasySave)](#)
