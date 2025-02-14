@@ -16,10 +16,10 @@
 
 # EasySave - Solution de Sauvegarde Automatisée
 
-## Description
+## Description📜
 EasySave est une application de sauvegarde permettant aux utilisateurs de définir et d'exécuter des travaux de sauvegarde de fichiers et dossiers. Conçue initialement en mode console, elle évolue en une application graphique avec des fonctionnalités avancées de gestion de sauvegarde, de cryptage et de supervision à distance.
 
-## Versions et Evolutions
+## Versions et Evolutions🔜
 
 ### Version 1.0
 - Application Console développée en .NET Core.
@@ -56,7 +56,7 @@ EasySave est une application de sauvegarde permettant aux utilisateurs de défin
 - **Fichier d'état:** Contient l'état actuel des sauvegardes en cours.
 - **Format:** JSON ou XML en fonction du paramétrage utilisateur.
 
-## Auteurs
+## Auteurs👨‍👩‍👧‍👦
 - [Axel Calendreau](https://github.com/calaxo)
 - [Maxime Lirio](https://github.com/MaximeLIRIO)
 - [Mikael Rouffiat](https://github.com/mickalol)
