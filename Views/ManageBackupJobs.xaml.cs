@@ -24,8 +24,7 @@ namespace EasySave
     /// </summary>
     public partial class ManageBackupJobs : Page
     {
-        private readonly BackupManager backupManager = new();
-        private ResourceManager ResourceManager => backupManager.resourceManager;
+        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         private bool exit = false;
         public ObservableCollection<ModelJob> BackupJobs { get; set; }
 
@@ -75,8 +74,8 @@ namespace EasySave
                 if (index >= 0)
                 {
                     BackupJobs.Remove(job);
-                    backupManager.Config.BackupJobs.Remove(job);
-                    backupManager.DeleteBackupJobAsync(index);
+                    BackupManager.GetInstance().Config.BackupJobs.Remove(job);
+                    BackupManager.GetInstance().DeleteBackupJobAsync(index);
                 }
                 
             }
@@ -108,7 +107,7 @@ namespace EasySave
         // Afficher les jobs de backup dans le ListView
         private void DisplayBackupJobs()
         {
-            BackupJobs = new ObservableCollection<ModelJob>(backupManager.Config.BackupJobs);
+            BackupJobs = new ObservableCollection<ModelJob>(BackupManager.GetInstance().Config.BackupJobs);
         }
 
         // Méthode pour sauvegarder la configuration
