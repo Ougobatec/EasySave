@@ -169,15 +169,15 @@ namespace EasySave
                     var endTime = DateTime.Now;
                     var transferTime = endTime - startTime;
 
-                    await Logger<ModelLog>.GetInstance(Config.LogFormat, LogDirectory).Log(new ModelLog
-                    {
-                        Timestamp = DateTime.Now,
-                        BackupName = job.Name,
-                        Source = newPath,
-                        Destination = destPath,
-                        Size = fileInfo.Length,
-                        TransfertTime = transferTime
-                    });
+                    //Logger<ModelLog>.GetInstance(Config.LogFormat, LogDirectory).Log(new ModelLog
+                    //{
+                    //    Timestamp = DateTime.Now,
+                    //    BackupName = job.Name,
+                    //    Source = newPath,
+                    //    Destination = destPath,
+                    //    Size = fileInfo.Length,
+                    //    TransfertTime = transferTime
+                    //});
 
                     state.SourceFilePath = newPath;
                     state.TargetFilePath = destPath;
@@ -308,6 +308,7 @@ namespace EasySave
             await File.WriteAllTextAsync(filePath, json);
         }
 
+<<<<<<< Updated upstream
         private static string GenerateKey(int bits)
         {
             byte[] key = new byte[bits/8];
@@ -317,6 +318,9 @@ namespace EasySave
             }
             return Convert.ToBase64String(key);
         }
+=======
+        
+>>>>>>> Stashed changes
     }
 }
 
