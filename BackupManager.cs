@@ -11,12 +11,12 @@ namespace EasySave
 {
     public class BackupManager
     {
-        public ResourceManager resourceManager;
+        public ResourceManager resourceManager = new ResourceManager("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
         public ModelConfig Config { get; private set; }
         private List<ModelState> BackupStates = [];
         private static BackupManager BackupManager_Instance = null;
-        private static readonly string ConfigFilePath = "config.json";
-        private static readonly string StateFilePath = "state.json";
+        private static readonly string ConfigFilePath = "Config\\config.json";
+        private static readonly string StateFilePath = "Config\\state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
         public static BackupManager GetInstance()
@@ -38,7 +38,6 @@ namespace EasySave
             CultureInfo culture = new(cultureName);
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
-            resourceManager = new ResourceManager("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
         }
 
         public async Task AddBackupJobAsync(ModelJob job)

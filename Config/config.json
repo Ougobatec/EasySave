@@ -1,0 +1,12 @@
+{
+  "Language": "en",
+  "LogFormat": "json",
+  "BackupJobs": [
+    {
+      "Name": "Backup1",
+      "SourceDirectory": "test",
+      "TargetDirectory": "test",
+      "Type": 1
+    }
+  ]
+}

@@ -13,7 +13,6 @@ namespace EasySave
     /// </summary>
     public partial class ManageBackupJobs : Page
     {
-        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         private bool exit = false;
         public ObservableCollection<ModelJob> BackupJobs { get; set; }
 
