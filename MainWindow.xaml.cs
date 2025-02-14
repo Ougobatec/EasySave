@@ -46,6 +46,8 @@ namespace EasySave
         private void CloseApp(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+            Environment.Exit(0); // Force la fermeture du processus
+
         }
     }
 }

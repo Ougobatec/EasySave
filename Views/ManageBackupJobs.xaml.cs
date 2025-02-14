@@ -56,26 +56,23 @@ namespace EasySave
                 return;
             }
 
+            var jobsToDelete = new List<ModelJob>(selectedItems);
+
             // Supprime les éléments sélectionnés de la liste
-            foreach (var job in selectedItems)
+            foreach (var job in jobsToDelete)
             {
                 int index = BackupJobs.IndexOf(job);
                 if (index >= 0)
                 {
-                    BackupJobs.Remove(job);
-                    BackupManager.GetInstance().Config.BackupJobs.Remove(job);
-                    BackupManager.GetInstance().DeleteBackupJobAsync(index);
+                    BackupJobs.RemoveAt(index);
+                    BackupManager.GetInstance().Config.BackupJobs.RemoveAt(index);
+                    BackupManager.GetInstance().DeleteBackupJobAsync(index).Wait();
                 }
-
             }
-
-            //// Sauvegarder les modifications
-            //SaveConfig();
 
             // Rafraîchir la ListView
             BackupJobsListView.Items.Refresh();
         }
-
         /// <summary>
         /// Execute all selected backUps
         /// </summary>

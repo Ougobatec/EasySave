@@ -29,7 +29,7 @@ namespace EasySave
         {
             Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "easysave"));
             LoadConfigAsync();
-            LoadStatesAsync().Wait();
+            LoadStatesAsync();
             SetCulture(Config.Language);
         }
 
@@ -285,11 +285,11 @@ namespace EasySave
             Config.BackupJobs ??= new List<ModelJob>();
         }
 
-        private async Task LoadStatesAsync()
+        private void LoadStatesAsync()
         {
             if (File.Exists(StateFilePath))
             {
-                var json = await File.ReadAllTextAsync(StateFilePath);
+                var json =  File.ReadAllText(StateFilePath);
                 BackupStates = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
             }
         }
