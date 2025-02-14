@@ -9,28 +9,28 @@
       Title="ManageBackupJobs">
 
     <Grid>
-        <TextBlock Text="Choisissez les sauvegardes que vous souhaitez modifier ou exécuter."
+        <TextBlock Text="Select the backups you want to modify or execute."
                    FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
         <StackPanel Orientation="Vertical">
             <DockPanel Margin="10,40,10,5">
-                <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged">
+                <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged" SelectionMode="Extended">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Nom de sauvegarde" Width="150">
+                            <GridViewColumn Header="Backup Name" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Emplacement source" Width="200">
+                            <GridViewColumn Header="Source Directory" Width="200">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding SourceDirectory}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Emplacement cible" Width="200">
+                            <GridViewColumn Header="Target Directory" Width="200">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding TargetDirectory}" TextAlignment="Left"/>
@@ -44,10 +44,10 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Modifier" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Content="Modifier" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"/>
+                            <GridViewColumn Header="Modify" Width="100">
+                                <GridViewColumn.CellTemplate >
+                                    <DataTemplate >
+                                        <Button Content="Modify" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"  HorizontalAlignment="Center" VerticalAlignment="Center"     />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -57,13 +57,13 @@
             </DockPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5">
-                <Button x:Name="CreateBackupJobButton" Content="Créer une sauvegarde" Background="Blue" Foreground="White" Padding="5,2" Margin="5,10" Click="CreateBackupJob_Click"/>
-                <Button x:Name="ExecuteBackUpsButton" Content="Exécuter les sauvegardes" Background="Green" Foreground="White" Padding="5,2" Margin="5,10" Click="ExecuteBackUps_Click"/>
-                <Button x:Name="DeleteBackUpsButton" Content="Supprimer les sauvegardes" Background="Red" Foreground="White" Padding="5,2" Margin="5,10" Click="DeleteBackUps_Click"/>
+                <Button x:Name="CreateBackupJobButton" Content="Create Backup" Background="Blue" Foreground="White" Padding="5,2" Margin="5,10" Click="CreateBackupJob_Click"/>
+                <Button x:Name="ExecuteBackUpsButton" Content="Execute Backups" Background="Green" Foreground="White" Padding="5,2" Margin="5,10" Click="ExecuteBackUps_Click"/>
+                <Button x:Name="DeleteBackUpsButton" Content="Delete Backups" Background="Red" Foreground="White" Padding="5,2" Margin="5,10" Click="DeleteBackUps_Click"/>
             </StackPanel>
         </StackPanel>
 
-        <!-- Zone d'affichage d'erreur -->
+        <!-- Error display area -->
         <TextBox Name="ErrorTextBox" Height="30" Margin="10,0,10,50" Background="LightCoral" Foreground="White"
                  Visibility="Collapsed" IsReadOnly="True" HorizontalAlignment="Stretch"/>
     </Grid>

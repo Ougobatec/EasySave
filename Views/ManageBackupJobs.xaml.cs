@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace EasySave
         private ResourceManager ResourceManager => backupManager.resourceManager;
         private bool exit = false;
         public ObservableCollection<ModelJob> BackupJobs { get; set; }
+
         public ManageBackupJobs()
         {
             InitializeComponent();
@@ -58,15 +60,42 @@ namespace EasySave
         /// </summary>
         private void DeleteBackUps_Click(object sender, RoutedEventArgs e)
         {
+            var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
 
+            if (selectedItems.Count == 0)
+            {
+                MessageBox.Show("Veuillez sélectionner au moins une sauvegarde à supprimer.", "Aucune sélection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Supprime les éléments sélectionnés de la liste
+            foreach (var job in selectedItems)
+            {
+                int index = BackupJobs.IndexOf(job);
+                if (index >= 0)
+                {
+                    BackupJobs.Remove(job);
+                    backupManager.Config.BackupJobs.Remove(job);
+                    backupManager.DeleteBackupJobAsync(index);
+                }
+                
+            }
+
+            //// Sauvegarder les modifications
+            //SaveConfig();
+
+            // Rafraîchir la ListView
+            BackupJobsListView.Items.Refresh();
         }
+
         /// <summary>
         /// Execute all selected backUps
         /// </summary>
         private void ExecuteBackUps_Click(object sender, RoutedEventArgs e)
         {
-
+            // Logique pour exécuter les sauvegardes sélectionnées
         }
+
         /// <summary>
         /// Display the page to create a backUpJob
         /// </summary>
@@ -76,27 +105,16 @@ namespace EasySave
             this.NavigationService.Navigate(addBackUpJob);
         }
 
-        //afficher les jobs de backup dans le datagrid
+        // Afficher les jobs de backup dans le ListView
         private void DisplayBackupJobs()
         {
-            
-            BackupJobs = new ObservableCollection<ModelJob>();
-
-            for (int i = 0; i < backupManager.Config.BackupJobs.Count; i++)
-            {
-                var job = backupManager.Config.BackupJobs[i];
-               
-                BackupJobs.Add(new ModelJob
-                {
-                    Name = job.Name,
-                    SourceDirectory = job.SourceDirectory,
-                    TargetDirectory = job.TargetDirectory,
-                    Type = job.Type
-                });
-            }
-
-            // Si vous avez une liaison de données dans XAML, vous devrez peut-être rafraîchir l'interface utilisateur
-            // Exemple : dataGrid.ItemsSource = BackupJobs;
+            BackupJobs = new ObservableCollection<ModelJob>(backupManager.Config.BackupJobs);
         }
+
+        // Méthode pour sauvegarder la configuration
+        //private async void SaveConfig()
+        //{
+        //    await backupManager.SaveConfigAsync();
+        //}
     }
 }

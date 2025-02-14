@@ -177,6 +177,7 @@ namespace EasySave.Views
             {
                 try
                 {
+
                     await backupManager.DeleteBackupJobAsync(index);
                     Console.WriteLine(ResourceManager.GetString("Message_BackupJobDeleted"), index);
                 }
