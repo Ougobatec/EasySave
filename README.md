@@ -2,9 +2,9 @@
 [![Abblix OIDC Server](https://resources.abblix.com/imgs/jpg/abblix-oidc-server-github-banner.jpg)](https://www.abblix.com/abblix-oidc-server)
 [![.NET](https://img.shields.io/badge/.NET-6.0%2C%207.0%2C%208.0%2C%209.0-512BD4)](https://docs.abblix.com/docs/technical-requirements)
 [![language](https://img.shields.io/badge/language-C%23-239120)](https://learn.microsoft.com/ru-ru/dotnet/csharp/tour-of-csharp/overview)
-[![GitHub release](https://img.shields.io/github/v/release/Abblix/Oidc.Server)](#)
-[![GitHub release date](https://img.shields.io/github/release-date/Abblix/Oidc.Server)](#)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Abblix/Oidc.Server)](#)
+[![GitHub release](https://img.shields.io/github/v/release/Abblix/Ougobatec/EasySave)](#)
+[![GitHub release date](https://img.shields.io/github/release-date/Abblix/Ougobatec/EasySave)](#)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Abblix/Ougobatec/EasySave)](#)
 
 
 [![getting started](https://img.shields.io/badge/getting_started-guide-1D76DB)](https://docs.abblix.com/docs/getting-started-guide)
