@@ -18,7 +18,7 @@ namespace EasySave
             {
                 MessageBox.Show($"Erreur lors du chargement : {ex.Message}");
             }
-        }
+        }   
         /// <summary>
         /// Go back to the main page
         /// </summary>

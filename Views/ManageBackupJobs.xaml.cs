@@ -47,30 +47,41 @@ namespace EasySave
         /// </summary>
         private void DeleteBackUps_Click(object sender, RoutedEventArgs e)
         {
-            var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
-
-            if (selectedItems.Count == 0)
+            try
             {
-                MessageBox.Show("Veuillez sélectionner au moins une sauvegarde à supprimer.", "Aucune sélection", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
 
-            var jobsToDelete = new List<ModelJob>(selectedItems);
-
-            // Supprime les éléments sélectionnés de la liste
-            foreach (var job in jobsToDelete)
-            {
-                int index = BackupJobs.IndexOf(job);
-                if (index >= 0)
+                if (selectedItems.Count == 0)
                 {
-                    BackupJobs.RemoveAt(index);
-                    BackupManager.GetInstance().Config.BackupJobs.RemoveAt(index);
-                    BackupManager.GetInstance().DeleteBackupJobAsync(index).Wait();
+                    MessageBox.Show("Veuillez sélectionner au moins une sauvegarde à supprimer.", "Aucune sélection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var jobsToDelete = new List<ModelJob>(selectedItems);
+
+                // Demander confirmation avant de supprimer
+                var result = MessageBox.Show("Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Supprime les éléments sélectionnés de la liste
+                    foreach (var job in jobsToDelete)
+                    {
+                        int index = BackupJobs.IndexOf(job);
+                        if (index >= 0)
+                        {
+                            BackupJobs.RemoveAt(index);
+                            BackupManager.GetInstance().DeleteBackupJobAsync(index);
+                        }
+                    }
+
+                    // Rafraîchir la ListView
+                    BackupJobsListView.Items.Refresh();
                 }
             }
-
-            // Rafraîchir la ListView
-            BackupJobsListView.Items.Refresh();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Une erreur est survenue lors de la suppression des sauvegardes.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         /// <summary>
         /// Execute all selected backUps
