@@ -1,5 +1,4 @@
 ﻿using EasySave.Models;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,6 +15,7 @@ namespace EasySave
         public AddBackUpJob(ModelJob? job = null)
         {
             InitializeComponent();
+            TitleAddEditBackupJob.Text = "Ajouter un travail de sauvegarde";
             if (job != null)
             {
                 Job = job;
@@ -24,6 +24,7 @@ namespace EasySave
                 SourceDirectoryTextBox.Text = job.SourceDirectory;
                 TargetDirectoryTextBox.Text = job.TargetDirectory;
                 TypeComboBox.Text = job.Type.ToString();
+                TitleAddEditBackupJob.Text = "Modifier " + job.Name;
             }
         }
         private void ConfirmationButton_Click(object sender, RoutedEventArgs e)

@@ -31,14 +31,20 @@ namespace EasySave
         /// </summary>
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.NavigationService.Navigate(new Settings());
+            //MainFrame.NavigationService.Navigate(new Settings());
+
+            var settingsPage = new Settings();
+            MainFrame.NavigationService.Navigate(settingsPage);
+
+            // remplissage après que la navigation soit terminée
+            settingsPage.Settings_Loaded();
         }
         /// <summary>
         /// Go to the settings page
         /// </summary>
         private void Logs_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.NavigationService.Navigate(new Logs());
+            MainFrame.NavigationService.Navigate(new ManageBackupJobs());
         }
         /// <summary>
         /// Close the software

@@ -308,7 +308,6 @@ namespace EasySave
             await File.WriteAllTextAsync(filePath, json);
         }
 
-<<<<<<< Updated upstream
         private static string GenerateKey(int bits)
         {
             byte[] key = new byte[bits/8];
@@ -318,9 +317,6 @@ namespace EasySave
             }
             return Convert.ToBase64String(key);
         }
-=======
-        
->>>>>>> Stashed changes
     }
 }
 
