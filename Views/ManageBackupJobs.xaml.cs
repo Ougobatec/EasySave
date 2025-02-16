@@ -96,32 +96,40 @@ namespace EasySave
             // Logique pour exécuter les sauvegardes sélectionnées
             try
             {
-                var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
-
-                if (selectedItems.Count == 0)
+                // Test si des logiciels métiers sont ouverts
+                if (BusinessSoftwareChecker.IsBusinessSoftwareRunning())
                 {
-                    MessageBox.Show("Veuillez sélectionner au moins une sauvegarde à exécuter.", "Aucune sélection", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    MessageBox.Show("Un logiciel métier est en cours d'exécution. Veuillez le fermer avant de lancer une sauvegarde.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
-
-                var jobsToExecute = new List<ModelJob>(selectedItems);
-
-                // Demander confirmation avant de lancer l'éxecution
-                var result = MessageBox.Show($"Veuillez confirmer l'exécution des sauvegardes.", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
+                else
                 {
-                    // Execute² les éléments sélectionnés de la liste
-                    foreach (var job in jobsToExecute)
+                    var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
+
+                    if (selectedItems.Count == 0)
                     {
-                        int index = BackupJobs.IndexOf(job);
-                        if (index >= 0)
-                        {
-                            BackupManager.GetInstance().ExecuteBackupJobAsync(index);
-                        }
+                        MessageBox.Show("Veuillez sélectionner au moins une sauvegarde à exécuter.", "Aucune sélection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
                     }
 
-                    // Rafraîchir la ListView
-                    BackupJobsListView.Items.Refresh();
+                    var jobsToExecute = new List<ModelJob>(selectedItems);
+
+                    // Demander confirmation avant de lancer l'éxecution
+                    var result = MessageBox.Show($"Veuillez confirmer l'exécution des sauvegardes.", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        // Execute² les éléments sélectionnés de la liste
+                        foreach (var job in jobsToExecute)
+                        {
+                            int index = BackupJobs.IndexOf(job);
+                            if (index >= 0)
+                            {
+                                BackupManager.GetInstance().ExecuteBackupJobAsync(index);
+                            }
+                        }
+
+                        // Rafraîchir la ListView
+                        BackupJobsListView.Items.Refresh();
+                    }
                 }
             }
             catch (Exception ex)
