@@ -18,7 +18,7 @@
         </ComboBox>
 
         <TextBlock Text="Langage" HorizontalAlignment="Left" Margin="330,100,0,0" VerticalAlignment="Top"/>
-        <ComboBox Name="LanguageComboBox" HorizontalAlignment="Left" Margin="400,100,0,0" Width="120" VerticalAlignment="Top">
+        <ComboBox Name="LanguageComboBox" HorizontalAlignment="Left" Margin="400,100,0,0" Width="120" VerticalAlignment="Top" SelectionChanged="Setting_Changed">
             <ComboBoxItem Content="fr"/>
             <ComboBoxItem Content="en"/>
         </ComboBox>

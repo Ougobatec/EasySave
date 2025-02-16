@@ -44,7 +44,7 @@ namespace EasySave
         /// </summary>
         private void Logs_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.NavigationService.Navigate(new ManageBackupJobs());
+            MainFrame.NavigationService.Navigate(new Logs());
         }
         /// <summary>
         /// Close the software

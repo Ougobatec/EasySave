@@ -26,15 +26,15 @@ namespace EasySave
         /// </summary>
         private void Setting_Changed(object sender, SelectionChangedEventArgs e)
         {
-            Button button = sender as Button;
+            ComboBox button = sender as ComboBox;
             if (button != null) {
                 if (button.Name == "TypeLogsComboBox")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync(null, TypeLogsComboBox.Text);
+                    BackupManager.GetInstance().ChangeSettingsAsync(null, (button.SelectedItem as ComboBoxItem)?.Content.ToString());
                 }
                 if (button.Name == "LanguageComboBox")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync(null, LanguageComboBox.Text);
+                    BackupManager.GetInstance().ChangeSettingsAsync((button.SelectedItem as ComboBoxItem)?.Content.ToString(), null);
                 }
              }
         }

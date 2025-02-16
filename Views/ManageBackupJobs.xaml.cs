@@ -22,7 +22,6 @@ namespace EasySave
             InitializeComponent();
             DataContext = this;
             DisplayBackupJobs();
-            
         }
 
         private void BackupJobsListView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -129,7 +128,6 @@ namespace EasySave
             {
                 MessageBox.Show("Une erreur est survenue lors de la suppression des sauvegardes.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         /// <summary>
@@ -140,13 +138,13 @@ namespace EasySave
             if (sender != null)
             {
                 // Sert à naviguer vers la page AddBackUpJob
-                AddBackUpJob addBackUpJob = new AddBackUpJob();
+                AddEditBackUpJob addBackUpJob = new AddEditBackUpJob();
                 this.NavigationService.Navigate(addBackUpJob);
                 Button button = sender as Button;
                 if (button != null && button.DataContext is ModelJob selectedJob)
                 {
                     // Navigation vers la page de modification avec les données
-                    NavigationService.Navigate(new AddBackUpJob(selectedJob));
+                    NavigationService.Navigate(new AddEditBackUpJob(selectedJob));
                 }
             }
         }
