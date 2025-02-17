@@ -171,21 +171,37 @@ namespace EasySave
                     if (extensionsToEncrypt.Contains(fileInfo.Extension))
                     {
                         var fileManager = new FileManager(destPath, job.Key);
-                        int elapsedTime = fileManager.TransformFile();
+                        int encryptionTime = fileManager.TransformFile();
+                        var endTime = DateTime.Now;
+                        var transferTime = endTime - startTime;
+
+                        await Logger<ModelLog>.GetInstance().Log(new ModelLog
+                        {
+                            Timestamp = DateTime.Now,
+                            BackupName = job.Name,
+                            Source = newPath,
+                            Destination = destPath,
+                            Size = fileInfo.Length,
+                            EncryptionTime = encryptionTime,
+                            TransfertTime = transferTime
+                        });
+                    }
+                    else
+                    {
+                        var endTime = DateTime.Now;
+                        var transferTime = endTime - startTime;
+
+                        await Logger<ModelLog>.GetInstance().Log(new ModelLog
+                        {
+                            Timestamp = DateTime.Now,
+                            BackupName = job.Name,
+                            Source = newPath,
+                            Destination = destPath,
+                            Size = fileInfo.Length,
+                            TransfertTime = transferTime
+                        });
                     }
 
-                    var endTime = DateTime.Now;
-                    var transferTime = endTime - startTime;
-
-                    await Logger<ModelLog>.GetInstance().Log(new ModelLog
-                    {
-                        Timestamp = DateTime.Now,
-                        BackupName = job.Name,
-                        Source = newPath,
-                        Destination = destPath,
-                        Size = fileInfo.Length,
-                        TransfertTime = transferTime
-                    });
 
                     state.SourceFilePath = newPath;
                     state.TargetFilePath = destPath;
@@ -231,21 +247,37 @@ namespace EasySave
                         if (extensionsToEncrypt.Contains(fileInfo.Extension))
                         {
                             var fileManager = new FileManager(destPath, job.Key);
-                            int elapsedTime = fileManager.TransformFile();
+                            int encryptionTime = fileManager.TransformFile();
+                            var endTime = DateTime.Now;
+                            var transferTime = endTime - startTime;
+
+                            await Logger<ModelLog>.GetInstance().Log(new ModelLog
+                            {
+                                Timestamp = DateTime.Now,
+                                BackupName = job.Name,
+                                Source = newPath,
+                                Destination = destPath,
+                                Size = fileInfo.Length,
+                                EncryptionTime = encryptionTime,
+                                TransfertTime = transferTime
+                            });
+                        }
+                        else
+                        {
+                            var endTime = DateTime.Now;
+                            var transferTime = endTime - startTime;
+
+                            await Logger<ModelLog>.GetInstance().Log(new ModelLog
+                            {
+                                Timestamp = DateTime.Now,
+                                BackupName = job.Name,
+                                Source = newPath,
+                                Destination = destPath,
+                                Size = fileInfo.Length,
+                                TransfertTime = transferTime
+                            });
                         }
 
-                        var endTime = DateTime.Now;
-                        var transferTime = endTime - startTime;
-
-                        await Logger<ModelLog>.GetInstance().Log(new ModelLog
-                        {
-                            Timestamp = DateTime.Now,
-                            BackupName = job.Name,
-                            Source = newPath,
-                            Destination = destPath,
-                            Size = fileInfo.Length,
-                            TransfertTime = transferTime
-                        });
 
                         state.SourceFilePath = newPath;
                         state.TargetFilePath = destPath;
