@@ -150,6 +150,7 @@ namespace EasySave
             Directory.CreateDirectory(destDir);
 
             var backupStartTime = DateTime.Now;
+            var extensionsToEncrypt = new List<string> { ".txt", ".docx", ".jpg" }; // Extensions des fichiers à crypter
 
             if (job.Type == BackupTypes.Full)
             {
@@ -166,6 +167,12 @@ namespace EasySave
                     var startTime = DateTime.Now;
 
                     await Task.Run(() => File.Copy(newPath, destPath, true));
+
+                    if (extensionsToEncrypt.Contains(fileInfo.Extension))
+                    {
+                        var fileManager = new FileManager(destPath, job.Key);
+                        int elapsedTime = fileManager.TransformFile();
+                    }
 
                     var endTime = DateTime.Now;
                     var transferTime = endTime - startTime;
@@ -221,6 +228,12 @@ namespace EasySave
 
                         await Task.Run(() => File.Copy(newPath, destPath, true));
 
+                        if (extensionsToEncrypt.Contains(fileInfo.Extension))
+                        {
+                            var fileManager = new FileManager(destPath, job.Key);
+                            int elapsedTime = fileManager.TransformFile();
+                        }
+
                         var endTime = DateTime.Now;
                         var transferTime = endTime - startTime;
 
@@ -257,6 +270,7 @@ namespace EasySave
                 TransfertTime = totalBackupTime
             });
         }
+
 
         private void LoadConfigAsync()
         {
