@@ -29,10 +29,10 @@ namespace EasySave
 
         private BackupManager()
         {
-            Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "easysave"));
             LoadConfigAsync();
             LoadStatesAsync();
             SetCulture(Config.Language);
+            Logger<ModelLog>.GetInstance().Settings(Config.LogFormat, LogDirectory);
         }
 
         public static void SetCulture(string cultureName)
@@ -127,6 +127,7 @@ namespace EasySave
             }
 
             await SaveJSONAsync(Config, ConfigFilePath);
+            Logger<ModelLog>.GetInstance().Settings(Config.LogFormat, LogDirectory);
         }
 
         private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
@@ -169,15 +170,15 @@ namespace EasySave
                     var endTime = DateTime.Now;
                     var transferTime = endTime - startTime;
 
-                    //Logger<ModelLog>.GetInstance(Config.LogFormat, LogDirectory).Log(new ModelLog
-                    //{
-                    //    Timestamp = DateTime.Now,
-                    //    BackupName = job.Name,
-                    //    Source = newPath,
-                    //    Destination = destPath,
-                    //    Size = fileInfo.Length,
-                    //    TransfertTime = transferTime
-                    //});
+                    await Logger<ModelLog>.GetInstance().Log(new ModelLog
+                    {
+                        Timestamp = DateTime.Now,
+                        BackupName = job.Name,
+                        Source = newPath,
+                        Destination = destPath,
+                        Size = fileInfo.Length,
+                        TransfertTime = transferTime
+                    });
 
                     state.SourceFilePath = newPath;
                     state.TargetFilePath = destPath;
@@ -223,7 +224,7 @@ namespace EasySave
                         var endTime = DateTime.Now;
                         var transferTime = endTime - startTime;
 
-                        await Logger<ModelLog>.GetInstance(Config.LogFormat, LogDirectory).Log(new ModelLog
+                        await Logger<ModelLog>.GetInstance().Log(new ModelLog
                         {
                             Timestamp = DateTime.Now,
                             BackupName = job.Name,
@@ -246,7 +247,7 @@ namespace EasySave
             var totalBackupTime = backupEndTime - backupStartTime;
             long totalSize = Directory.GetFiles(destDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
 
-            await Logger<ModelLog>.GetInstance(Config.LogFormat, LogDirectory).Log(new ModelLog
+            await Logger<ModelLog>.GetInstance().Log(new ModelLog
             {
                 Timestamp = DateTime.Now,
                 BackupName = job.Name,
