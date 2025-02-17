@@ -1,4 +1,5 @@
 ﻿using EasySave.Models;
+using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,10 +13,22 @@ namespace EasySave
         private readonly ModelJob? Job = null;
         private int Index;
         public ModelConfig Config { get; private set; }
+        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public AddEditBackUpJob(ModelJob? job = null)
         {
             InitializeComponent();
-            TitleAddEditBackupJob.Text = "Ajouter un travail de sauvegarde";
+            // Change languages
+            BackupNameTextBlock.Text = ResourceManager.GetString("Prompt_JobName");
+            SourceDirectoryTextBlock.Text = ResourceManager.GetString("Prompt_SourceDirectory");
+            TargetDirectoryTextBlock.Text = ResourceManager.GetString("Prompt_TargetDirectory");
+            TypeTextBlock.Text = ResourceManager.GetString("Prompt_BackupType");
+            TitleAddEditBackupJob.Text = ResourceManager.GetString("Title_Add_Backup");
+            Button_Submit.Content = ResourceManager.GetString("Button_Submit");
+            Header_Saves_Name.Header = ResourceManager.GetString("Header_Saves_Name");
+            Header_Saves_Type.Header = ResourceManager.GetString("Header_Saves_Type");
+            Header_Saves_Size.Header = ResourceManager.GetString("Header_Saves_Size");
+            Header_Saves_Date.Header = ResourceManager.GetString("Header_Saves_Date");
+
             SavesList.Visibility = Visibility.Hidden;
             Job = job;
             if (job != null)
@@ -25,7 +38,7 @@ namespace EasySave
                 SourceDirectoryTextBox.Text = job.SourceDirectory;
                 TargetDirectoryTextBox.Text = job.TargetDirectory;
                 TypeComboBox.Text = job.Type.ToString();
-                TitleAddEditBackupJob.Text = "Modifier " + job.Name;
+                TitleAddEditBackupJob.Text = ResourceManager.GetString("Title_Edit_Backup") + job.Name;
                 SavesList.Visibility = Visibility.Visible;
             }
         }
@@ -39,16 +52,10 @@ namespace EasySave
                 double proportion3 = 0.20;  // 20% pour "Taille"
                 double proportion4 = 0.20;  // 20% pour "Date"
 
-                //double proportion5 = 0.1;   // 10% pour "Modifier"
-                //double proportion6 = 0.1;   // 10% pour "Etat"
-
-
                 gridView.Columns[0].Width = totalWidth * proportion1;
                 gridView.Columns[1].Width = totalWidth * proportion2;
                 gridView.Columns[2].Width = totalWidth * proportion3;
                 gridView.Columns[3].Width = totalWidth * proportion4;
-                //gridView.Columns[4].Width = totalWidth * proportion5;
-                //gridView.Columns[5].Width = totalWidth * proportion6;
             }
         }
         private void ConfirmationButton_Click(object sender, RoutedEventArgs e)

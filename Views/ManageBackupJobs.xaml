@@ -9,49 +9,49 @@
       Title="ManageBackupJobs">
 
     <Grid>
-        <TextBlock Text="Select the backups you want to modify or execute."
+        <TextBlock x:Name="ManageBackupJobsTitle" Text="Select the backups you want to modify or execute."
                    FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
         <StackPanel Orientation="Vertical">
             <DockPanel Margin="10,40,10,5">
                 <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged" SelectionMode="Extended">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Backup Name" Width="150">
+                            <GridViewColumn x:Name="Header_ManageBackupJobs_BackUp_Name"  Header="Backup Name" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Source Directory" Width="200">
+                            <GridViewColumn x:Name="Header_ManageBackupJobs_Source_Directory"  Header="Source Directory" Width="200">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding SourceDirectory}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Target Directory" Width="200">
+                            <GridViewColumn x:Name="Header_ManageBackupJobs_Target_Directory" Header="Target Directory" Width="200">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding TargetDirectory}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Type" Width="100">
+                            <GridViewColumn x:Name="Header_ManageBackupJobs_Type" Header="Type" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Type}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Modify" Width="100">
+                            <GridViewColumn x:Name="Header_ManageBackupJobs_Modify" Header="Modify" Width="100">
                                 <GridViewColumn.CellTemplate >
                                     <DataTemplate>
                                         <Button Content="Modify" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"  HorizontalAlignment="Center" VerticalAlignment="Center" Click="CreateBackupJob_Click"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="State" Width="100">
+                            <GridViewColumn x:Name="Header_ManageBackupJobs_State" Header="State" Width="100">
                                 <GridViewColumn.CellTemplate >
                                     <DataTemplate >
                                         <StackPanel>

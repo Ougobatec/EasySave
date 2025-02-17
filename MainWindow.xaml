@@ -4,7 +4,7 @@
         Title="EasySave" MinWidth="1000" MinHeight="450">
 
     <Grid>
-        
+
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
         <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom" Margin="0">
             <!-- Bouton Quitter en bas à droite -->
@@ -13,15 +13,14 @@
             HorizontalAlignment="Left" VerticalAlignment="Bottom"
             Margin="10,10,0,10"
             Click="CloseApp" Width="60"/>
-           
+
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
             <!-- Bouton Accueil -->
             <Button x:Name="HomeButton" Content="Accueil" Width="59" Height="23" 
-            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,10,0" Click="HomeButton_Click"/>
+            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0,10,0" Click="HomeButton_Click" RenderTransformOrigin="0.046,0.449"/>
             <!-- Bouton Paramètres -->
-            <Button x:Name="Settings" Content="Settings" Width="59" Height="23"
-            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,0" Click="Settings_Click"/>
+            <Button x:Name="Settings" Content="Settings" Width="78" Height="23" VerticalAlignment="Bottom" Margin="0,0,10,0" Click="Settings_Click"/>
             <!-- Bouton Logs -->
             <Button x:Name="Logs" Content="Logs" Width="59" Height="23"
             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,0" Click="Logs_Click"/>

@@ -61,6 +61,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Submit.
+        /// </summary>
+        internal static string Button_Submit {
+            get {
+                return ResourceManager.GetString("Button_Submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à A backup job with the same name already exists!.
         /// </summary>
         internal static string Error_DuplicateBackupJob {
@@ -124,6 +133,168 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Date.
+        /// </summary>
+        internal static string Header_Logs_Date {
+            get {
+                return ResourceManager.GetString("Header_Logs_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Name.
+        /// </summary>
+        internal static string Header_Logs_Name {
+            get {
+                return ResourceManager.GetString("Header_Logs_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Size.
+        /// </summary>
+        internal static string Header_Logs_Size {
+            get {
+                return ResourceManager.GetString("Header_Logs_Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Source Directory.
+        /// </summary>
+        internal static string Header_Logs_Source_Directory {
+            get {
+                return ResourceManager.GetString("Header_Logs_Source_Directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Target Directory.
+        /// </summary>
+        internal static string Header_Logs_Target_Directory {
+            get {
+                return ResourceManager.GetString("Header_Logs_Target_Directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Transfer time.
+        /// </summary>
+        internal static string Header_Logs_Transfer_Time {
+            get {
+                return ResourceManager.GetString("Header_Logs_Transfer_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à BackUp Name.
+        /// </summary>
+        internal static string Header_ManageBackupJobs_BackUp_Name {
+            get {
+                return ResourceManager.GetString("Header_ManageBackupJobs_BackUp_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Modify.
+        /// </summary>
+        internal static string Header_ManageBackupJobs_Modify {
+            get {
+                return ResourceManager.GetString("Header_ManageBackupJobs_Modify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Source Directory.
+        /// </summary>
+        internal static string Header_ManageBackupJobs_Source_Directory {
+            get {
+                return ResourceManager.GetString("Header_ManageBackupJobs_Source_Directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à State.
+        /// </summary>
+        internal static string Header_ManageBackupJobs_State {
+            get {
+                return ResourceManager.GetString("Header_ManageBackupJobs_State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Target Directory.
+        /// </summary>
+        internal static string Header_ManageBackupJobs_Target_Directory {
+            get {
+                return ResourceManager.GetString("Header_ManageBackupJobs_Target_Directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Type.
+        /// </summary>
+        internal static string Header_ManageBackupJobs_Type {
+            get {
+                return ResourceManager.GetString("Header_ManageBackupJobs_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Date.
+        /// </summary>
+        internal static string Header_Save_Date {
+            get {
+                return ResourceManager.GetString("Header_Save_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Name.
+        /// </summary>
+        internal static string Header_Saves_Name {
+            get {
+                return ResourceManager.GetString("Header_Saves_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Size.
+        /// </summary>
+        internal static string Header_Saves_Size {
+            get {
+                return ResourceManager.GetString("Header_Saves_Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Type.
+        /// </summary>
+        internal static string Header_Saves_Type {
+            get {
+                return ResourceManager.GetString("Header_Saves_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Language.
+        /// </summary>
+        internal static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select the backups you want to modify or execute..
+        /// </summary>
+        internal static string ManageBackupJobsTitle {
+            get {
+                return ResourceManager.GetString("ManageBackupJobsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Add a backup Job.
         /// </summary>
         internal static string Menu_AddBackupJob {
@@ -151,7 +322,7 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Change settings.
+        ///   Recherche une chaîne localisée semblable à Settings.
         /// </summary>
         internal static string Menu_ChangeSettings {
             get {
@@ -174,6 +345,24 @@ namespace EasySave.Resources {
         internal static string Menu_ExecuteBackups {
             get {
                 return ResourceManager.GetString("Menu_ExecuteBackups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Home.
+        /// </summary>
+        internal static string Menu_Home {
+            get {
+                return ResourceManager.GetString("Menu_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Logs.
+        /// </summary>
+        internal static string Menu_Logs {
+            get {
+                return ResourceManager.GetString("Menu_Logs", resourceCulture);
             }
         }
         
@@ -349,6 +538,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add a Backup job.
+        /// </summary>
+        internal static string Title_Add_Backup {
+            get {
+                return ResourceManager.GetString("Title_Add_Backup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à ----- Choose backups to execute (e.g., 1,2,3 or 1-3 or all) -----.
         /// </summary>
         internal static string Title_ChooseBackupJobsToExecute {
@@ -394,11 +592,38 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Modify.
+        /// </summary>
+        internal static string Title_Edit_Backup {
+            get {
+                return ResourceManager.GetString("Title_Edit_Backup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à ----- MENU -----.
         /// </summary>
         internal static string Title_Menu {
             get {
                 return ResourceManager.GetString("Title_Menu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Settings.
+        /// </summary>
+        internal static string Title_Settings {
+            get {
+                return ResourceManager.GetString("Title_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Type logs.
+        /// </summary>
+        internal static string Type_logs {
+            get {
+                return ResourceManager.GetString("Type_logs", resourceCulture);
             }
         }
     }

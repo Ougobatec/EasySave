@@ -16,42 +16,42 @@
                 <ListView x:Name="LogsListView" ItemsSource="{Binding LogEntries}" DockPanel.Dock="Top" SizeChanged="LogsListView_SizeChanged" SelectionMode="Extended">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Date" Width="80">
+                            <GridViewColumn x:Name="Header_Logs_Date" Header="Date" Width="80">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Timestamp}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Backup Name" Width="150">
+                            <GridViewColumn x:Name="Header_Logs_Name" Header="Backup Name" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding BackupName}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Source Directory" Width="175">
+                            <GridViewColumn x:Name="Header_Logs_Source_Directory" Header="Source Directory" Width="175">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Source}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Target Directory" Width="175">
+                            <GridViewColumn x:Name="Header_Logs_Target_Directory" Header="Target Directory" Width="175">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Destination}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Size" Width="100">
+                            <GridViewColumn x:Name="Header_Logs_Size" Header="Size" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Size}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Transfer Time" Width="100">
+                            <GridViewColumn x:Name="Header_Logs_Transfer_Time" Header="Transfer Time" Width="100">
                                 <GridViewColumn.CellTemplate >
                                     <DataTemplate>
                                         <TextBlock Text="{Binding TransfertTime}" TextAlignment="Left"/>

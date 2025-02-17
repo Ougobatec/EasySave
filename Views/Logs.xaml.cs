@@ -1,6 +1,7 @@
 ﻿using EasySave.Models;
 using Logger;
 using System.Collections.ObjectModel;
+using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,6 +12,7 @@ namespace EasySave
     /// </summary>
     public partial class Logs : Page
     {
+        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelLog> LogEntries { get; set; }
 
         public Logs()
@@ -18,6 +20,13 @@ namespace EasySave
             InitializeComponent();
             DataContext = this;
             DisplayLogs();
+            // Language changes
+            Header_Logs_Date.Header = ResourceManager.GetString("Header_Logs_Date");
+            Header_Logs_Name.Header = ResourceManager.GetString("Header_Logs_Name");
+            Header_Logs_Source_Directory.Header = ResourceManager.GetString("Header_Logs_Source_Directory");
+            Header_Logs_Target_Directory.Header = ResourceManager.GetString("Header_Logs_Target_Directory");
+            Header_Logs_Size.Header = ResourceManager.GetString("Header_Logs_Size");
+            Header_Logs_Transfer_Time.Header = ResourceManager.GetString("Header_Logs_Transfer_Time");
         }
 
         private void LogsListView_SizeChanged(object sender, SizeChangedEventArgs e)

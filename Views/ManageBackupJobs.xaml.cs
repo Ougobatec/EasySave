@@ -1,10 +1,10 @@
 ﻿using EasySave.Models;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-
 
 namespace EasySave
 {
@@ -22,6 +22,19 @@ namespace EasySave
             InitializeComponent();
             DataContext = this;
             DisplayBackupJobs();
+            // Language changes
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(BackupManager.GetInstance().Config.Language.ToString());
+            CreateBackupJobButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_AddBackupJob");
+            ExecuteBackUpsButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_ExecuteBackups");
+            DeleteBackUpsButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_DeleteBackupJob");
+            ManageBackupJobsTitle.Text = BackupManager.GetInstance().resourceManager.GetString("ManageBackupJobsTitle");
+
+            Header_ManageBackupJobs_BackUp_Name.Header = BackupManager.GetInstance().resourceManager.GetString("Header_ManageBackupJobs_BackUp_Name");
+            Header_ManageBackupJobs_Source_Directory.Header = BackupManager.GetInstance().resourceManager.GetString("Header_ManageBackupJobs_Source_Directory");
+            Header_ManageBackupJobs_Target_Directory.Header = BackupManager.GetInstance().resourceManager.GetString("Header_ManageBackupJobs_Target_Directory");
+            Header_ManageBackupJobs_Type.Header = BackupManager.GetInstance().resourceManager.GetString("Header_ManageBackupJobs_Type");
+            Header_ManageBackupJobs_Modify.Header = BackupManager.GetInstance().resourceManager.GetString("Header_ManageBackupJobs_Modify");
+            Header_ManageBackupJobs_State.Header = BackupManager.GetInstance().resourceManager.GetString("Header_ManageBackupJobs_State");
         }
 
         private void BackupJobsListView_SizeChanged(object sender, SizeChangedEventArgs e)

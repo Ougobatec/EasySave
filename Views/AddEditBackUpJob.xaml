@@ -29,12 +29,12 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock Text="Nom Sauvegarde" FontWeight="Bold"/>
+                <TextBlock x:Name="BackupNameTextBlock" Text="Nom Sauvegarde" FontWeight="Bold"/>
                 <TextBox x:Name="BackupNameTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock Text="Emplacement source" FontWeight="Bold"/>
+                <TextBlock x:Name="SourceDirectoryTextBlock" Text="Emplacement source" FontWeight="Bold"/>
                 <TextBox x:Name="SourceDirectoryTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
         </Grid>
@@ -47,12 +47,12 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock Text="Emplacement cible" FontWeight="Bold"/>
+                <TextBlock x:Name="TargetDirectoryTextBlock" Text="Emplacement cible" FontWeight="Bold"/>
                 <TextBox x:Name="TargetDirectoryTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock Text="Type" FontWeight="Bold"/>
+                <TextBlock x:Name="TypeTextBlock" Text="Type" FontWeight="Bold"/>
                 <ComboBox x:Name="TypeComboBox" Height="30" BorderBrush="Black" BorderThickness="1">
                     <ComboBoxItem Content="Full"/>
                     <ComboBoxItem Content="Differential"/>
@@ -61,7 +61,7 @@
         </Grid>
 
         <!-- Bouton Confirmer centré -->
-        <Button x:Name="ConfirmationButton" Content="Confirmer" Width="100" Height="25" 
+        <Button x:Name="Button_Submit" Content="Submit" Width="100" Height="25" 
                 Grid.Row="2" Margin="0,43,0,54"
                 HorizontalAlignment="Center" Click="ConfirmationButton_Click"/>
 
@@ -70,28 +70,28 @@
                 <ListView x:Name="SavesListView" ItemsSource="{Binding Saves}" DockPanel.Dock="Top" SizeChanged="SavesListView_SizeChanged" SelectionMode="Extended" Width="475">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Name" Width="175">
+                            <GridViewColumn x:Name="Header_Saves_Name" Header="Name" Width="175">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Type" Width="100">
+                            <GridViewColumn x:Name="Header_Saves_Type" Header="Type" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Type}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Size" Width="100">
+                            <GridViewColumn x:Name="Header_Saves_Size" Header="Size" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Size}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Header="Date" Width="100">
+                            <GridViewColumn x:Name="Header_Saves_Date" Header="Date" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Date}" TextAlignment="Left"/>

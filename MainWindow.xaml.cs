@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Resources;
+using System.Windows;
 
 namespace EasySave
 {
@@ -7,18 +9,29 @@ namespace EasySave
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static MainWindow MainWindow_Instance = null;
         public MainWindow()
         {
             try
             {
                 InitializeComponent();
+                MainWindow_Instance = this; // Stocke l'instance active de MainWindow
                 MainFrame.NavigationService.Navigate(new ManageBackupJobs()); // Charger la première page au démarrage
+                QuitButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Quit");
+                HomeButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Home");
+                Settings.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_ChangeSettings");
+                Logs.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Logs");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur lors du chargement : {ex.Message}");
             }
-        }   
+        }
+        public static MainWindow GetInstance()
+        {
+            MainWindow_Instance ??= new MainWindow();
+            return MainWindow_Instance;
+        }
         /// <summary>
         /// Go back to the main page
         /// </summary>
@@ -40,7 +53,7 @@ namespace EasySave
             settingsPage.Settings_Loaded();
         }
         /// <summary>
-        /// Go to the settings page
+        /// Go to the logs page
         /// </summary>
         private void Logs_Click(object sender, RoutedEventArgs e)
         {
@@ -54,6 +67,16 @@ namespace EasySave
             Application.Current.Shutdown();
             Environment.Exit(0); // Force la fermeture du processus
 
+        }
+        /// <summary>
+        /// Refresh the UI
+        /// </summary>
+        public void RefreshUI()
+        {
+            QuitButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Quit");
+            HomeButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Home");
+            Settings.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_ChangeSettings");
+            Logs.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Logs");
         }
     }
 }

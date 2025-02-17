@@ -9,15 +9,15 @@
       Title="Settings">
 
     <Grid>
-        <TextBlock Text="Paramètres" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+        <TextBlock x:Name="Title_Settings" Text="Paramètres" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,0"/>
 
-        <TextBlock Text="Type logs" HorizontalAlignment="Left" Margin="100,100,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="Type_logs" Text="Type logs" HorizontalAlignment="Left" Margin="100,100,0,0" VerticalAlignment="Top"/>
         <ComboBox Name="TypeLogsComboBox" HorizontalAlignment="Left" Margin="180,100,0,0" Width="120" VerticalAlignment="Top" SelectionChanged="Setting_Changed">
             <ComboBoxItem Content="json"/>
             <ComboBoxItem Content="xml"/>
         </ComboBox>
 
-        <TextBlock Text="Langage" HorizontalAlignment="Left" Margin="330,100,0,0" VerticalAlignment="Top"/>
+        <TextBlock x:Name="Language" Text="Langage" HorizontalAlignment="Left" Margin="330,100,0,0" VerticalAlignment="Top"/>
         <ComboBox Name="LanguageComboBox" HorizontalAlignment="Left" Margin="400,100,0,0" Width="120" VerticalAlignment="Top" SelectionChanged="Setting_Changed">
             <ComboBoxItem Content="fr"/>
             <ComboBoxItem Content="en"/>

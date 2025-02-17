@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Resources;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 
 namespace EasySave
 {
@@ -8,6 +11,7 @@ namespace EasySave
     /// </summary>
     public partial class Settings : Page
     {
+        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public Settings()
         {
             InitializeComponent();
@@ -35,6 +39,17 @@ namespace EasySave
                 if (button.Name == "LanguageComboBox")
                 {
                     BackupManager.GetInstance().ChangeSettingsAsync((button.SelectedItem as ComboBoxItem)?.Content.ToString(), null);
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(BackupManager.GetInstance().Config.Language.ToString());
+
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // Mise à jour des textes sur le thread principal
+                        MainWindow.GetInstance().RefreshUI();
+                        // Language Changes
+                        Type_logs.Text = ResourceManager.GetString("Type_logs");
+                        Language.Text = ResourceManager.GetString("Language");
+                        Title_Settings.Text = ResourceManager.GetString("Title_Settings");
+                    });
                 }
              }
         }
