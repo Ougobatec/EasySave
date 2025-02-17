@@ -33,7 +33,6 @@ namespace EasySave
                 double proportion2 = 0.3;  // 30% pour "Emplacement source"
                 double proportion3 = 0.2;  // 20% pour "Emplacement cible"
                 double proportion4 = 0.1;  // 10% pour "Type"
-
                 double proportion5 = 0.1;   // 10% pour "Modifier"
                 double proportion6 = 0.1;   // 10% pour "Etat"
 
@@ -88,6 +87,7 @@ namespace EasySave
                 MessageBox.Show("Une erreur est survenue lors de la suppression des sauvegardes.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         /// <summary>
         /// Execute all selected backUps
         /// </summary>
@@ -161,7 +161,6 @@ namespace EasySave
         private void DisplayBackupJobs()
         {
             BackupJobs = new ObservableCollection<ModelJob>(BackupManager.GetInstance().Config.BackupJobs);
-
         }
         
        

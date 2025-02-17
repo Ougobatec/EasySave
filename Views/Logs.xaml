@@ -13,34 +13,34 @@
             FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
         <StackPanel Orientation="Vertical">
             <DockPanel Margin="10,40,10,5">
-                <ListView x:Name="LogsListView" ItemsSource="{Binding Logs}" DockPanel.Dock="Top" SizeChanged="LogsListView_SizeChanged" SelectionMode="Extended">
+                <ListView x:Name="LogsListView" ItemsSource="{Binding LogEntries}" DockPanel.Dock="Top" SizeChanged="LogsListView_SizeChanged" SelectionMode="Extended">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Date" Width="80">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Date}" TextAlignment="Left"/>
+                                        <TextBlock Text="{Binding Timestamp}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="Backup Name" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
+                                        <TextBlock Text="{Binding BackupName}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="Source Directory" Width="175">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding SourceDirectory}" TextAlignment="Left"/>
+                                        <TextBlock Text="{Binding Source}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Header="Target Directory" Width="175">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TargetDirectory}" TextAlignment="Left"/>
+                                        <TextBlock Text="{Binding Destination}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -54,7 +54,7 @@
                             <GridViewColumn Header="Transfer Time" Width="100">
                                 <GridViewColumn.CellTemplate >
                                     <DataTemplate>
-                                       <TextBlock Text="{Binding Size}" TextAlignment="Left"/>
+                                        <TextBlock Text="{Binding TransfertTime}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
