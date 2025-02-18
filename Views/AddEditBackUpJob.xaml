@@ -18,7 +18,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TitleAddEditBackupJob" Text="Sauvegarde 1" FontSize="20" FontWeight="Bold"
+        <TextBlock x:Name="TitleAddEditBackupJob" Text="Create a BackUpJob" FontSize="20" FontWeight="Bold"
                    HorizontalAlignment="Center" Grid.Row="0" Margin="0,10"/>
 
         <!-- Première ligne avec deux labels et deux champs -->
@@ -65,42 +65,47 @@
                 Grid.Row="2" Margin="0,43,0,54"
                 HorizontalAlignment="Center" Click="ConfirmationButton_Click"/>
 
-        <StackPanel x:Name="SavesList" Orientation="Vertical" Margin="10,69,-10,1" Grid.Row="2">
+        <TextBlock x:Name="TitleSavesList" Text="Saves list" FontSize="20" FontWeight="Bold"
+                   HorizontalAlignment="Center" Grid.Row="2" Margin="0,84,0,10"/>
+
+        <StackPanel x:Name="SavesList" Orientation="Vertical" Margin="10,86,-10,100" Grid.Row="2" Grid.RowSpan="4">
             <DockPanel Margin="10,40,10,5">
-                <ListView x:Name="SavesListView" ItemsSource="{Binding Saves}" DockPanel.Dock="Top" SizeChanged="SavesListView_SizeChanged" SelectionMode="Extended" Width="475">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn x:Name="Header_Saves_Name" Header="Name" Width="175">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="Header_Saves_Type" Header="Type" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Type}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="Header_Saves_Size" Header="Size" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Size}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn x:Name="Header_Saves_Date" Header="Date" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Date}" TextAlignment="Left"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <DataGrid Name="SavesDataGrid" ItemsSource="{Binding SavesEntries}" AutoGenerateColumns="False" SizeChanged="SavesDataGrid_SizeChanged" IsReadOnly="True" SelectionUnit="Cell">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="Header_Saves_Date" Header="Horodatage" Binding="{Binding Timestamp}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="IsHitTestVisible" Value="True"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn x:Name="Header_Saves_Name" Header="BackUp name" Binding="{Binding BackupName}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="IsHitTestVisible" Value="True"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn x:Name="Header_Saves_Type" Header="Type" Binding="{Binding Source}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="IsHitTestVisible" Value="True"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn x:Name="Header_Saves_Size" Header="Taille" Binding="{Binding Size}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="IsHitTestVisible" Value="True"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
 
         </StackPanel>

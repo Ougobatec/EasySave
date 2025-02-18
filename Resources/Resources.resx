@@ -276,9 +276,6 @@
   <data name="Header_Saves_Size" xml:space="preserve">
     <value>Size</value>
   </data>
-  <data name="Header_Save_Date" xml:space="preserve">
-    <value>Date</value>
-  </data>
   <data name="Type_logs" xml:space="preserve">
     <value>Type logs</value>
   </data>
@@ -305,5 +302,11 @@
   </data>
   <data name="Title_Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Header_Saves_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="TitleSavesList" xml:space="preserve">
+    <value>Saves historic</value>
   </data>
 </root>

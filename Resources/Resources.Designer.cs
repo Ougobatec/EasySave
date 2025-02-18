@@ -243,9 +243,9 @@ namespace EasySave.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Date.
         /// </summary>
-        internal static string Header_Save_Date {
+        internal static string Header_Saves_Date {
             get {
-                return ResourceManager.GetString("Header_Save_Date", resourceCulture);
+                return ResourceManager.GetString("Header_Saves_Date", resourceCulture);
             }
         }
         
@@ -615,6 +615,15 @@ namespace EasySave.Resources {
         internal static string Title_Settings {
             get {
                 return ResourceManager.GetString("Title_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Saves historic.
+        /// </summary>
+        internal static string TitleSavesList {
+            get {
+                return ResourceManager.GetString("TitleSavesList", resourceCulture);
             }
         }
         
