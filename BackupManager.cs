@@ -8,6 +8,7 @@ using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
 using CryptoSoft;
+using EasySave.Sock;
 
 namespace EasySave
 {
@@ -24,6 +25,16 @@ namespace EasySave
         public static BackupManager GetInstance()
         {
             BackupManager_Instance ??= new BackupManager();
+
+            Server receveur = new  Sock.Server();
+            Client client = new Client();
+
+            //test socket pour livrable 3
+            //receveur.Demarage();
+            //client.Send();
+            
+
+
             return BackupManager_Instance;
         }
 
