@@ -12,7 +12,7 @@ namespace EasySave
     /// </summary>
     public partial class Logs : Page
     {
-        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelLog> LogEntries { get; set; }
 
         public Logs()

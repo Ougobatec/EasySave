@@ -6,7 +6,7 @@ namespace EasySave.Views
 {
     public class ViewCLI
     {
-        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         private bool exit = false;
 
         public void Run()
@@ -84,7 +84,7 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
-        private async Task UpdateBackupJob()
+        private static async Task UpdateBackupJob()
         {
             Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobToUpdate"));
             DisplayBackupJobs();
@@ -123,7 +123,7 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
-        private async Task ExecuteBackupJobs()
+        private static async Task ExecuteBackupJobs()
         {
             Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobsToExecute"));
             DisplayBackupJobs();
@@ -166,7 +166,7 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
-        private async Task DeleteBackupJob()
+        private static async Task DeleteBackupJob()
         {
             Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobToDelete"));
             DisplayBackupJobs();
@@ -176,7 +176,6 @@ namespace EasySave.Views
             {
                 try
                 {
-
                     await BackupManager.GetInstance().DeleteBackupJobAsync(index);
                     Console.WriteLine(ResourceManager.GetString("Message_BackupJobDeleted"), index);
                 }
@@ -193,7 +192,7 @@ namespace EasySave.Views
             ReturnToMenu();
         }
 
-        private async Task ChangeSettings()
+        private static async Task ChangeSettings()
         {
             string language = null;
             string logFormat = null;
@@ -233,7 +232,7 @@ namespace EasySave.Views
                         break;
 
                     case '3':
-                        await BackupManager.GetInstance().ChangeSettingsAsync(language, logFormat);
+                        await BackupManager.GetInstance().ChangeConfigAsync(language, logFormat);
                         Console.WriteLine(ResourceManager.GetString("Message_SettingsSaved"));
                         ReturnToMenu();
                         return;
@@ -245,7 +244,7 @@ namespace EasySave.Views
             }
         }
 
-        private async Task ExecuteBackupJobByIndex(int index)
+        private static async Task ExecuteBackupJobByIndex(int index)
         {
             if (index < 0 || index >= BackupManager.GetInstance().Config.BackupJobs.Count)
             {
@@ -255,7 +254,7 @@ namespace EasySave.Views
             await BackupManager.GetInstance().ExecuteBackupJobAsync(index);
         }
 
-        private void DisplayBackupJobs()
+        private static void DisplayBackupJobs()
         {
             Console.WriteLine();
             for (int i = 0; i < BackupManager.GetInstance().Config.BackupJobs.Count; i++)
@@ -280,7 +279,7 @@ namespace EasySave.Views
             return input;
         }
 
-        private BackupTypes GetValidBackupType()
+        private static BackupTypes GetValidBackupType()
         {
             while (true)
             {
@@ -297,7 +296,7 @@ namespace EasySave.Views
             }
         }
 
-        private void ReturnToMenu()
+        private static void ReturnToMenu()
         {
             Console.WriteLine("\n" + ResourceManager.GetString("Message_PressEnterToContinue"));
             Console.ReadLine();

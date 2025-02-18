@@ -13,7 +13,8 @@ namespace EasySave
         private readonly ModelJob? Job = null;
         private int Index;
         public ModelConfig Config { get; private set; }
-        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+        
         public AddEditBackUpJob(ModelJob? job = null)
         {
             InitializeComponent();

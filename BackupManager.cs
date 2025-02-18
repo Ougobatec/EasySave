@@ -29,17 +29,10 @@ namespace EasySave
 
         private BackupManager()
         {
-            LoadConfigAsync();
-            LoadStatesAsync();
+            LoadConfig();
+            LoadStates();
             SetCulture(Config.Language);
             Logger<ModelLog>.GetInstance().Settings(Config.LogFormat, LogDirectory);
-        }
-
-        public static void SetCulture(string cultureName)
-        {
-            CultureInfo culture = new(cultureName);
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
         }
 
         public async Task AddBackupJobAsync(ModelJob job)
@@ -113,7 +106,7 @@ namespace EasySave
             await SaveJSONAsync(BackupStates, StateFilePath);
         }
 
-        public async Task ChangeSettingsAsync(string language, string logFormat)
+        public async Task ChangeConfigAsync(string language, string logFormat)
         {
             if (!string.IsNullOrEmpty(language))
             {
@@ -128,16 +121,6 @@ namespace EasySave
 
             await SaveJSONAsync(Config, ConfigFilePath);
             Logger<ModelLog>.GetInstance().Settings(Config.LogFormat, LogDirectory);
-        }
-
-        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
-        {
-            state.State = newState;
-            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
-            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
-            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
-            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveJSONAsync(BackupStates, StateFilePath);
         }
 
         private async Task CopyDirectoryAsync(ModelJob job)
@@ -303,8 +286,17 @@ namespace EasySave
             });
         }
 
+        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
+        {
+            state.State = newState;
+            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
+            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
+            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
+            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
+            await SaveJSONAsync(BackupStates, StateFilePath);
+        }
 
-        private void LoadConfigAsync()
+        private void LoadConfig()
         {
             if (File.Exists(ConfigFilePath))
             {
@@ -334,11 +326,11 @@ namespace EasySave
             Config.BackupJobs ??= [];
         }
 
-        private void LoadStatesAsync()
+        private void LoadStates()
         {
             if (File.Exists(StateFilePath))
             {
-                var json =  File.ReadAllText(StateFilePath);
+                var json = File.ReadAllText(StateFilePath);
                 BackupStates = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
             }
         }
@@ -353,6 +345,13 @@ namespace EasySave
 
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync(filePath, json);
+        }
+
+        private static void SetCulture(string cultureName)
+        {
+            CultureInfo culture = new(cultureName);
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
         }
 
         private static string GenerateKey(int bits)

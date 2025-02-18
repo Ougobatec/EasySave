@@ -11,7 +11,8 @@ namespace EasySave
     /// </summary>
     public partial class Settings : Page
     {
-        private ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+
         public Settings()
         {
             InitializeComponent();
@@ -30,15 +31,15 @@ namespace EasySave
         /// </summary>
         private void Setting_Changed(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox button = sender as ComboBox;
-            if (button != null) {
+            if (sender is ComboBox button)
+            {
                 if (button.Name == "TypeLogsComboBox")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync(null, (button.SelectedItem as ComboBoxItem)?.Content.ToString());
+                    BackupManager.GetInstance().ChangeConfigAsync(null, (button.SelectedItem as ComboBoxItem)?.Content.ToString());
                 }
                 if (button.Name == "LanguageComboBox")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync((button.SelectedItem as ComboBoxItem)?.Content.ToString(), null);
+                    BackupManager.GetInstance().ChangeConfigAsync((button.SelectedItem as ComboBoxItem)?.Content.ToString(), null);
                     Thread.CurrentThread.CurrentUICulture = new CultureInfo(BackupManager.GetInstance().Config.Language.ToString());
 
                     Application.Current.Dispatcher.Invoke(() =>
@@ -51,7 +52,7 @@ namespace EasySave
                         Title_Settings.Text = ResourceManager.GetString("Title_Settings");
                     });
                 }
-             }
+            }
         }
     }
 }
