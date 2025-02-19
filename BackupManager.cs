@@ -164,7 +164,7 @@ namespace EasySave
                             Source = newPath,
                             Destination = destPath,
                             Size = fileInfo.Length,
-                            EncryptionTime = encryptionTime,
+                            EncryptionTime = TimeSpan.FromMilliseconds(encryptionTime),
                             TransfertTime = transferTime
                         });
                     }
@@ -238,7 +238,7 @@ namespace EasySave
                                 Source = newPath,
                                 Destination = destPath,
                                 Size = fileInfo.Length,
-                                EncryptionTime = encryptionTime,
+                                EncryptionTime = TimeSpan.FromMilliseconds(encryptionTime),
                                 TransfertTime = transferTime
                             });
                         }

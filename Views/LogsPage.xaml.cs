@@ -37,12 +37,14 @@ namespace EasySave.Views
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
-            Header_Logs_Date.Header = ResourceManager.GetString("Header_Logs_Date");
-            Header_Logs_Name.Header = ResourceManager.GetString("Header_Logs_Name");
-            Header_Logs_Source_Directory.Header = ResourceManager.GetString("Header_Logs_Source_Directory");
-            Header_Logs_Target_Directory.Header = ResourceManager.GetString("Header_Logs_Target_Directory");
-            Header_Logs_Size.Header = ResourceManager.GetString("Header_Logs_Size");
-            Header_Logs_Transfer_Time.Header = ResourceManager.GetString("Header_Logs_Transfer_Time");
+            Title_Logs.Text = ResourceManager.GetString("Logs_Title");
+            Header_Date.Header = ResourceManager.GetString("Logs_Header_Date");
+            Header_Name.Header = ResourceManager.GetString("Logs_Header_Name");
+            Header_SourceDirectory.Header = ResourceManager.GetString("Logs_Header_SourceDirectory");
+            Header_TargetDirectory.Header = ResourceManager.GetString("Logs_Header_TargetDirectory");
+            Header_Size.Header = ResourceManager.GetString("Logs_Header_Size");
+            Header_EncryptionTime.Header = ResourceManager.GetString("Logs_Header_EncryptionTime");
+            Header_TransferTime.Header = ResourceManager.GetString("Logs_Header_TransferTime");
             DisplayLogs();
         }
 
@@ -50,13 +52,14 @@ namespace EasySave.Views
         {
             if (sender is DataGrid dataGrid)
             {
-                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth; // Largeur disponible
-                dataGrid.Columns[0].Width = totalWidth * 0.1; // 10% pour "Horodatage"
-                dataGrid.Columns[1].Width = totalWidth * 0.1; // 10% pour "Nom sauvegarde"
-                dataGrid.Columns[2].Width = totalWidth * 0.3; // 30% pour "Emplacement source"
-                dataGrid.Columns[3].Width = totalWidth * 0.3; // 30% pour "Emplacement cible"
-                dataGrid.Columns[4].Width = totalWidth * 0.1; // 10% pour "Taille"
-                dataGrid.Columns[5].Width = totalWidth * 0.1; // 10% pour "Temps de transfert"
+                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
+                dataGrid.Columns[0].Width = totalWidth * 0.1;  // 10% pour "Horodatage"
+                dataGrid.Columns[1].Width = totalWidth * 0.2;  // 10% pour "Nom sauvegarde"
+                dataGrid.Columns[2].Width = totalWidth * 0.2;  // 30% pour "Emplacement source"
+                dataGrid.Columns[3].Width = totalWidth * 0.2;  // 30% pour "Emplacement cible"
+                dataGrid.Columns[4].Width = totalWidth * 0.1;  // 10% pour "Taille"
+                dataGrid.Columns[5].Width = totalWidth * 0.1;  // 10% pour "Temps de cryptage"
+                dataGrid.Columns[6].Width = totalWidth * 0.1;  // 10% pour "Temps de transfert"
             }
         }
 

@@ -43,12 +43,12 @@ namespace EasySave.Views
             if (BackupJobsListView.View is GridView gridView)
             {
                 double totalWidth = BackupJobsListView.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                gridView.Columns[0].Width = totalWidth * 0.2;   // 20% pour "Nom de sauvegarde"
-                gridView.Columns[1].Width = totalWidth * 0.25;  // 25% pour "Répertoire source"
-                gridView.Columns[2].Width = totalWidth * 0.25;  // 25% pour "Répertoire cible"
-                gridView.Columns[3].Width = totalWidth * 0.1;   // 10% pour "Type"
-                gridView.Columns[4].Width = totalWidth * 0.1;   // 10% pour "Modifier"
-                gridView.Columns[5].Width = totalWidth * 0.1;   // 10% pour "Etat"
+                gridView.Columns[0].Width = totalWidth * 0.2;  // 20% pour "Nom de sauvegarde"
+                gridView.Columns[1].Width = totalWidth * 0.25; // 25% pour "Répertoire source"
+                gridView.Columns[2].Width = totalWidth * 0.25; // 25% pour "Répertoire cible"
+                gridView.Columns[3].Width = totalWidth * 0.1;  // 10% pour "Type"
+                gridView.Columns[4].Width = totalWidth * 0.1;  // 10% pour "Modifier"
+                gridView.Columns[5].Width = totalWidth * 0.1;  // 10% pour "Etat"
             }
         }
 

@@ -9,7 +9,7 @@ namespace EasySave.Models
         public string Source { get; set; } = string.Empty;
         public string Destination { get; set; } = string.Empty;
         public long Size { get; set; }
-        public int EncryptionTime { get; set; }
+        public TimeSpan EncryptionTime { get; set; }
         public TimeSpan TransfertTime { get; set; }
     }
 }
