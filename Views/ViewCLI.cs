@@ -55,7 +55,7 @@ namespace EasySave.Views
             }
         }
 
-        private async Task AddBackupJob()
+        private static async Task AddBackupJob()
         {
             Console.WriteLine(ResourceManager.GetString("Title_ChooseBackupJobToAdd"));
             string name = GetValidInput(ResourceManager.GetString("Prompt_JobName"), ResourceManager.GetString("Error_Empty"));
@@ -90,7 +90,7 @@ namespace EasySave.Views
             DisplayBackupJobs();
             Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
             var input = Console.ReadLine();
-            if (int.TryParse(input, out int index) && index >= 0 && index < BackupManager.GetInstance().Config.BackupJobs.Count)
+            if (int.TryParse(input, out int index) && index >= 0 && index < BackupManager.GetInstance().JsonConfig.BackupJobs.Count)
             {
                 string name = GetValidInput(ResourceManager.GetString("Prompt_JobName"), ResourceManager.GetString("Error_Empty"));
                 string sourceDirectory = GetValidInput(ResourceManager.GetString("Prompt_SourceDirectory"), ResourceManager.GetString("Error_Empty"));
@@ -131,7 +131,7 @@ namespace EasySave.Views
             var input = Console.ReadLine();
             if (input.Equals("all", StringComparison.CurrentCultureIgnoreCase))
             {
-                for (int i = 0; i < BackupManager.GetInstance().Config.BackupJobs.Count; i++)
+                for (int i = 0; i < BackupManager.GetInstance().JsonConfig.BackupJobs.Count; i++)
                 {
                     await ExecuteBackupJobByIndex(i);
                 }
@@ -172,7 +172,7 @@ namespace EasySave.Views
             DisplayBackupJobs();
             Console.Write("\n" + ResourceManager.GetString("Prompt_ChooseOption"));
             var input = Console.ReadLine();
-            if (int.TryParse(input, out int index) && index >= 0 && index < BackupManager.GetInstance().Config.BackupJobs.Count)
+            if (int.TryParse(input, out int index) && index >= 0 && index < BackupManager.GetInstance().JsonConfig.BackupJobs.Count)
             {
                 try
                 {
@@ -232,7 +232,7 @@ namespace EasySave.Views
                         break;
 
                     case '3':
-                        await BackupManager.GetInstance().ChangeConfigAsync(language, logFormat);
+                        await BackupManager.GetInstance().ChangeSettingsAsync(language, logFormat);
                         Console.WriteLine(ResourceManager.GetString("Message_SettingsSaved"));
                         ReturnToMenu();
                         return;
@@ -246,7 +246,7 @@ namespace EasySave.Views
 
         private static async Task ExecuteBackupJobByIndex(int index)
         {
-            if (index < 0 || index >= BackupManager.GetInstance().Config.BackupJobs.Count)
+            if (index < 0 || index >= BackupManager.GetInstance().JsonConfig.BackupJobs.Count)
             {
                 Console.WriteLine(string.Format(ResourceManager.GetString("Error_InvalidIndex"), index));
                 return;
@@ -257,9 +257,9 @@ namespace EasySave.Views
         private static void DisplayBackupJobs()
         {
             Console.WriteLine();
-            for (int i = 0; i < BackupManager.GetInstance().Config.BackupJobs.Count; i++)
+            for (int i = 0; i < BackupManager.GetInstance().JsonConfig.BackupJobs.Count; i++)
             {
-                var job = BackupManager.GetInstance().Config.BackupJobs[i];
+                var job = BackupManager.GetInstance().JsonConfig.BackupJobs[i];
                 Console.WriteLine(string.Format(ResourceManager.GetString("Message_BackupJobDetails"), i, job.Name, job.SourceDirectory, job.TargetDirectory, job.Type));
             }
         }

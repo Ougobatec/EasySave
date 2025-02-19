@@ -2,74 +2,63 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Resources;
-using System.Text.Json;
 using System.Security.Cryptography;
+using System.Text.Json;
+using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
-using CryptoSoft;
-using EasySave.Sock;
 
 namespace EasySave
 {
     public class BackupManager
     {
         public ResourceManager resourceManager = new("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
-        public ModelConfig Config { get; private set; }
-        private List<ModelState> BackupStates = [];
-        private static BackupManager BackupManager_Instance = null;
+        public ModelConfig JsonConfig { get; private set; } = new ModelConfig();
+        public List<ModelState> JsonState { get; private set; } = [];
+        private static BackupManager? BackupManager_Instance;
         private static readonly string ConfigFilePath = "Config\\config.json";
         private static readonly string StateFilePath = "Config\\state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
-
-        public static BackupManager GetInstance()
-        {
-            BackupManager_Instance ??= new BackupManager();
-
-            Server receveur = new  Sock.Server();
-            Client client = new Client();
-
-            //test socket pour livrable 3
-            //receveur.Demarage();
-            //client.Send();
-            
-
-
-            return BackupManager_Instance;
-        }
 
         private BackupManager()
         {
             LoadConfig();
             LoadStates();
-            SetCulture(Config.Language);
-            Logger<ModelLog>.GetInstance().Settings(Config.LogFormat, LogDirectory);
+            SetCulture(JsonConfig.Language);
+            Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
+        }
+
+        public static BackupManager GetInstance()
+        {
+            BackupManager_Instance ??= new BackupManager();
+            return BackupManager_Instance;
         }
 
         public async Task AddBackupJobAsync(ModelJob job)
         {
-            if (Config.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
+            if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
             job.Key = GenerateKey(64);
-            Config.BackupJobs.Add(job);
-            BackupStates.Add(new ModelState { Name = job.Name });
-            await SaveJSONAsync(Config, ConfigFilePath);
-            await SaveJSONAsync(BackupStates, StateFilePath);
+            JsonConfig.BackupJobs.Add(job);
+            JsonState.Add(new ModelState { Name = job.Name });
+            await SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await SaveJsonAsync(JsonState, StateFilePath);
         }
 
         public async Task UpdateBackupJobAsync(ModelJob updatedJob, int index)
         {
-            var existingJob = Config.BackupJobs[index];
+            var existingJob = JsonConfig.BackupJobs[index];
 
-            if (Config.BackupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
+            if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
                 throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
             }
 
-            var state = BackupStates.FirstOrDefault(s => s.Name == existingJob.Name);
+            var state = JsonState.FirstOrDefault(s => s.Name == existingJob.Name);
             if (state != null)
             {
                 state.Name = updatedJob.Name;
@@ -80,14 +69,14 @@ namespace EasySave
             existingJob.TargetDirectory = updatedJob.TargetDirectory;
             existingJob.Type = updatedJob.Type;
 
-            await SaveJSONAsync(Config, ConfigFilePath);
-            await SaveJSONAsync(BackupStates, StateFilePath);
+            await SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await SaveJsonAsync(JsonState, StateFilePath);
         }
 
         public async Task ExecuteBackupJobAsync(int index)
         {
-            var job = Config.BackupJobs[index];
-            var state = BackupStates.FirstOrDefault(s => s.Name == job.Name);
+            var job = JsonConfig.BackupJobs[index];
+            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
 
             if (!Directory.Exists(job.SourceDirectory))
             {
@@ -104,39 +93,39 @@ namespace EasySave
 
         public async Task DeleteBackupJobAsync(int index)
         {
-            var job = Config.BackupJobs[index];
-            Config.BackupJobs.RemoveAt(index);
+            var job = JsonConfig.BackupJobs[index];
+            JsonConfig.BackupJobs.RemoveAt(index);
 
-            var state = BackupStates.FirstOrDefault(s => s.Name == job.Name);
+            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
             if (state != null)
             {
-                BackupStates.Remove(state);
+                JsonState.Remove(state);
             }
 
-            await SaveJSONAsync(Config, ConfigFilePath);
-            await SaveJSONAsync(BackupStates, StateFilePath);
+            await SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await SaveJsonAsync(JsonState, StateFilePath);
         }
 
-        public async Task ChangeConfigAsync(string language, string logFormat)
+        public async Task ChangeSettingsAsync(string? language = null, string? logFormat = null)
         {
             if (!string.IsNullOrEmpty(language))
             {
-                Config.Language = language;
+                JsonConfig.Language = language;
                 SetCulture(language);
             }
 
             if (!string.IsNullOrEmpty(logFormat))
             {
-                Config.LogFormat = logFormat;
+                JsonConfig.LogFormat = logFormat;
+                Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
             }
 
-            await SaveJSONAsync(Config, ConfigFilePath);
-            Logger<ModelLog>.GetInstance().Settings(Config.LogFormat, LogDirectory);
+            await SaveJsonAsync(JsonConfig, ConfigFilePath);
         }
 
         private async Task CopyDirectoryAsync(ModelJob job)
         {
-            var state = BackupStates.FirstOrDefault(s => s.Name == job.Name);
+            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
             string sourceDir = job.SourceDirectory;
             string baseDestDir = job.TargetDirectory;
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -144,11 +133,10 @@ namespace EasySave
             Directory.CreateDirectory(destDir);
 
             var backupStartTime = DateTime.Now;
-            var extensionsToEncrypt = new List<string> { ".txt", ".docx", ".jpg" }; // Extensions des fichiers à crypter
+            var extensionsToEncrypt = new List<string> { ".txt", ".docx", ".jpg" };
 
             if (job.Type == BackupTypes.Full)
             {
-                // Sauvegarde complète : copier tous les fichiers
                 foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
                 {
                     Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
@@ -201,15 +189,13 @@ namespace EasySave
                     state.TargetFilePath = destPath;
                     state.NbFilesLeftToDo--;
                     state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                    await SaveJSONAsync(BackupStates, StateFilePath);
+                    await SaveJsonAsync(JsonState, StateFilePath);
                 }
             }
             else if (job.Type == BackupTypes.Differential)
             {
-                // Trouver tous les sous-dossiers de sauvegarde
                 var backupDirs = Directory.GetDirectories(baseDestDir).OrderBy(d => d).ToList();
 
-                // Sauvegarde différentielle : copier uniquement les fichiers modifiés ou nouveaux
                 foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
                 {
                     Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
@@ -277,7 +263,7 @@ namespace EasySave
                         state.TargetFilePath = destPath;
                         state.NbFilesLeftToDo--;
                         state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                        await SaveJSONAsync(BackupStates, StateFilePath);
+                        await SaveJsonAsync(JsonState, StateFilePath);
                     }
                 }
             }
@@ -304,7 +290,7 @@ namespace EasySave
             state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
             state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
             state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveJSONAsync(BackupStates, StateFilePath);
+            await SaveJsonAsync(JsonState, StateFilePath);
         }
 
         private void LoadConfig()
@@ -314,39 +300,44 @@ namespace EasySave
                 try
                 {
                     var json = File.ReadAllText(ConfigFilePath);
-                    Config = JsonSerializer.Deserialize<ModelConfig>(json, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true,
-                        ReadCommentHandling = JsonCommentHandling.Skip,
-                        AllowTrailingCommas = true
-                    }) ?? new ModelConfig();
+                    JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();
                 }
-                catch (JsonException ex)
+                catch (JsonException)
                 {
-                    Console.WriteLine($"Error deserializing JSON: {ex.Message}");
-                    Config = new ModelConfig();
+                    JsonConfig = new ModelConfig();
                 }
             }
             else
             {
-                Config = new ModelConfig();
+                JsonConfig = new ModelConfig();
             }
 
-            Config.Language ??= "en";
-            Config.LogFormat ??= "json";
-            Config.BackupJobs ??= [];
+            JsonConfig.Language ??= "en";
+            JsonConfig.LogFormat ??= "json";
+            JsonConfig.BackupJobs ??= [];
         }
 
         private void LoadStates()
         {
             if (File.Exists(StateFilePath))
             {
-                var json = File.ReadAllText(StateFilePath);
-                BackupStates = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
+                try
+                {
+                    var json = File.ReadAllText(StateFilePath);
+                    JsonState = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
+                }
+                catch (JsonException)
+                {
+                    JsonState = [];
+                }
+            }
+            else
+            {
+                JsonState = [];
             }
         }
 
-        private static async Task SaveJSONAsync<T>(T data, string filePath)
+        private static async Task SaveJsonAsync<T>(T data, string filePath)
         {
             var directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
@@ -363,11 +354,12 @@ namespace EasySave
             CultureInfo culture = new(cultureName);
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
         }
 
         private static string GenerateKey(int bits)
         {
-            byte[] key = new byte[bits/8];
+            byte[] key = new byte[bits / 8];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(key);

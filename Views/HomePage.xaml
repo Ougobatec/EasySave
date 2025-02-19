@@ -1,59 +1,65 @@
-﻿<Page x:Class="EasySave.ManageBackupJobs"
+﻿<Page x:Class="EasySave.Views.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:EasySave"
-      mc:Ignorable="d"
+      xmlns:local="clr-namespace:EasySave.Views"
+      mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ManageBackupJobs">
+      Title="HomePage">
+    <Page.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Page.Resources>
 
     <Grid>
-        <TextBlock x:Name="ManageBackupJobsTitle" Text="Select the backups you want to modify or execute."
-                   FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
-        <StackPanel Orientation="Vertical">
-            <DockPanel Margin="10,40,10,5">
+        <TextBlock x:Name="Title_Home" Text="Select the backups to modify or execute" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+
+        <StackPanel Margin="0,60,0,0">
+            <DockPanel Margin="10,0,10,0">
                 <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged" SelectionMode="Extended">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn x:Name="Header_ManageBackupJobs_BackUp_Name"  Header="Backup Name" Width="150">
+                            <GridViewColumn x:Name="Header_BackupName" Header="Backup Name" Width="150">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn x:Name="Header_ManageBackupJobs_Source_Directory"  Header="Source Directory" Width="200">
+                            <GridViewColumn x:Name="Header_SourceDirectory"  Header="Source Directory" Width="200">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding SourceDirectory}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn x:Name="Header_ManageBackupJobs_Target_Directory" Header="Target Directory" Width="200">
+                            <GridViewColumn x:Name="Header_TargetDirectory" Header="Target Directory" Width="200">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding TargetDirectory}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn x:Name="Header_ManageBackupJobs_Type" Header="Type" Width="100">
+                            <GridViewColumn x:Name="Header_Type" Header="Type" Width="100">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Type}" TextAlignment="Left"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn x:Name="Header_ManageBackupJobs_Modify" Header="Modify" Width="100">
-                                <GridViewColumn.CellTemplate >
+                            <GridViewColumn x:Name="Header_Modify" Header="Modify" Width="100">
+                                <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Modify" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Padding="5,2"  HorizontalAlignment="Center" VerticalAlignment="Center" Click="CreateBackupJob_Click"/>
+                                        <Button Content="Modify" Command="{Binding DataContext.ModifyCommand}" CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}" Click="Button_Create_Click"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn x:Name="Header_ManageBackupJobs_State" Header="State" Width="100">
-                                <GridViewColumn.CellTemplate >
-                                    <DataTemplate >
+                            <GridViewColumn x:Name="Header_State" Header="State" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
                                         <StackPanel>
                                             <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progression}" Width="100" Height="20" />
                                             <TextBlock Text="{Binding Progression, StringFormat={}{0}%}" HorizontalAlignment="Center" />
@@ -65,19 +71,16 @@
                     </ListView.View>
                 </ListView>
             </DockPanel>
-            <StackPanel>
-                
-            </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5">
-                <Button x:Name="CreateBackupJobButton" Content="Create Backup" Background="Blue" Foreground="White" Padding="5,2" Margin="5,10" Click="CreateBackupJob_Click"/>
-                <Button x:Name="ExecuteBackUpsButton" Content="Execute Backups" Background="Green" Foreground="White" Padding="5,2" Margin="5,10" Click="ExecuteBackUps_Click"/>
-                <Button x:Name="DeleteBackUpsButton" Content="Delete Backups" Background="Red" Foreground="White" Padding="5,2" Margin="5,10" Click="DeleteBackUps_Click"/>
+                <Button x:Name="Button_Create" Content="Create backup" Background="Blue" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Create_Click"/>
+                <Button x:Name="Button_Execute" Content="Execute backups" Background="Green" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Execute_Click"/>
+                <Button x:Name="Button_Delete" Content="Delete backups" Background="Red" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Delete_Click"/>
             </StackPanel>
         </StackPanel>
 
         <!-- Error display area -->
         <TextBox Name="ErrorTextBox" Height="30" Margin="10,0,10,50" Background="LightCoral" Foreground="White"
-                 Visibility="Collapsed" IsReadOnly="True" HorizontalAlignment="Stretch"/>
+         Visibility="Collapsed" IsReadOnly="True" HorizontalAlignment="Stretch"/>
     </Grid>
 </Page>

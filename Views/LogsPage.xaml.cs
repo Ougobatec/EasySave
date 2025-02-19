@@ -1,21 +1,33 @@
-﻿using EasySave.Models;
-using Logger;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Resources;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using EasySave.Models;
+using Logger;
 
-namespace EasySave
+namespace EasySave.Views
 {
     /// <summary>
-    /// Logique d'interaction pour Page1.xaml
+    /// Logique d'interaction pour LogsPage.xaml
     /// </summary>
-    public partial class Logs : Page
+    public partial class LogsPage : Page
     {
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelLog> LogEntries { get; set; }
 
-        public Logs()
+        public LogsPage()
         {
             InitializeComponent();
             DataContext = this;

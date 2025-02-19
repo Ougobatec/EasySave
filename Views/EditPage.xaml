@@ -1,14 +1,14 @@
-﻿<Page x:Class="EasySave.AddEditBackUpJob"
+﻿<Page x:Class="EasySave.Views.EditPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:EasySave"
+      xmlns:local="clr-namespace:EasySave.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AddEditBackUpJob">
+      Title="EditPage">
 
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -18,8 +18,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TitleAddEditBackupJob" Text="Create a BackUpJob" FontSize="20" FontWeight="Bold"
-                   HorizontalAlignment="Center" Grid.Row="0" Margin="0,10"/>
+        <TextBlock x:Name="Title_Edit" Text="Create a backupJob" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
         <!-- Première ligne avec deux labels et deux champs -->
         <Grid Grid.Row="1" Margin="0,10,0,30">
@@ -62,11 +61,11 @@
 
         <!-- Bouton Confirmer centré -->
         <Button x:Name="Button_Submit" Content="Submit" Width="100" Height="25" 
-                Grid.Row="2" Margin="0,43,0,54"
-                HorizontalAlignment="Center" Click="ConfirmationButton_Click"/>
+            Grid.Row="2" Margin="0,43,0,54"
+            HorizontalAlignment="Center" Click="ConfirmationButton_Click"/>
 
         <TextBlock x:Name="TitleSavesList" Text="Saves list" FontSize="20" FontWeight="Bold"
-                   HorizontalAlignment="Center" Grid.Row="2" Margin="0,84,0,10"/>
+               HorizontalAlignment="Center" Grid.Row="2" Margin="0,84,0,10"/>
 
         <StackPanel x:Name="SavesList" Orientation="Vertical" Margin="10,86,-10,100" Grid.Row="2" Grid.RowSpan="4">
             <DockPanel Margin="10,40,10,5">
@@ -112,6 +111,6 @@
 
         <!-- Error display area -->
         <TextBox Name="ErrorTextBox" Height="30" Margin="10,0,10,50" Background="LightCoral" Foreground="White"
-             Visibility="Collapsed" IsReadOnly="True" HorizontalAlignment="Stretch"/>
+         Visibility="Collapsed" IsReadOnly="True" HorizontalAlignment="Stretch"/>
     </Grid>
 </Page>

@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System.Configuration;
 using System.Resources;
 using System.Windows;
+using EasySave.Views;
+using Microsoft.Windows.Themes;
 
 namespace EasySave
 {
@@ -9,74 +11,51 @@ namespace EasySave
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static MainWindow MainWindow_Instance = null;
+        private static MainWindow? MainWindow_Instance;
+        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+
         public MainWindow()
         {
-            try
-            {
-                InitializeComponent();
-                MainWindow_Instance = this; // Stocke l'instance active de MainWindow
-                MainFrame.NavigationService.Navigate(new ManageBackupJobs()); // Charger la première page au démarrage
-                QuitButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Quit");
-                HomeButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Home");
-                Settings.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_ChangeSettings");
-                Logs.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Logs");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erreur lors du chargement : {ex.Message}");
-            }
+            InitializeComponent();
+            MainWindow_Instance = this;
+
+            Refresh();
+            MainFrame.NavigationService.Navigate(new HomePage());
         }
+
         public static MainWindow GetInstance()
         {
             MainWindow_Instance ??= new MainWindow();
             return MainWindow_Instance;
         }
-        /// <summary>
-        /// Go back to the main page
-        /// </summary>
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.NavigationService.Navigate(new ManageBackupJobs());
-        }
-        /// <summary>
-        /// Go to the settings page
-        /// </summary>
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            //MainFrame.NavigationService.Navigate(new Settings());
 
-            var settingsPage = new Settings();
-            MainFrame.NavigationService.Navigate(settingsPage);
-
-            // remplissage après que la navigation soit terminée
-            settingsPage.Settings_Loaded();
-        }
-        /// <summary>
-        /// Go to the logs page
-        /// </summary>
-        private void Logs_Click(object sender, RoutedEventArgs e)
+        public void Refresh()
         {
-            MainFrame.NavigationService.Navigate(new Logs());
+            Button_Quit.Content = ResourceManager.GetString("Main_Button-Quit");
+            Button_Home.Content = ResourceManager.GetString("Main_Button-Home");
+            Button_Settings.Content = ResourceManager.GetString("Main_Button-Settings");
+            Button_Logs.Content = ResourceManager.GetString("Main_Button-Logs");
         }
-        /// <summary>
-        /// Close the software
-        /// </summary>
-        private void CloseApp(object sender, RoutedEventArgs e)
+
+        private void Button_Home_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new HomePage());
+        }
+
+        private void Button_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new SettingsPage());
+        }
+
+        private void Button_Logs_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService.Navigate(new LogsPage());
+        }
+
+        private void Button_Quit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-            Environment.Exit(0); // Force la fermeture du processus
-
-        }
-        /// <summary>
-        /// Refresh the UI
-        /// </summary>
-        public void RefreshUI()
-        {
-            QuitButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Quit");
-            HomeButton.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Home");
-            Settings.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_ChangeSettings");
-            Logs.Content = BackupManager.GetInstance().resourceManager.GetString("Menu_Logs");
+            Environment.Exit(0);
         }
     }
 }
