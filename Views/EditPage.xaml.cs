@@ -3,6 +3,8 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using EasySave.Models;
+using Microsoft.Win32;
+
 
 namespace EasySave.Views
 {
@@ -14,7 +16,7 @@ namespace EasySave.Views
         // Used to keep the data on the current job to use it between methods
         private readonly ModelJob? Job = null;
         private int Index;
-        public ModelConfig Config { get; private set; }
+        
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelLog> SavesEntries { get; set; }
 
@@ -23,8 +25,8 @@ namespace EasySave.Views
             InitializeComponent();
             DataContext = this;
             // Change languages
-            BackupNameTextBlock.Text = ResourceManager.GetString("Prompt_JobName");
-            SourceDirectoryTextBlock.Text = ResourceManager.GetString("Prompt_SourceDirectory");
+            BackupNameTextBox.Text = ResourceManager.GetString("Prompt_JobName");
+            SourceDirectoryTextBox.Text = ResourceManager.GetString("Prompt_SourceDirectory");
             TargetDirectoryTextBlock.Text = ResourceManager.GetString("Prompt_TargetDirectory");
             TypeTextBlock.Text = ResourceManager.GetString("Prompt_BackupType");
             //TitleAddEditBackupJob.Text = ResourceManager.GetString("Title_Add_Backup");
@@ -117,6 +119,39 @@ namespace EasySave.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void BrowseSourceDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                CheckFileExists = false,
+                CheckPathExists = true,
+                FileName = "Dossier sélectionné",
+                Filter = "Dossiers|*.none",
+                Title = "Sélectionner le dossier source"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                SourceDirectoryTextBox.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+            }
+        }
+
+        private void BrowseTargetDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                CheckFileExists = false,
+                CheckPathExists = true,
+                FileName = "Dossier sélectionné",
+                Filter = "Dossiers|*.none",
+                Title = "Sélectionner le dossier de destination"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                TargetDirectoryTextBox.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
             }
         }
         //private async void DisplaySaves()
