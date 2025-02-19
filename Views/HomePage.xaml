@@ -14,12 +14,12 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="#F0F0F0">
         <TextBlock x:Name="Title_Home" Text="Select the backups to modify or execute" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
-        <StackPanel Margin="0,60,0,0">
+        <Grid Margin="0,60,0,48">
             <DockPanel Margin="10,0,10,0">
-                <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged" SelectionMode="Extended">
+                <ListView x:Name="BackupJobsListView" ItemsSource="{Binding BackupJobs}" DockPanel.Dock="Top" SizeChanged="BackupJobsListView_SizeChanged" SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn x:Name="Header_BackupName" Header="Backup Name" Width="150">
@@ -71,12 +71,12 @@
                     </ListView.View>
                 </ListView>
             </DockPanel>
+        </Grid>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5">
-                <Button x:Name="Button_Create" Content="Create backup" Background="Blue" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Create_Click"/>
-                <Button x:Name="Button_Execute" Content="Execute backups" Background="Green" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Execute_Click"/>
-                <Button x:Name="Button_Delete" Content="Delete backups" Background="Red" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Delete_Click"/>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="bottom" Margin="5">
+            <Button x:Name="Button_Create" Content="Create backup" Background="Blue" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Create_Click"/>
+            <Button x:Name="Button_Execute" Content="Execute backups" Background="Green" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Execute_Click"/>
+            <Button x:Name="Button_Delete" Content="Delete backups" Background="Red" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Delete_Click"/>
         </StackPanel>
 
         <!-- Error display area -->

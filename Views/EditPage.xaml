@@ -28,12 +28,12 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock x:Name="BackupNameTextBlock" Text="Nom Sauvegarde" FontWeight="Bold"/>
+                <TextBlock x:Name="BackupNameTextBlock" Text="Backup name" FontWeight="Bold"/>
                 <TextBox x:Name="BackupNameTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock x:Name="SourceDirectoryTextBlock" Text="Emplacement source" FontWeight="Bold"/>
+                <TextBlock x:Name="SourceDirectoryTextBlock" Text="Source directory" FontWeight="Bold"/>
                 <TextBox x:Name="SourceDirectoryTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
         </Grid>
@@ -46,7 +46,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock x:Name="TargetDirectoryTextBlock" Text="Emplacement cible" FontWeight="Bold"/>
+                <TextBlock x:Name="TargetDirectoryTextBlock" Text="Target directory" FontWeight="Bold"/>
                 <TextBox x:Name="TargetDirectoryTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
 

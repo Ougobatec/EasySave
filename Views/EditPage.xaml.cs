@@ -14,7 +14,6 @@ namespace EasySave.Views
         // Used to keep the data on the current job to use it between methods
         private readonly ModelJob? Job = null;
         private int Index;
-        public ModelConfig Config { get; private set; }
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelLog> SavesEntries { get; set; }
 

@@ -8,58 +8,62 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="LogsPage">
 
-    <Grid>
-        <DataGrid Name="LogsDataGrid" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" SizeChanged="LogsDataGrid_SizeChanged" IsReadOnly="True" SelectionUnit="Cell">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Header_Logs_Date" Header="Horodatage" Binding="{Binding Timestamp}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="IsHitTestVisible" Value="True"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn x:Name="Header_Logs_Name" Header="Nom sauvegarde" Binding="{Binding BackupName}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="IsHitTestVisible" Value="True"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn x:Name="Header_Logs_Source_Directory" Header="Emplacement source" Binding="{Binding Source}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="IsHitTestVisible" Value="True"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn x:Name="Header_Logs_Target_Directory" Header="Emplacement cible" Binding="{Binding Destination}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="IsHitTestVisible" Value="True"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn x:Name="Header_Logs_Size" Header="Taille" Binding="{Binding Size}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="IsHitTestVisible" Value="True"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn x:Name="Header_Logs_Transfer_Time" Header="Temps de transfert" Binding="{Binding TransfertTime}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="IsHitTestVisible" Value="True"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+    <Grid Background="#F0F0F0">
+        <TextBlock x:Name="Title_Logs" Text="Logs" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+
+        <Grid Margin="0,60,0,0">
+            <DataGrid Margin="10,0,10,10" Name="LogsDataGrid" ItemsSource="{Binding LogEntries}" AutoGenerateColumns="False" SizeChanged="LogsDataGrid_SizeChanged" IsReadOnly="True" SelectionUnit="Cell" HorizontalScrollBarVisibility="Disabled">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="Header_Logs_Date" Header="Horodatage" Binding="{Binding Timestamp}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:Name="Header_Logs_Name" Header="Nom sauvegarde" Binding="{Binding BackupName}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:Name="Header_Logs_Source_Directory" Header="Emplacement source" Binding="{Binding Source}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:Name="Header_Logs_Target_Directory" Header="Emplacement cible" Binding="{Binding Destination}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:Name="Header_Logs_Size" Header="Taille" Binding="{Binding Size}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn x:Name="Header_Logs_Transfer_Time" Header="Temps de transfert" Binding="{Binding TransfertTime}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="IsHitTestVisible" Value="True"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Page>
