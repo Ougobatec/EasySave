@@ -8,10 +8,10 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SettingsPage">
 
-    <Grid>
+    <Grid Background="#F0F0F0">
         <TextBlock x:Name="Title_Settings" Text="Settings" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
-        <StackPanel HorizontalAlignment="Center" Margin="0,80,0,0">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
                 <TextBlock x:Name="Text_Language" Text="Language" Margin="0,0,10,0"/>
                 <ComboBox x:Name="ComboBox_Language" Width="120" SelectionChanged="Setting_Changed">

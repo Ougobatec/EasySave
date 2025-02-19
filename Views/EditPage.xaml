@@ -28,7 +28,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock x:Name="BackupNameTextBlock" Text="Nom Sauvegarde" FontWeight="Bold"/>
+                <TextBlock x:Name="BackupNameTextBlock" Text="Backup name" FontWeight="Bold"/>
                 <TextBox x:Name="BackupNameTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
             </StackPanel>
 
