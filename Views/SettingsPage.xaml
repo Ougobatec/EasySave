@@ -31,7 +31,7 @@
                 <TextBox x:Name="Limit_size_fileTextBox" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,40,0,0">
-                <TextBlock x:Name="Priority_extension" Text="Manage File Extensions" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <TextBlock x:Name="Title_ExtensionsSettings" Text="Manage file extensions" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

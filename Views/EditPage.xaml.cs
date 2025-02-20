@@ -17,7 +17,6 @@ namespace EasySave.Views
     {
         // Used to keep the data on the current job to use it between methods
         private readonly ModelJob? Job = null;
-        private int Index;
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelLog> SavesEntries { get; set; }
 
@@ -30,15 +29,7 @@ namespace EasySave.Views
 
             if (job != null)
             {
-                Job = job;
-                DisplaySaves();
-                // Remplir les champs avec les valeurs actuelles
-                BackupNameTextBox.Text = job.Name;
-                SourceDirectoryTextBox.Text = job.SourceDirectory;
-                TargetDirectoryTextBox.Text = job.TargetDirectory;
-                TypeComboBox.Text = job.Type.ToString();
-                Title_Edit.Text = ResourceManager.GetString("Title_Edit_Backup") + " " + job.Name;
-                SavesList.Visibility = Visibility.Visible;
+                LoadJob(job);
             }
         }
 
@@ -62,16 +53,11 @@ namespace EasySave.Views
         {
             if (sender is DataGrid dataGrid)
             {
-                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth; // Largeur disponible
-                double proportion1 = 0.25;  // 25% pour "Horodatage"
-                double proportion2 = 0.25;  // 25% pour "Nom sauvegarde"
-                double proportion3 = 0.20;  // 20% pour "Type"
-                double proportion4 = 0.3;  // 30% pour "Taille"
-
-                dataGrid.Columns[0].Width = totalWidth * proportion1;
-                dataGrid.Columns[1].Width = totalWidth * proportion2;
-                dataGrid.Columns[2].Width = totalWidth * proportion3;
-                dataGrid.Columns[3].Width = totalWidth * proportion4;
+                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
+                dataGrid.Columns[0].Width = totalWidth * 0.25;  // 25% pour "Horodatage"
+                dataGrid.Columns[1].Width = totalWidth * 0.25;  // 25% pour "Nom sauvegarde"
+                dataGrid.Columns[2].Width = totalWidth * 0.2;   // 20% pour "Emplacement source"
+                dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% pour "Emplacement cible"
             }
         }
         
@@ -111,18 +97,40 @@ namespace EasySave.Views
                 };
                 if (Job == null)
                 {
-                    BackupManager.GetInstance().AddBackupJobAsync(job);
+                    try
+                    {
+                        BackupManager.GetInstance().AddBackupJobAsync(job);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.Equals("Message_NameExists"))
+                        {
+                            MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
                 }
                 else
                 {
-                    Index = BackupManager.GetInstance().JsonConfig.BackupJobs.FindIndex(s => s.Name == Job.Name);
-                    if (Index != -1)
+                    try
                     {
-                        BackupManager.GetInstance().UpdateBackupJobAsync(job, Index);
+                        BackupManager.GetInstance().UpdateBackupJobAsync(job, Job);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show($"Erreur", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (ex.Equals("Message_NameExists"))
+                        {
+                            MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 }
 

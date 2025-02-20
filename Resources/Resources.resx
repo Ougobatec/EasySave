@@ -168,17 +168,14 @@
   <data name="Message_Selection" xml:space="preserve">
     <value>Please select at least one backup.</value>
   </data>
-  <data name="MessageTitle_Selection" xml:space="preserve">
-    <value>No selection</value>
+  <data name="MessageTitle_Success" xml:space="preserve">
+    <value>Succes</value>
   </data>
   <data name="Message_BusinessSoftware" xml:space="preserve">
     <value>Business software is running. Please close it before starting a backup.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
     <value>Attention</value>
-  </data>
-  <data name="Message_ErrorExecute" xml:space="preserve">
-    <value>An error occurred while performing backups.</value>
   </data>
   <data name="MessageTitle_Error" xml:space="preserve">
     <value>Error</value>
@@ -191,9 +188,6 @@
   </data>
   <data name="Message_Delete" xml:space="preserve">
     <value>Are you sure you want to delete the selected backups?</value>
-  </data>
-  <data name="Message_ErrorDelete" xml:space="preserve">
-    <value>An error occurred while deleting backups.</value>
   </data>
   <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
@@ -224,5 +218,29 @@
   </data>
   <data name="Message_Fill" xml:space="preserve">
     <value>Please fill in all fields.</value>
+  </data>
+  <data name="Message_NameExists" xml:space="preserve">
+    <value>A backup already has this name.</value>
+  </data>
+  <data name="Message_DirectoryNotFound" xml:space="preserve">
+    <value>Directory not found for backup '{0}'.</value>
+  </data>
+  <data name="Title_ExtensionsSettings" xml:space="preserve">
+    <value>Manage file extensions</value>
+  </data>
+  <data name="Message_ExecuteSuccess" xml:space="preserve">
+    <value>Backup '{0}' completed successfully.</value>
+  </data>
+  <data name="Message_AddSuccess" xml:space="preserve">
+    <value>Backup '{0}' added successfully.</value>
+  </data>
+  <data name="Message_DeleteSuccess" xml:space="preserve">
+    <value>Backup '{0}' deleted successfully.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error : '{0}'</value>
+  </data>
+  <data name="Message_UpdateSuccess" xml:space="preserve">
+    <value>Backup '{0}' updated successfully.</value>
   </data>
 </root>

@@ -40,8 +40,7 @@ namespace EasySave
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                MessageBox.Show("Une sauvegarde avec ce nom existe déjà", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                throw new Exception("Message_NameExists");
             }
 
             job.Key = GenerateKey(64);
@@ -49,59 +48,46 @@ namespace EasySave
             JsonState.Add(new ModelState { Name = job.Name });
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
             await SaveJsonAsync(JsonState, StateFilePath);
-
-            MessageBox.Show("Sauvegarde ajoutée avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        public async Task UpdateBackupJobAsync(ModelJob updatedJob, int index)
+        public async Task UpdateBackupJobAsync(ModelJob newJob, ModelJob existingJob)
         {
-            var existingJob = JsonConfig.BackupJobs[index];
-
-            if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
+            if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
-                MessageBox.Show("Une sauvegarde avec ce nom existe déjà", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                throw new Exception("Message_NameExists");
             }
 
             var state = JsonState.FirstOrDefault(s => s.Name == existingJob.Name);
             if (state != null)
             {
-                state.Name = updatedJob.Name;
+                state.Name = newJob.Name;
             }
 
-            existingJob.Name = updatedJob.Name;
-            existingJob.SourceDirectory = updatedJob.SourceDirectory;
-            existingJob.TargetDirectory = updatedJob.TargetDirectory;
-            existingJob.Type = updatedJob.Type;
+            existingJob.Name = newJob.Name;
+            existingJob.SourceDirectory = newJob.SourceDirectory;
+            existingJob.TargetDirectory = newJob.TargetDirectory;
+            existingJob.Type = newJob.Type;
 
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
             await SaveJsonAsync(JsonState, StateFilePath);
-
-            MessageBox.Show("Les modifications ont été enregistrées !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        public async Task ExecuteBackupJobAsync(int index)
+        public async Task ExecuteBackupJobAsync(ModelJob job)
         {
-            var job = JsonConfig.BackupJobs[index];
-            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
-
             if (!Directory.Exists(job.SourceDirectory))
             {
-                MessageBox.Show("Repertoire source non trouvé", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
+                throw new Exception("Message_DirectoryNotFound");
             }
 
+            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
             await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
             await CopyDirectoryAsync(job);
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
-
-            MessageBox.Show("Sauvegardes executés avec succès", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        public async Task DeleteBackupJobAsync(int index)
+        public async Task DeleteBackupJobAsync(ModelJob job)
         {
-            var job = JsonConfig.BackupJobs[index];
-            JsonConfig.BackupJobs.RemoveAt(index);
+            JsonConfig.BackupJobs.Remove(job);
 
             var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
             if (state != null)
@@ -130,7 +116,7 @@ namespace EasySave
                     break;
                 // changement de la taille limite d'un fichier (pour qu'il soit considérer comme volumineux)
                 case "limitSizeFile":
-                    JsonConfig.limitSizeFile = Int32.Parse(value); ;
+                    JsonConfig.limitSizeFile = Int32.Parse(value);
                     break;
                 // ajout, suppréssion d'une extension prioritaire
                 case "PriorityFiles":

@@ -168,17 +168,14 @@
   <data name="Message_Selection" xml:space="preserve">
     <value>Veuillez sélectionner au moins une sauvegarde.</value>
   </data>
-  <data name="MessageTitle_Selection" xml:space="preserve">
-    <value>Aucune sélection</value>
+  <data name="MessageTitle_Success" xml:space="preserve">
+    <value>Succès</value>
   </data>
   <data name="Message_BusinessSoftware" xml:space="preserve">
     <value>Un logiciel métier est en cours d'exécution. Veuillez le fermer avant de lancer une sauvegarde.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
     <value>Attention</value>
-  </data>
-  <data name="Message_ErrorExecute" xml:space="preserve">
-    <value>Une erreur s'est produite lors de l'exécution des sauvegardes.</value>
   </data>
   <data name="MessageTitle_Error" xml:space="preserve">
     <value>Erreur</value>
@@ -191,9 +188,6 @@
   </data>
   <data name="Message_Delete" xml:space="preserve">
     <value>Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?</value>
-  </data>
-  <data name="Message_ErrorDelete" xml:space="preserve">
-    <value>Une erreur s'est produite lors de la suppression des sauvegardes.</value>
   </data>
   <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
@@ -224,5 +218,29 @@
   </data>
   <data name="Message_Fill" xml:space="preserve">
     <value>Veuillez remplir tous les champs.</value>
+  </data>
+  <data name="Message_NameExists" xml:space="preserve">
+    <value>Une sauvegarde porte déjà ce nom.</value>
+  </data>
+  <data name="Message_DirectoryNotFound" xml:space="preserve">
+    <value>Répertoire non trouvé pour la sauvegarde '{0}'.</value>
+  </data>
+  <data name="Title_ExtensionsSettings" xml:space="preserve">
+    <value>Gérer les extensions de fichiers</value>
+  </data>
+  <data name="Message_ExecuteSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été effectuée avec succès.</value>
+  </data>
+  <data name="Message_AddSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été ajoutée avec succès.</value>
+  </data>
+  <data name="Message_DeleteSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été supprimée avec succès.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur : '{0}'</value>
+  </data>
+  <data name="Message_UpdateSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été modifiée avec succès.</value>
   </data>
 </root>

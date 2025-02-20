@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
@@ -81,7 +82,7 @@ namespace EasySave.Views
 
                     if (selectedItems.Count == 0)
                     {
-                        MessageBox.Show(ResourceManager.GetString("Message_Selection"), ResourceManager.GetString("MessageTitle_Selection"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show(ResourceManager.GetString("Message_Selection"), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
@@ -91,10 +92,21 @@ namespace EasySave.Views
                     {
                         foreach (var job in jobsToExecute)
                         {
-                            int index = BackupManager.GetInstance().JsonConfig.BackupJobs.IndexOf(job);
-                            if (index >= 0)
+                            try
                             {
-                                BackupManager.GetInstance().ExecuteBackupJobAsync(index);
+                                BackupManager.GetInstance().ExecuteBackupJobAsync(job);
+                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (ex.Equals("Message_DirectoryNotFound"))
+                                {
+                                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_DirectoryNotFound"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
                             }
                         }
 
@@ -127,16 +139,15 @@ namespace EasySave.Views
                     foreach (var job in jobsToDelete)
                     {
                         BackupJobs.Remove(job);
-                        int index = BackupManager.GetInstance().JsonConfig.BackupJobs.IndexOf(job);
-                        BackupManager.GetInstance().DeleteBackupJobAsync(index);
+                        BackupManager.GetInstance().DeleteBackupJobAsync(job);
                     }
                     Refresh();
                     BackupJobsListView.Items.Refresh();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(ResourceManager.GetString("Message_ErrorDelete"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

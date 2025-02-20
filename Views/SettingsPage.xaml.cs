@@ -12,8 +12,8 @@ namespace EasySave.Views
     public partial class SettingsPage : Page
     {
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<string> AvailableExtensions { get; set; } = new ObservableCollection<string> { ".txt", ".jpg", ".png" };
-        public ObservableCollection<string> SelectedExtensions { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> AvailableExtensions { get; set; } = [".txt", ".jpg", ".png"];
+        public ObservableCollection<string> SelectedExtensions { get; set; } = [];
 
         public SettingsPage()
         {
@@ -26,13 +26,14 @@ namespace EasySave.Views
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
-            Title_Settings.Text = ResourceManager.GetString("Settings_Title");
-            Text_Language.Text = ResourceManager.GetString("Settings_Text-Language");
-            Text_LogFormat.Text = ResourceManager.GetString("Settings_Text-LogFormat");
-            Priority_extension.Text = ResourceManager.GetString("Priority_extension");
+            Title_Settings.Text = ResourceManager.GetString("Title_Settings");
+            Text_Language.Text = ResourceManager.GetString("Text_Language");
+            Text_LogFormat.Text = ResourceManager.GetString("Text_LogFormat");
+            Title_ExtensionsSettings.Text = ResourceManager.GetString("Title_ExtensionsSettings");
             ComboBox_Language.Text = BackupManager.GetInstance().JsonConfig.Language.ToString();
             ComboBox_LogFormat.Text = BackupManager.GetInstance().JsonConfig.LogFormat.ToString();
         }
+
         /// <summary>
         /// Method to change parameters
         /// </summary>
