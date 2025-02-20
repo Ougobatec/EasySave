@@ -31,10 +31,10 @@ namespace EasySave
 
         public void Refresh()
         {
-            Button_Quit.Content = ResourceManager.GetString("Main_Button-Quit");
-            Button_Home.Content = ResourceManager.GetString("Main_Button-Home");
-            Button_Settings.Content = ResourceManager.GetString("Main_Button-Settings");
-            Button_Logs.Content = ResourceManager.GetString("Main_Button-Logs");
+            Button_Quit.Content = ResourceManager.GetString("Button_Quit");
+            Button_Home.Content = ResourceManager.GetString("Button_Home");
+            Button_Settings.Content = ResourceManager.GetString("Button_Settings");
+            Button_Logs.Content = ResourceManager.GetString("Button_Logs");
         }
 
         private void Button_Home_Click(object sender, RoutedEventArgs e)

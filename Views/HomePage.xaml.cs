@@ -25,16 +25,16 @@ namespace EasySave.Views
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
-            Title_Home.Text = ResourceManager.GetString("Home_Title");
-            Header_BackupName.Header = ResourceManager.GetString("Home_Header_BackupName");
-            Header_SourceDirectory.Header = ResourceManager.GetString("Home_Header_SourceDirectory");
-            Header_TargetDirectory.Header = ResourceManager.GetString("Home_Header_TargetDirectory");
-            Header_Type.Header = ResourceManager.GetString("Home_Header_Type");
-            Header_Modify.Header = ResourceManager.GetString("Home_Header_Modify");
-            Header_State.Header = ResourceManager.GetString("Home_Header_State");
-            Button_Create.Content = ResourceManager.GetString("Home_Button_Create");
-            Button_Execute.Content = ResourceManager.GetString("Home_Button_Execute");
-            Button_Delete.Content = ResourceManager.GetString("Home_Button_Delete");
+            Title_Home.Text = ResourceManager.GetString("Title_Home");
+            Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
+            Header_SourceDirectory.Header = ResourceManager.GetString("Text_SourceDirectory");
+            Header_TargetDirectory.Header = ResourceManager.GetString("Text_TargetDirectory");
+            Header_Type.Header = ResourceManager.GetString("Text_Type");
+            Header_Modify.Header = ResourceManager.GetString("Text_Modify");
+            Header_State.Header = ResourceManager.GetString("Text_State");
+            Button_Create.Content = ResourceManager.GetString("Button_Create");
+            Button_Execute.Content = ResourceManager.GetString("Button_Execute");
+            Button_Delete.Content = ResourceManager.GetString("Button_Delete");
             DisplayBackupJobs();
         }
 
@@ -73,7 +73,7 @@ namespace EasySave.Views
             {
                 if (BusinessSoftwareChecker.IsBusinessSoftwareRunning())
                 {
-                    MessageBox.Show(ResourceManager.GetString("Home_Message_BusinessSoftware"), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(ResourceManager.GetString("Message_BusinessSoftware"), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 else
                 {
@@ -81,12 +81,12 @@ namespace EasySave.Views
 
                     if (selectedItems.Count == 0)
                     {
-                        MessageBox.Show(ResourceManager.GetString("Home_Message_NoneSelected"), ResourceManager.GetString("MessageTitle_NoneSelected"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show(ResourceManager.GetString("Message_Selection"), ResourceManager.GetString("MessageTitle_Selection"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
                     var jobsToExecute = new List<ModelJob>(selectedItems);
-                    var result = MessageBox.Show(ResourceManager.GetString("Home_Message_Execution"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    var result = MessageBox.Show(ResourceManager.GetString("Message_Execute"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
                         foreach (var job in jobsToExecute)
@@ -104,7 +104,7 @@ namespace EasySave.Views
             }
             catch (Exception)
             {
-                MessageBox.Show(ResourceManager.GetString("Home_Message_ErrorExecution"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ResourceManager.GetString("Message_ErrorExecute"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -116,27 +116,27 @@ namespace EasySave.Views
 
                 if (selectedItems.Count == 0)
                 {
-                    MessageBox.Show(ResourceManager.GetString("Home_Message_NoneSelected"), ResourceManager.GetString("MessageTitle_NoneSelected"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(ResourceManager.GetString("Message_Selection"), ResourceManager.GetString("MessageTitle_Selection"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 var jobsToDelete = new List<ModelJob>(selectedItems);
-                var result = MessageBox.Show(ResourceManager.GetString("Home_Message_Deletion"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var result = MessageBox.Show(ResourceManager.GetString("Message_Delete"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     foreach (var job in jobsToDelete)
                     {
+                        BackupJobs.Remove(job);
                         int index = BackupManager.GetInstance().JsonConfig.BackupJobs.IndexOf(job);
                         BackupManager.GetInstance().DeleteBackupJobAsync(index);
                     }
-
-                    DisplayBackupJobs();
+                    Refresh();
                     BackupJobsListView.Items.Refresh();
                 }
             }
             catch (Exception)
             {
-                MessageBox.Show(ResourceManager.GetString("Home_Message_ErrorDeletion"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ResourceManager.GetString("Message_ErrorDelete"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -21,9 +21,9 @@ namespace EasySave.Views
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
-            Title_Settings.Text = ResourceManager.GetString("Settings_Title");
-            Text_Language.Text = ResourceManager.GetString("Settings_Text-Language");
-            Text_LogFormat.Text = ResourceManager.GetString("Settings_Text-LogFormat");
+            Title_Settings.Text = ResourceManager.GetString("Title_Settings");
+            Text_Language.Text = ResourceManager.GetString("Text_Language");
+            Text_LogFormat.Text = ResourceManager.GetString("Text_LogFormat");
             ComboBox_Language.Text = BackupManager.GetInstance().JsonConfig.Language.ToString();
             ComboBox_LogFormat.Text = BackupManager.GetInstance().JsonConfig.LogFormat.ToString();
         }

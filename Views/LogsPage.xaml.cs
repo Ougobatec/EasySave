@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using EasySave.Models;
 using Logger;
 
@@ -37,14 +25,14 @@ namespace EasySave.Views
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
-            Title_Logs.Text = ResourceManager.GetString("Logs_Title");
-            Header_Date.Header = ResourceManager.GetString("Logs_Header_Date");
-            Header_Name.Header = ResourceManager.GetString("Logs_Header_Name");
-            Header_SourceDirectory.Header = ResourceManager.GetString("Logs_Header_SourceDirectory");
-            Header_TargetDirectory.Header = ResourceManager.GetString("Logs_Header_TargetDirectory");
-            Header_Size.Header = ResourceManager.GetString("Logs_Header_Size");
-            Header_EncryptionTime.Header = ResourceManager.GetString("Logs_Header_EncryptionTime");
-            Header_TransferTime.Header = ResourceManager.GetString("Logs_Header_TransferTime");
+            Title_Logs.Text = ResourceManager.GetString("Title_Logs");
+            Header_Date.Header = ResourceManager.GetString("Text_Date");
+            Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
+            Header_SourceDirectory.Header = ResourceManager.GetString("Text_SourceDirectory");
+            Header_TargetDirectory.Header = ResourceManager.GetString("Text_TargetDirectory");
+            Header_Size.Header = ResourceManager.GetString("Text_Size");
+            Header_EncryptionTime.Header = ResourceManager.GetString("Text_EncryptionTime");
+            Header_TransferTime.Header = ResourceManager.GetString("Text_TransferTime");
             DisplayLogs();
         }
 
@@ -53,13 +41,13 @@ namespace EasySave.Views
             if (sender is DataGrid dataGrid)
             {
                 double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                dataGrid.Columns[0].Width = totalWidth * 0.1;  // 10% pour "Horodatage"
-                dataGrid.Columns[1].Width = totalWidth * 0.2;  // 10% pour "Nom sauvegarde"
-                dataGrid.Columns[2].Width = totalWidth * 0.2;  // 30% pour "Emplacement source"
-                dataGrid.Columns[3].Width = totalWidth * 0.2;  // 30% pour "Emplacement cible"
-                dataGrid.Columns[4].Width = totalWidth * 0.1;  // 10% pour "Taille"
-                dataGrid.Columns[5].Width = totalWidth * 0.1;  // 10% pour "Temps de cryptage"
-                dataGrid.Columns[6].Width = totalWidth * 0.1;  // 10% pour "Temps de transfert"
+                dataGrid.Columns[0].Width = totalWidth * 0.1;   // 10% pour "Horodatage"
+                dataGrid.Columns[1].Width = totalWidth * 0.14;  // 10% pour "Nom sauvegarde"
+                dataGrid.Columns[2].Width = totalWidth * 0.24;  // 30% pour "Emplacement source"
+                dataGrid.Columns[3].Width = totalWidth * 0.24;  // 30% pour "Emplacement cible"
+                dataGrid.Columns[4].Width = totalWidth * 0.08;  // 10% pour "Taille"
+                dataGrid.Columns[5].Width = totalWidth * 0.1;   // 10% pour "Temps de cryptage"
+                dataGrid.Columns[6].Width = totalWidth * 0.1;   // 10% pour "Temps de transfert"
             }
         }
 

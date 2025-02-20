@@ -7,8 +7,14 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="EditPage">
+    <Page.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Page.Resources>
 
-    <Grid>
+    <Grid Background="#F0F0F0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,19 +27,19 @@
         <TextBlock x:Name="Title_Edit" Text="Create a backupJob" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
         <!-- Première ligne avec deux labels et deux champs -->
-        <Grid Grid.Row="1" Margin="0,10,0,30">
+        <Grid Grid.Row="1" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock x:Name="BackupNameTextBlock" Text="Backup name" FontWeight="Bold"/>
-                <TextBox x:Name="BackupNameTextBox" Height="30" BorderBrush="Black" BorderThickness="1"/>
+                <TextBlock x:Name="Text_BackupName" Text="Backup name" FontWeight="Bold"/>
+                <TextBox x:Name="Textbox_BackupName" Height="30" BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock x:Name="SourceDirectoryTextBlock" Text="Emplacement source" FontWeight="Bold"/>
+                <TextBlock x:Name="Text_SourceDirectory" Text="Source directory" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -42,21 +48,21 @@
                         <!-- Le bouton a une largeur fixe -->
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="SourceDirectoryTextBox" Height="30" BorderBrush="Black" BorderThickness="1" Grid.Column="0"/>
-                    <Button Content="..." Width="30" Height="30" Click="BrowseSourceDirectory_Click" Grid.Column="1"/>
+                    <TextBox x:Name="Textbox_SourceDirectory" Height="30" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="0,5,0,0"/>
+                    <Button Content="..." Width="30" Height="30" Click="BrowseSourceDirectory_Click" Grid.Column="1" Margin="0,5,0,0"/>
                 </Grid>
             </StackPanel>
         </Grid>
 
         <!-- Deuxième ligne avec deux labels et deux champs -->
-        <Grid Grid.Row="2" Margin="0,10,0,30">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Margin="10">
-                <TextBlock x:Name="TargetDirectoryTextBlock" Text="Emplacement cible" FontWeight="Bold"/>
+                <TextBlock x:Name="Text_TargetDirectory" Text="Target directory" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -65,14 +71,14 @@
                         <!-- Le bouton a une largeur fixe -->
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="TargetDirectoryTextBox" Height="30" BorderBrush="Black" BorderThickness="1" Grid.Column="0"/>
-                    <Button Content="..." Width="30" Height="30" Click="BrowseTargetDirectory_Click" Grid.Column="1"/>
+                    <TextBox x:Name="Textbox_TargetDirectory" Height="30" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="0,5,0,0"/>
+                    <Button Content="..." Width="30" Height="30" Click="BrowseTargetDirectory_Click" Grid.Column="1" Margin="0,5,0,0"/>
                 </Grid>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="10">
-                <TextBlock x:Name="TypeTextBlock" Text="Type" FontWeight="Bold"/>
-                <ComboBox x:Name="TypeComboBox" Height="30" BorderBrush="Black" BorderThickness="1">
+                <TextBlock x:Name="Text_Type" Text="Type" FontWeight="Bold"/>
+                <ComboBox x:Name="ComboBox_Type" Height="30" BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0">
                     <ComboBoxItem Content="Full"/>
                     <ComboBoxItem Content="Differential"/>
                 </ComboBox>
@@ -80,18 +86,16 @@
         </Grid>
 
         <!-- Bouton Confirmer centré -->
-        <Button x:Name="Button_Submit" Content="Submit" Width="100" Height="25" 
-            Grid.Row="3" Margin="0,20,0,0"
-            HorizontalAlignment="Center" Click="ConfirmationButton_Click"/>
+        <Button x:Name="Button_Submit" Content="Submit" Grid.Row="3" HorizontalAlignment="Right" Background="Green" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Submit_Click"/>
 
-        <TextBlock x:Name="TitleSavesList" Text="Saves list" FontSize="20" FontWeight="Bold"
-               HorizontalAlignment="Center" Grid.Row="4" Margin="0,20,0,10"/>
+        <TextBlock x:Name="Title_SavesList" Text="Saves list" FontSize="20" FontWeight="Bold"
+               HorizontalAlignment="Center" Grid.Row="4" Margin="0,20,0,10" Visibility="Hidden"/>
 
-        <StackPanel x:Name="SavesList" Orientation="Vertical" Margin="10,10,10,10" Grid.Row="5">
+        <StackPanel x:Name="SavesList" Orientation="Vertical" Margin="10,10,10,10" Grid.Row="5" Visibility="Hidden">
             <DockPanel Margin="10,10,10,10">
                 <DataGrid Name="SavesDataGrid" ItemsSource="{Binding SavesEntries}" AutoGenerateColumns="False" SizeChanged="SavesDataGrid_SizeChanged" IsReadOnly="True" SelectionUnit="Cell">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="Header_Saves_Date" Header="Horodatage" Binding="{Binding Timestamp}">
+                        <DataGridTextColumn x:Name="Header_Date" Header="Date" Binding="{Binding Timestamp}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -99,7 +103,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="Header_Saves_Name" Header="BackUp name" Binding="{Binding BackupName}">
+                        <DataGridTextColumn x:Name="Header_BackupName" Header="Backup name" Binding="{Binding BackupName}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -107,7 +111,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="Header_Saves_Type" Header="Type" Binding="{Binding Source}">
+                        <DataGridTextColumn x:Name="Header_Type" Header="Type" Binding="{Binding Source}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -115,7 +119,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="Header_Saves_Size" Header="Taille" Binding="{Binding Size}">
+                        <DataGridTextColumn x:Name="Header_Size" Header="Size" Binding="{Binding Size}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

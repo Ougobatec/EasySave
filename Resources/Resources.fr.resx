@@ -117,70 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Main_Button-Home" xml:space="preserve">
+  <data name="Button_Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
-  <data name="Main_Button-Logs" xml:space="preserve">
+  <data name="Button_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="Main_Button-Quit" xml:space="preserve">
+  <data name="Button_Quit" xml:space="preserve">
     <value>Quitter</value>
   </data>
-  <data name="Main_Button-Settings" xml:space="preserve">
+  <data name="Button_Settings" xml:space="preserve">
     <value>Paramètres</value>
   </data>
-  <data name="Settings_Text-Language" xml:space="preserve">
+  <data name="Text_Language" xml:space="preserve">
     <value>Langue</value>
   </data>
-  <data name="Settings_Text-LogFormat" xml:space="preserve">
+  <data name="Text_LogFormat" xml:space="preserve">
     <value>Format de logs</value>
   </data>
-  <data name="Settings_Title" xml:space="preserve">
+  <data name="Title_Settings" xml:space="preserve">
     <value>Paramètres</value>
   </data>
-  <data name="Home_Title" xml:space="preserve">
+  <data name="Title_Home" xml:space="preserve">
     <value>Sélectionnez les sauvegardes à modifier ou à exécuter</value>
   </data>
-  <data name="Home_Header_BackupName" xml:space="preserve">
-    <value>Nom de sauvegarde</value>
-  </data>
-  <data name="Home_Header_SourceDirectory" xml:space="preserve">
+  <data name="Text_SourceDirectory" xml:space="preserve">
     <value>Répertoire source</value>
   </data>
-  <data name="Home_Header_TargetDirectory" xml:space="preserve">
+  <data name="Text_TargetDirectory" xml:space="preserve">
     <value>Répertoire cible</value>
   </data>
-  <data name="Home_Header_Type" xml:space="preserve">
+  <data name="Text_Type" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="Home_Header_Modify" xml:space="preserve">
+  <data name="Text_Modify" xml:space="preserve">
     <value>Modifier</value>
   </data>
-  <data name="Home_Header_State" xml:space="preserve">
+  <data name="Text_State" xml:space="preserve">
     <value>Etat</value>
   </data>
-  <data name="Home_Button_Create" xml:space="preserve">
+  <data name="Button_Create" xml:space="preserve">
     <value>Créer une sauvegarde</value>
   </data>
-  <data name="Home_Button_Execute" xml:space="preserve">
+  <data name="Button_Execute" xml:space="preserve">
     <value>Exécuter les sauvegardes</value>
   </data>
-  <data name="Home_Button_Delete" xml:space="preserve">
+  <data name="Button_Delete" xml:space="preserve">
     <value>Supprimer les sauvegardes</value>
   </data>
-  <data name="Home_Message_NoneSelected" xml:space="preserve">
+  <data name="Message_Selection" xml:space="preserve">
     <value>Veuillez sélectionner au moins une sauvegarde.</value>
   </data>
-  <data name="MessageTitle_NoneSelected" xml:space="preserve">
+  <data name="MessageTitle_Selection" xml:space="preserve">
     <value>Aucune sélection</value>
   </data>
-  <data name="Home_Message_BusinessSoftware" xml:space="preserve">
+  <data name="Message_BusinessSoftware" xml:space="preserve">
     <value>Un logiciel métier est en cours d'exécution. Veuillez le fermer avant de lancer une sauvegarde.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
     <value>Attention</value>
   </data>
-  <data name="Home_Message_ErrorExecution" xml:space="preserve">
+  <data name="Message_ErrorExecute" xml:space="preserve">
     <value>Une erreur s'est produite lors de l'exécution des sauvegardes.</value>
   </data>
   <data name="MessageTitle_Error" xml:space="preserve">
@@ -189,37 +186,43 @@
   <data name="MessageTitle_Confirmation" xml:space="preserve">
     <value>Confirmation</value>
   </data>
-  <data name="Home_Message_Execution" xml:space="preserve">
+  <data name="Message_Execute" xml:space="preserve">
     <value>Êtes-vous sûr de vouloir executer les sauvegardes sélectionnées ?</value>
   </data>
-  <data name="Home_Message_Deletion" xml:space="preserve">
+  <data name="Message_Delete" xml:space="preserve">
     <value>Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?</value>
   </data>
-  <data name="Home_Message_ErrorDeletion" xml:space="preserve">
+  <data name="Message_ErrorDelete" xml:space="preserve">
     <value>Une erreur s'est produite lors de la suppression des sauvegardes.</value>
   </data>
-  <data name="Logs_Title" xml:space="preserve">
+  <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="Logs_Header_Date" xml:space="preserve">
-    <value>Date</value>
-  </data>
-  <data name="Logs_Header_Name" xml:space="preserve">
+  <data name="Text_BackupName" xml:space="preserve">
     <value>Nom de sauvegarde</value>
   </data>
-  <data name="Logs_Header_SourceDirectory" xml:space="preserve">
-    <value>Répertoire source</value>
-  </data>
-  <data name="Logs_Header_TargetDirectory" xml:space="preserve">
-    <value>Répertoire cible</value>
-  </data>
-  <data name="Logs_Header_Size" xml:space="preserve">
+  <data name="Text_Size" xml:space="preserve">
     <value>Taille</value>
   </data>
-  <data name="Logs_Header_TransferTime" xml:space="preserve">
+  <data name="Text_TransferTime" xml:space="preserve">
     <value>Temps de transfert</value>
   </data>
-  <data name="Logs_Header_EncryptionTime" xml:space="preserve">
+  <data name="Text_EncryptionTime" xml:space="preserve">
     <value>Temps de cryptage</value>
+  </data>
+  <data name="Title_Edit" xml:space="preserve">
+    <value>Créer un travail de sauvegarde</value>
+  </data>
+  <data name="Button_Submit" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Title_SavesList" xml:space="preserve">
+    <value>Liste de sauvegardes</value>
+  </data>
+  <data name="Text_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Message_Fill" xml:space="preserve">
+    <value>Veuillez remplir tous les champs.</value>
   </data>
 </root>

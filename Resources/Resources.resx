@@ -117,70 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Main_Button-Home" xml:space="preserve">
+  <data name="Button_Home" xml:space="preserve">
     <value>Home</value>
   </data>
-  <data name="Main_Button-Logs" xml:space="preserve">
+  <data name="Button_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="Main_Button-Quit" xml:space="preserve">
+  <data name="Button_Quit" xml:space="preserve">
     <value>Quit</value>
   </data>
-  <data name="Main_Button-Settings" xml:space="preserve">
+  <data name="Button_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="Settings_Text-Language" xml:space="preserve">
+  <data name="Text_Language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="Settings_Text-LogFormat" xml:space="preserve">
+  <data name="Text_LogFormat" xml:space="preserve">
     <value>Log Format</value>
   </data>
-  <data name="Settings_Title" xml:space="preserve">
+  <data name="Title_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="Home_Title" xml:space="preserve">
+  <data name="Title_Home" xml:space="preserve">
     <value>Select the backups to modify or execute</value>
   </data>
-  <data name="Home_Header_BackupName" xml:space="preserve">
-    <value>Backup Name</value>
-  </data>
-  <data name="Home_Header_SourceDirectory" xml:space="preserve">
+  <data name="Text_SourceDirectory" xml:space="preserve">
     <value>Source directory</value>
   </data>
-  <data name="Home_Header_TargetDirectory" xml:space="preserve">
+  <data name="Text_TargetDirectory" xml:space="preserve">
     <value>Target directory</value>
   </data>
-  <data name="Home_Header_Type" xml:space="preserve">
+  <data name="Text_Type" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="Home_Header_Modify" xml:space="preserve">
+  <data name="Text_Modify" xml:space="preserve">
     <value>Modify</value>
   </data>
-  <data name="Home_Header_State" xml:space="preserve">
+  <data name="Text_State" xml:space="preserve">
     <value>State</value>
   </data>
-  <data name="Home_Button_Create" xml:space="preserve">
+  <data name="Button_Create" xml:space="preserve">
     <value>Create backup</value>
   </data>
-  <data name="Home_Button_Execute" xml:space="preserve">
+  <data name="Button_Execute" xml:space="preserve">
     <value>Execute backups</value>
   </data>
-  <data name="Home_Button_Delete" xml:space="preserve">
+  <data name="Button_Delete" xml:space="preserve">
     <value>Delete backups</value>
   </data>
-  <data name="Home_Message_NoneSelected" xml:space="preserve">
+  <data name="Message_Selection" xml:space="preserve">
     <value>Please select at least one backup.</value>
   </data>
-  <data name="MessageTitle_NoneSelected" xml:space="preserve">
+  <data name="MessageTitle_Selection" xml:space="preserve">
     <value>No selection</value>
   </data>
-  <data name="Home_Message_BusinessSoftware" xml:space="preserve">
+  <data name="Message_BusinessSoftware" xml:space="preserve">
     <value>Business software is running. Please close it before starting a backup.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
     <value>Attention</value>
   </data>
-  <data name="Home_Message_ErrorExecution" xml:space="preserve">
+  <data name="Message_ErrorExecute" xml:space="preserve">
     <value>An error occurred while performing backups.</value>
   </data>
   <data name="MessageTitle_Error" xml:space="preserve">
@@ -189,37 +186,43 @@
   <data name="MessageTitle_Confirmation" xml:space="preserve">
     <value>Confirmation</value>
   </data>
-  <data name="Home_Message_Execution" xml:space="preserve">
+  <data name="Message_Execute" xml:space="preserve">
     <value>Are you sure you want to execute the selected backups?</value>
   </data>
-  <data name="Home_Message_Deletion" xml:space="preserve">
+  <data name="Message_Delete" xml:space="preserve">
     <value>Are you sure you want to delete the selected backups?</value>
   </data>
-  <data name="Home_Message_ErrorDeletion" xml:space="preserve">
+  <data name="Message_ErrorDelete" xml:space="preserve">
     <value>An error occurred while deleting backups.</value>
   </data>
-  <data name="Logs_Title" xml:space="preserve">
+  <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="Logs_Header_Date" xml:space="preserve">
-    <value>Date</value>
-  </data>
-  <data name="Logs_Header_Name" xml:space="preserve">
+  <data name="Text_BackupName" xml:space="preserve">
     <value>Backup name</value>
   </data>
-  <data name="Logs_Header_SourceDirectory" xml:space="preserve">
-    <value>Source directory</value>
-  </data>
-  <data name="Logs_Header_TargetDirectory" xml:space="preserve">
-    <value>Target directory</value>
-  </data>
-  <data name="Logs_Header_Size" xml:space="preserve">
+  <data name="Text_Size" xml:space="preserve">
     <value>Size</value>
   </data>
-  <data name="Logs_Header_TransferTime" xml:space="preserve">
+  <data name="Text_TransferTime" xml:space="preserve">
     <value>Transfert time</value>
   </data>
-  <data name="Logs_Header_EncryptionTime" xml:space="preserve">
+  <data name="Text_EncryptionTime" xml:space="preserve">
     <value>Encryption time</value>
+  </data>
+  <data name="Title_Edit" xml:space="preserve">
+    <value>Create a backupJob</value>
+  </data>
+  <data name="Button_Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Title_SavesList" xml:space="preserve">
+    <value>Saves list</value>
+  </data>
+  <data name="Text_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Message_Fill" xml:space="preserve">
+    <value>Please fill in all fields.</value>
   </data>
 </root>

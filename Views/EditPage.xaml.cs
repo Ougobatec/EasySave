@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using EasySave.Models;
+using Logger;
 using Microsoft.Win32;
 
 
@@ -23,61 +25,67 @@ namespace EasySave.Views
         {
             InitializeComponent();
             DataContext = this;
-            // Change languages
-            BackupNameTextBox.Text = ResourceManager.GetString("Prompt_JobName");
-            SourceDirectoryTextBox.Text = ResourceManager.GetString("Prompt_SourceDirectory");
-            TargetDirectoryTextBlock.Text = ResourceManager.GetString("Prompt_TargetDirectory");
-            TypeTextBlock.Text = ResourceManager.GetString("Prompt_BackupType");
-            //TitleAddEditBackupJob.Text = ResourceManager.GetString("Title_Add_Backup");
-            TitleSavesList.Text = ResourceManager.GetString("TitleSavesList");
-            Button_Submit.Content = ResourceManager.GetString("Button_Submit");
-            Header_Saves_Name.Header = ResourceManager.GetString("Header_Saves_Name");
-            Header_Saves_Type.Header = ResourceManager.GetString("Header_Saves_Type");
-            Header_Saves_Size.Header = ResourceManager.GetString("Header_Saves_Size");
-            Header_Saves_Date.Header = ResourceManager.GetString("Header_Saves_Date");
+            Job = job;
+            Refresh();
 
-            SavesList.Visibility = Visibility.Hidden;
             if (job != null)
             {
-                Job = job;
-                //DisplaySaves();
-                // Remplir les champs avec les valeurs actuelles
-                BackupNameTextBox.Text = job.Name;
-                SourceDirectoryTextBox.Text = job.SourceDirectory;
-                TargetDirectoryTextBox.Text = job.TargetDirectory;
-                TypeComboBox.Text = job.Type.ToString();
-                //TitleAddEditBackupJob.Text = ResourceManager.GetString("Title_Edit_Backup") + " " + job.Name;
-                SavesList.Visibility = Visibility.Visible;
+                LoadJob(job);
             }
         }
+
+        private void Refresh()
+        {
+            MainWindow.GetInstance().Refresh();
+            Title_Edit.Text = ResourceManager.GetString("Title_Edit");
+            Text_BackupName.Text = ResourceManager.GetString("Text_BackupName");
+            Text_SourceDirectory.Text = ResourceManager.GetString("Text_SourceDirectory");
+            Text_TargetDirectory.Text = ResourceManager.GetString("Text_TargetDirectory");
+            Text_Type.Text = ResourceManager.GetString("Text_Type");
+            Button_Submit.Content = ResourceManager.GetString("Button_Submit");
+            Title_SavesList.Text = ResourceManager.GetString("Title_SavesList");
+            Header_Date.Header = ResourceManager.GetString("Text_Date");
+            Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
+            Header_Type.Header = ResourceManager.GetString("Text_Type");
+            Header_Size.Header = ResourceManager.GetString("Text_Size");
+        }
+
         private void SavesDataGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (sender is DataGrid dataGrid)
             {
-                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth; // Largeur disponible
-                double proportion1 = 0.25;  // 25% pour "Horodatage"
-                double proportion2 = 0.25;  // 25% pour "Nom sauvegarde"
-                double proportion3 = 0.20;  // 20% pour "Emplacement source"
-                double proportion4 = 0.3;  // 30% pour "Emplacement cible"
-
-                dataGrid.Columns[0].Width = totalWidth * proportion1;
-                dataGrid.Columns[1].Width = totalWidth * proportion2;
-                dataGrid.Columns[2].Width = totalWidth * proportion3;
-                dataGrid.Columns[3].Width = totalWidth * proportion4;
+                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
+                dataGrid.Columns[0].Width = totalWidth * 0.25;  // 25% pour "Horodatage"
+                dataGrid.Columns[1].Width = totalWidth * 0.25;  // 25% pour "Nom sauvegarde"
+                dataGrid.Columns[2].Width = totalWidth * 0.2;   // 20% pour "Emplacement source"
+                dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% pour "Emplacement cible"
             }
         }
-        private void ConfirmationButton_Click(object sender, RoutedEventArgs e)
+        
+        private void LoadJob(ModelJob job)
+        {
+            Title_Edit.Text = ResourceManager.GetString("Title_Edit") + " - " + job.Name;
+            Textbox_BackupName.Text = job.Name;
+            Textbox_SourceDirectory.Text = job.SourceDirectory;
+            Textbox_TargetDirectory.Text = job.TargetDirectory;
+            ComboBox_Type.SelectedIndex = (int)job.Type;
+            Title_SavesList.Visibility = Visibility.Visible;
+            SavesList.Visibility = Visibility.Visible;
+            DisplaySaves();
+        }
+
+        private void Button_Submit_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string name = BackupNameTextBox.Text;
-                string source = SourceDirectoryTextBox.Text;
-                string target = TargetDirectoryTextBox.Text;
-                string type = ((ComboBoxItem)TypeComboBox.SelectedItem)?.Content.ToString();
+                string name = Textbox_BackupName.Text;
+                string source = Textbox_SourceDirectory.Text;
+                string target = Textbox_TargetDirectory.Text;
+                string type = ((ComboBoxItem)ComboBox_Type.SelectedItem)?.Content.ToString();
 
                 if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(target) || string.IsNullOrWhiteSpace(type))
                 {
-                    MessageBox.Show("Veuillez remplir tous les champs.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(ResourceManager.GetString("Message_Fill"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -91,8 +99,6 @@ namespace EasySave.Views
                 if (Job == null)
                 {
                     BackupManager.GetInstance().AddBackupJobAsync(job);
-                    // Confirmer à l'utilisateur
-                    MessageBox.Show("Sauvegarde ajoutée avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
@@ -100,8 +106,6 @@ namespace EasySave.Views
                     if (Index != -1)
                     {
                         BackupManager.GetInstance().UpdateBackupJobAsync(job, Index);
-                        // Confirmer à l'utilisateur
-                        MessageBox.Show("Les modifications ont été enregistrées !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
@@ -110,10 +114,10 @@ namespace EasySave.Views
                 }
 
                 // Réinitialiser les champs après ajout
-                BackupNameTextBox.Text = "";
-                SourceDirectoryTextBox.Text = "";
-                TargetDirectoryTextBox.Text = "";
-                TypeComboBox.SelectedIndex = -1;
+                Textbox_BackupName.Text = "";
+                Textbox_SourceDirectory.Text = "";
+                Textbox_TargetDirectory.Text = "";
+                ComboBox_Type.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -133,7 +137,7 @@ namespace EasySave.Views
 
             if (dialog.ShowDialog() == true)
             {
-                SourceDirectoryTextBox.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+                Textbox_SourceDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
             }
         }
 
@@ -150,41 +154,41 @@ namespace EasySave.Views
 
             if (dialog.ShowDialog() == true)
             {
-                TargetDirectoryTextBox.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+                Textbox_TargetDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
             }
         }
-        //private async void DisplaySaves()
-        //{
-        //    SavesEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
+        private async void DisplaySaves()
+        {
+            SavesEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
 
-        //    foreach (ModelLog el in SavesEntries.ToList()) // Convertir en liste temporaire pour éviter la modification pendant l'itération
-        //    {
-        //        // we check for saves that are not associated with the backUpJob to remove them
-        //        // !Directory.Exists(el.Destination) : we go check if the path exist or not (save could have been deleted)
-        //        // Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName : we check if the folder above is different than backUpJob directory or if the name of the backupJob is different
-        //        if (Job != null && (!Directory.Exists(el.Destination) || Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName))
-        //        {
-        //            SavesEntries.Remove(el);
-        //        }
-        //        else
-        //        {
-        //            // we check the type of the saves with the folder name
-        //            string type = Path.GetFileName(el.Destination.TrimEnd(Path.DirectorySeparatorChar));
-        //            el.BackupName = type;
-        //            if (type.Contains("full"))
-        //            {
-        //                el.Source = "Full";
-        //            }
-        //            else if (type.Contains("diff"))
-        //            {
-        //                el.Source = "Differential";
-        //            }
-        //            else
-        //            {
-        //                el.Source = "";
-        //            }
-        //        }
-        //    }
-        //}
+            foreach (ModelLog el in SavesEntries.ToList()) // Convertir en liste temporaire pour éviter la modification pendant l'itération
+            {
+                // we check for saves that are not associated with the backUpJob to remove them
+                // !Directory.Exists(el.Destination) : we go check if the path exist or not (save could have been deleted)
+                // Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName : we check if the folder above is different than backUpJob directory or if the name of the backupJob is different
+                if (Job != null && (!Directory.Exists(el.Destination) || Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName))
+                {
+                    SavesEntries.Remove(el);
+                }
+                else
+                {
+                    // we check the type of the saves with the folder name
+                    string type = Path.GetFileName(el.Destination.TrimEnd(Path.DirectorySeparatorChar));
+                    el.BackupName = type;
+                    if (type.Contains("full"))
+                    {
+                        el.Source = "Full";
+                    }
+                    else if (type.Contains("diff"))
+                    {
+                        el.Source = "Differential";
+                    }
+                    else
+                    {
+                        el.Source = "";
+                    }
+                }
+            }
+        }
     }
 }

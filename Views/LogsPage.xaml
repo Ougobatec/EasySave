@@ -12,7 +12,7 @@
         <TextBlock x:Name="Title_Logs" Text="Logs" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
         <Grid Margin="0,60,0,0">
-            <DataGrid Margin="10,0,10,10" Name="LogsDataGrid" ItemsSource="{Binding LogEntries}" SizeChanged="LogsDataGrid_SizeChanged" IsReadOnly="True" SelectionUnit="Cell" HorizontalScrollBarVisibility="Disabled">
+            <DataGrid Margin="10,0,10,10" Name="LogsDataGrid" ItemsSource="{Binding LogEntries}" SizeChanged="LogsDataGrid_SizeChanged" AutoGenerateColumns="False" IsReadOnly="True" SelectionUnit="Cell" HorizontalScrollBarVisibility="Disabled">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="Header_Date" Header="Horodatage" Binding="{Binding Timestamp}">
                         <DataGridTextColumn.ElementStyle>
@@ -22,7 +22,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_Name" Header="Nom sauvegarde" Binding="{Binding BackupName}">
+                    <DataGridTextColumn x:Name="Header_BackupName" Header="Nom sauvegarde" Binding="{Binding BackupName}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>

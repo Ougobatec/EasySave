@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Resources;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Windows;
 using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
@@ -39,7 +40,8 @@ namespace EasySave
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
+                MessageBox.Show("Une sauvegarde avec ce nom existe déjà", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
 
             job.Key = GenerateKey(64);
@@ -47,6 +49,8 @@ namespace EasySave
             JsonState.Add(new ModelState { Name = job.Name });
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
             await SaveJsonAsync(JsonState, StateFilePath);
+
+            MessageBox.Show("Sauvegarde ajoutée avec succès !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public async Task UpdateBackupJobAsync(ModelJob updatedJob, int index)
@@ -55,7 +59,8 @@ namespace EasySave
 
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(updatedJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
             {
-                throw new InvalidOperationException(resourceManager.GetString("Error_DuplicateBackupJob"));
+                MessageBox.Show("Une sauvegarde avec ce nom existe déjà", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
 
             var state = JsonState.FirstOrDefault(s => s.Name == existingJob.Name);
@@ -71,6 +76,8 @@ namespace EasySave
 
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
             await SaveJsonAsync(JsonState, StateFilePath);
+
+            MessageBox.Show("Les modifications ont été enregistrées !", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public async Task ExecuteBackupJobAsync(int index)
@@ -80,7 +87,7 @@ namespace EasySave
 
             if (!Directory.Exists(job.SourceDirectory))
             {
-                Console.WriteLine(string.Format(resourceManager.GetString("Error_SourceDirectoryNotFound"), job.Name, job.SourceDirectory));
+                MessageBox.Show("Repertoire source non trouvé", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -88,7 +95,7 @@ namespace EasySave
             await CopyDirectoryAsync(job);
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
 
-            Console.WriteLine(string.Format(resourceManager.GetString("Message_BackupJobExecuted"), job.Name));
+            MessageBox.Show("Sauvegardes executés avec succès", "Succès", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public async Task DeleteBackupJobAsync(int index)
