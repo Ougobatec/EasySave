@@ -12,20 +12,56 @@
         <TextBlock x:Name="Title_Settings" Text="Settings" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <TextBlock x:Name="Text_Language" Text="Language" Margin="0,0,10,0"/>
                 <ComboBox x:Name="ComboBox_Language" Width="120" SelectionChanged="Setting_Changed">
                     <ComboBoxItem Content="fr"/>
                     <ComboBoxItem Content="en"/>
                 </ComboBox>
             </StackPanel>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,30,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
                 <TextBlock x:Name="Text_LogFormat" Text="Log Format" Margin="0,0,10,0"/>
                 <ComboBox x:Name="ComboBox_LogFormat" Width="120" SelectionChanged="Setting_Changed">
                     <ComboBoxItem Content="json"/>
                     <ComboBoxItem Content="xml"/>
                 </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
+                <TextBlock x:Name="Limit_size_file" Text="Limit Size File" Margin="0,0,10,0"/>
+                <TextBox x:Name="Limit_size_fileTextBox" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0,40,0,0">
+                <TextBlock x:Name="Priority_extension" Text="Manage File Extensions" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ListBox des extensions disponibles -->
+                    <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailableExtensions}" Width="100" Height="100" Grid.Column="0"/>
+
+                    <!-- Boutons de déplacement -->
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+                        <Button Content="➜" Width="40" Click="MoveToSelected"/>
+                        <Button Content="➜➜" Width="40" Click="MoveAllToSelected" Margin="0,5,0,5"/>
+                        <Button Content="⬅" Width="40" Click="MoveToAvailable"/>
+                        <Button Content="⬅⬅" Width="40" Click="MoveAllToAvailable" Margin="0,5,0,0"/>
+                    </StackPanel>
+
+                    <!-- ListBox des extensions sélectionnées -->
+                    <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Extension}" VerticalAlignment="Center" Width="100"/>
+                                    <CheckBox IsChecked="{Binding IsEncrypted}" Content="Encrypt" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </StackPanel>
         </StackPanel>
     </Grid>

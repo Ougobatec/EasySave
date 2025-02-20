@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Resources;
 using System.Security.Cryptography;
 using System.Text.Json;
-using System.Windows;
+using System.Windows.Controls;
 using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
@@ -113,20 +113,33 @@ namespace EasySave
             await SaveJsonAsync(JsonState, StateFilePath);
         }
 
-        public async Task ChangeSettingsAsync(string? language = null, string? logFormat = null)
+        //public async Task ChangeSettingsAsync(string? language = null, string? logFormat = null)
+        public async Task ChangeSettingsAsync(string? parameter = null, string? value = null)
         {
-            if (!string.IsNullOrEmpty(language))
+            switch (parameter)
             {
-                JsonConfig.Language = language;
-                SetCulture(language);
+                // changement de la langue
+                case "language":
+                    JsonConfig.Language = value;
+                    SetCulture(value);
+                    break;
+                // changement du logFormat
+                case "logFormat":
+                    JsonConfig.LogFormat = value;
+                    Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
+                    break;
+                // changement de la taille limite d'un fichier (pour qu'il soit considérer comme volumineux)
+                case "limitSizeFile":
+                    JsonConfig.limitSizeFile = Int32.Parse(value); ;
+                    break;
+                // ajout, suppréssion d'une extension prioritaire
+                case "PriorityFiles":
+                    
+                    break;
+                default:
+                    // code block
+                    break;
             }
-
-            if (!string.IsNullOrEmpty(logFormat))
-            {
-                JsonConfig.LogFormat = logFormat;
-                Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
-            }
-
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
         }
 

@@ -30,7 +30,15 @@ namespace EasySave.Views
 
             if (job != null)
             {
-                LoadJob(job);
+                Job = job;
+                DisplaySaves();
+                // Remplir les champs avec les valeurs actuelles
+                BackupNameTextBox.Text = job.Name;
+                SourceDirectoryTextBox.Text = job.SourceDirectory;
+                TargetDirectoryTextBox.Text = job.TargetDirectory;
+                TypeComboBox.Text = job.Type.ToString();
+                Title_Edit.Text = ResourceManager.GetString("Title_Edit_Backup") + " " + job.Name;
+                SavesList.Visibility = Visibility.Visible;
             }
         }
 
@@ -54,11 +62,16 @@ namespace EasySave.Views
         {
             if (sender is DataGrid dataGrid)
             {
-                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                dataGrid.Columns[0].Width = totalWidth * 0.25;  // 25% pour "Horodatage"
-                dataGrid.Columns[1].Width = totalWidth * 0.25;  // 25% pour "Nom sauvegarde"
-                dataGrid.Columns[2].Width = totalWidth * 0.2;   // 20% pour "Emplacement source"
-                dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% pour "Emplacement cible"
+                double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth; // Largeur disponible
+                double proportion1 = 0.25;  // 25% pour "Horodatage"
+                double proportion2 = 0.25;  // 25% pour "Nom sauvegarde"
+                double proportion3 = 0.20;  // 20% pour "Type"
+                double proportion4 = 0.3;  // 30% pour "Taille"
+
+                dataGrid.Columns[0].Width = totalWidth * proportion1;
+                dataGrid.Columns[1].Width = totalWidth * proportion2;
+                dataGrid.Columns[2].Width = totalWidth * proportion3;
+                dataGrid.Columns[3].Width = totalWidth * proportion4;
             }
         }
         
@@ -175,6 +188,7 @@ namespace EasySave.Views
                     // we check the type of the saves with the folder name
                     string type = Path.GetFileName(el.Destination.TrimEnd(Path.DirectorySeparatorChar));
                     el.BackupName = type;
+                    // we will stock the type of the save in the source of the element (because there are no type propriety for the save in logs)
                     if (type.Contains("full"))
                     {
                         el.Source = "Full";
