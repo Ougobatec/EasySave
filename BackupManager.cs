@@ -26,20 +26,31 @@ namespace EasySave
         private static readonly string StateFilePath = "Config\\state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
+
+        /// <summary>
+        /// principal method how retrieve the state, config and language
+        /// </summary>
         private BackupManager()
         {
-            LoadConfig();
-            LoadStates();
+            LoadConfig(ConfigFilePath);
+            LoadStates(StateFilePath);
             SetCulture(JsonConfig.Language);
             Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
         }
 
+        /// <summary>
+        /// singleton isntancer
+        /// </summary>
         public static BackupManager GetInstance()
         {
             BackupManager_Instance ??= new BackupManager();
             return BackupManager_Instance;
         }
 
+
+        /// <summary>
+        /// where a backup is created add it to state and config file
+        /// </summary>
         public async Task AddBackupJobAsync(ModelJob job)
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
@@ -49,10 +60,13 @@ namespace EasySave
 
             JsonConfig.BackupJobs.Add(job);
             JsonState.Add(job.State);
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
+        /// <summary>
+        /// where a backup is updated modify it in config and state
+        /// </summary>
         public async Task UpdateBackupJobAsync(ModelJob newJob, ModelJob existingJob)
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
@@ -72,8 +86,8 @@ namespace EasySave
             existingJob.Type = newJob.Type;
             existingJob.State.Name = newJob.Name;
 
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
         /// <summary>
@@ -107,8 +121,8 @@ namespace EasySave
                 JsonState.Remove(state);
             }
 
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
         public async Task ChangeSettingsAsync(string parameter, string value)
@@ -125,11 +139,11 @@ namespace EasySave
                     JsonConfig.LogFormat = value;
                     Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
                     break;
-                // changement de la taille limite d'un fichier (pour qu'il soit considérer comme volumineux)
+                // changement de la taille limite d'un fichier (pour qu'il soit considï¿½rer comme volumineux)
                 case "limitSizeFile":
                     JsonConfig.limitSizeFile = Int32.Parse(value);
                     break;
-                // ajout, suppréssion d'une extension prioritaire
+                // ajout, supprï¿½ssion d'une extension prioritaire
                 case "PriorityFiles":
                     
                     break;
@@ -137,7 +151,7 @@ namespace EasySave
                     // code block
                     break;
             }
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
         }
 
         /// <summary>
@@ -209,7 +223,7 @@ namespace EasySave
                     state.TargetFilePath = destPath;
                     state.NbFilesLeftToDo--;
                     state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                    await SaveJsonAsync(JsonState, StateFilePath);
+                    await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
                 }
             }
             else if (job.Type == BackupTypes.Differential)
@@ -283,7 +297,7 @@ namespace EasySave
                         state.TargetFilePath = destPath;
                         state.NbFilesLeftToDo--;
                         state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                        await SaveJsonAsync(JsonState, StateFilePath);
+                        await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
                     }
                 }
             }
@@ -292,6 +306,12 @@ namespace EasySave
             var totalBackupTime = backupEndTime - backupStartTime;
             long totalSize = Directory.GetFiles(destDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
 
+
+
+            /// <summary>
+            /// 
+            /// pour l'utilisation de la classe logger dans la dll
+            /// </summary>
             await Logger<ModelLog>.GetInstance().Log(new ModelLog
             {
                 Timestamp = DateTime.Now,
@@ -304,7 +324,8 @@ namespace EasySave
         }
 
         /// <summary>
-        /// c'est quoi ca?
+        /// 
+        /// update of a new state if it change
         /// </summary>
         private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
         {
@@ -313,16 +334,22 @@ namespace EasySave
             state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
             state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
             state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
-        private void LoadConfig()
+
+
+        /// <summary>
+        /// Load config from the config file
+        /// </summary>
+        /// <exception cref="Exception">creation of a new config </exception>
+        private void LoadConfig(string pathConfig)
         {
-            if (File.Exists(ConfigFilePath))
+            if (File.Exists(pathConfig))
             {
                 try
                 {
-                    var json = File.ReadAllText(ConfigFilePath);                                            //lire tout le json du fichier
+                    var json = File.ReadAllText(pathConfig);                                            //lire tout le json du fichier
                     JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();        //transform json to config data via ModelConfig class
                 }
                 catch (JsonException)
@@ -343,43 +370,28 @@ namespace EasySave
         /// <summary>
         /// je sais pas ce que c'est
         /// </summary>
-        private void LoadStates()
+        /// <exception cref="Exception">creation of a new state </exception>
+        private void LoadStates(string filepath)
         {
-            if (File.Exists(StateFilePath))
+            if (File.Exists(filepath))
             {
                 try
                 {
-                    var json = File.ReadAllText(StateFilePath);
+                    var json = File.ReadAllText(filepath);
                     JsonState = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
                 }
                 catch (JsonException)
                 {
-                    JsonState = [];
+                    JsonState = [];             //if there is a problem with the actual json create a new jsonstate
                 }
             }
             else
             {
-                JsonState = [];
+                JsonState = [];                 //if there is no json create a new jsonstate
             }
         }
 
-        /// <summary>
-        /// save data into desired json file
-        /// 
-        /// mais le <T> je sais pas ce que c'est
-        /// 
-        /// </summary>
-        private static async Task SaveJsonAsync<T>(T data, string filePath)
-        {
-            var directory = Path.GetDirectoryName(filePath);                                                    //take the folder above the file
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);                                                           //create directory if it doesn't exist
-            }
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      //transform to json
-            await File.WriteAllTextAsync(filePath, json);                                                       //write to desired json file
-        }
 
         /// <summary>
         /// for changing language via resx file
