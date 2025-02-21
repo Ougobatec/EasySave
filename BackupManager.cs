@@ -28,7 +28,7 @@ namespace EasySave
         private BackupManager()
         {
             LoadConfig();
-            LoadStates();
+            LoadStates(StateFilePath);
             SetCulture(JsonConfig.Language);
             Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
         }
@@ -303,7 +303,8 @@ namespace EasySave
         }
 
         /// <summary>
-        /// c'est quoi ca?
+        /// 
+        /// update of a new state if it change
         /// </summary>
         private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
         {
@@ -315,6 +316,12 @@ namespace EasySave
             await SaveJsonAsync(JsonState, StateFilePath);
         }
 
+
+
+        /// <summary>
+        /// Load config from the config file
+        /// </summary>
+        /// <exception cref="Exception">creation of a new config </exception>
         private void LoadConfig()
         {
             if (File.Exists(ConfigFilePath))
@@ -342,23 +349,24 @@ namespace EasySave
         /// <summary>
         /// je sais pas ce que c'est
         /// </summary>
-        private void LoadStates()
+        /// <exception cref="Exception">creation of a new state </exception>
+        private void LoadStates(string filepath)
         {
-            if (File.Exists(StateFilePath))
+            if (File.Exists(filepath))
             {
                 try
                 {
-                    var json = File.ReadAllText(StateFilePath);
+                    var json = File.ReadAllText(filepath);
                     JsonState = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
                 }
                 catch (JsonException)
                 {
-                    JsonState = [];
+                    JsonState = [];             //if there is a problem with the actual json create a new jsonstate
                 }
             }
             else
             {
-                JsonState = [];
+                JsonState = [];                 //if there is no json create a new jsonstate
             }
         }
 
@@ -399,7 +407,7 @@ namespace EasySave
             byte[] key = new byte[bits / 8];
             using (var rng = RandomNumberGenerator.Create())
             {
-                rng.GetBytes(key);
+                rng.GetBytes(key); // put random number in the array key
             }
             return Convert.ToBase64String(key);         //transform to base64
         }

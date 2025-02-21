@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Libraries\" />
+    <Folder Include="Doxygen\" />
   </ItemGroup>
 
   <ItemGroup>
