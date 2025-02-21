@@ -19,6 +19,7 @@ namespace EasySave.Views
         private readonly ModelJob? Job = null;
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
         public ObservableCollection<ModelSave> SavesEntries { get; set; }
+
         public EditPage(ModelJob? job = null)
         {
             InitializeComponent();

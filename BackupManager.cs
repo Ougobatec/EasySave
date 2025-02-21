@@ -75,7 +75,6 @@ namespace EasySave
             await SaveJsonAsync(JsonState, StateFilePath);
         }
 
-
         /// <summary>
         /// Executes the backup job asynchronously.
         /// </summary>
@@ -94,7 +93,6 @@ namespace EasySave
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
         }
 
-
         /// <summary>
         /// delete a backup via a backup object
         /// </summary>
@@ -112,8 +110,7 @@ namespace EasySave
             await SaveJsonAsync(JsonState, StateFilePath);
         }
 
-        //public async Task ChangeSettingsAsync(string? language = null, string? logFormat = null)
-        public async Task ChangeSettingsAsync(string? parameter = null, string? value = null)
+        public async Task ChangeSettingsAsync(string parameter, string value)
         {
             switch (parameter)
             {
@@ -141,8 +138,6 @@ namespace EasySave
             }
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
         }
-
-
 
         /// <summary>
         /// c'est sale et c'est gros
@@ -307,7 +302,6 @@ namespace EasySave
             });
         }
 
-
         /// <summary>
         /// c'est quoi ca?
         /// </summary>
@@ -396,8 +390,6 @@ namespace EasySave
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
         }
-
-
 
         /// <summary>
         /// create a cryptographic key via of the desired length via a random number generator
