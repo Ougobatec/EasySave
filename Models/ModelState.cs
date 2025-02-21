@@ -1,4 +1,6 @@
-﻿namespace EasySave.Models
+﻿using System.Security.RightsManagement;
+
+namespace EasySave.Models
 {
 
     /// <summary>
@@ -12,13 +14,7 @@
     /// </summary>
     public class ModelState
     {
-        /// <summary>
-        /// name of the concerned backup
-        /// 
-        /// 
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
-
+        public string Name { get; set; }
         /// <summary>
         /// esque c'est le chemin de source de la backup ou de un fichier ?
         /// 
@@ -61,11 +57,29 @@
         /// </summary>
         public int NbFilesLeftToDo { get; set; }
 
+
+        private int progression;    
         /// <summary>
         /// je sais pas ce que c'est
         /// 
         /// 
         /// </summary>
-        public int Progression { get; set; }
+        public int Progression 
+        {
+            get => progression;
+            set
+            {
+                progression = value;
+                OnProgressChange?.Invoke(this, EventArgs.Empty);
+            }
+            
+        }
+
+        public event EventHandler? OnProgressChange;
+
+        public ModelState(string name)
+        {
+            Name = name;
+        }
     }
 }

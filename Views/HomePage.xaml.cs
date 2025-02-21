@@ -95,6 +95,7 @@ namespace EasySave.Views
                             try
                             {
                                 await BackupManager.GetInstance().ExecuteBackupJobAsync(job);
+                                UpdateProgression(job, job.State.Progression);
                                 MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                             catch (Exception ex)
@@ -162,5 +163,12 @@ namespace EasySave.Views
         {
             BackupJobs = new ObservableCollection<ModelJob>(BackupManager.GetInstance().JsonConfig.BackupJobs);
         }
+
+        private void UpdateProgression(ModelJob job, int newProgression )
+        {
+               job.State.Progression = newProgression;
+        }
+
+        
     }
 }

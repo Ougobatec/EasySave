@@ -3,6 +3,7 @@ using System.IO;
 using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
+using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
 using Microsoft.Win32;
@@ -88,13 +89,13 @@ namespace EasySave.Views
                     return;
                 }
 
-                var job = new ModelJob
-                {
-                    Name = name,
-                    SourceDirectory = source,
-                    TargetDirectory = target,
-                    Type = Enum.Parse<EasySave.Enumerations.BackupTypes>(type),
-                };
+                var job = new ModelJob(name, source, target, Enum.Parse<BackupTypes>(type));
+                //    {
+                //    Name = name,
+                //    SourceDirectory = source,
+                //    TargetDirectory = target,
+                //    Type = Enum.Parse<BackupTypes>(type),
+                //};)
                 if (Job == null)
                 {
                     try

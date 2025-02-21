@@ -9,6 +9,7 @@ using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
+using Microsoft.VisualBasic;
 
 namespace EasySave
 {
@@ -46,9 +47,8 @@ namespace EasySave
                 throw new Exception("Message_NameExists");
             }
 
-            job.Key = GenerateKey(64);
             JsonConfig.BackupJobs.Add(job);
-            JsonState.Add(new ModelState { Name = job.Name });
+            JsonState.Add(job.State);
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
             await SaveJsonAsync(JsonState, StateFilePath);
         }
@@ -60,16 +60,17 @@ namespace EasySave
                 throw new Exception("Message_NameExists");
             }
 
-            var state = JsonState.FirstOrDefault(s => s.Name == existingJob.Name);
-            if (state != null)
-            {
-                state.Name = newJob.Name;
-            }
+            //var state = JsonState.FirstOrDefault(s => s.Name == existingJob.Name);
+            //if (state != null)
+            //{
+            //    state.Name = newJob.Name;
+            //}
 
             existingJob.Name = newJob.Name;
             existingJob.SourceDirectory = newJob.SourceDirectory;
             existingJob.TargetDirectory = newJob.TargetDirectory;
             existingJob.Type = newJob.Type;
+            existingJob.State.Name = newJob.Name;
 
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
             await SaveJsonAsync(JsonState, StateFilePath);
@@ -389,19 +390,6 @@ namespace EasySave
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
-        }
-
-        /// <summary>
-        /// create a cryptographic key via of the desired length via a random number generator
-        /// </summary>
-        private static string GenerateKey(int bits)
-        {
-            byte[] key = new byte[bits / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(key);
-            }
-            return Convert.ToBase64String(key);         //transform to base64
         }
     }
 }
