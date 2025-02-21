@@ -25,20 +25,31 @@ namespace EasySave
         private static readonly string StateFilePath = "Config\\state.json";
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
+
+        /// <summary>
+        /// principal method how retrieve the state, config and language
+        /// </summary>
         private BackupManager()
         {
-            LoadConfig();
+            LoadConfig(ConfigFilePath);
             LoadStates(StateFilePath);
             SetCulture(JsonConfig.Language);
             Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
         }
 
+        /// <summary>
+        /// singleton isntancer
+        /// </summary>
         public static BackupManager GetInstance()
         {
             BackupManager_Instance ??= new BackupManager();
             return BackupManager_Instance;
         }
 
+
+        /// <summary>
+        /// where a backup is created add it to state and config file
+        /// </summary>
         public async Task AddBackupJobAsync(ModelJob job)
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
@@ -53,6 +64,9 @@ namespace EasySave
             await SaveJsonAsync(JsonState, StateFilePath);
         }
 
+        /// <summary>
+        /// where a backup is updated modify it in config and state
+        /// </summary>
         public async Task UpdateBackupJobAsync(ModelJob newJob, ModelJob existingJob)
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
@@ -322,13 +336,13 @@ namespace EasySave
         /// Load config from the config file
         /// </summary>
         /// <exception cref="Exception">creation of a new config </exception>
-        private void LoadConfig()
+        private void LoadConfig(string pathConfig)
         {
-            if (File.Exists(ConfigFilePath))
+            if (File.Exists(pathConfig))
             {
                 try
                 {
-                    var json = File.ReadAllText(ConfigFilePath);                                            //lire tout le json du fichier
+                    var json = File.ReadAllText(pathConfig);                                            //lire tout le json du fichier
                     JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();        //transform json to config data via ModelConfig class
                 }
                 catch (JsonException)
