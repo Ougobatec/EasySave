@@ -12,6 +12,9 @@ using Logger;
 
 namespace EasySave
 {
+    /// <summary>
+    /// manage all the backup logic
+    /// </summary>
     public class BackupManager
     {
         public ResourceManager resourceManager = new("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
@@ -135,7 +138,7 @@ namespace EasySave
             string sourceDir = job.SourceDirectory;
             string baseDestDir = job.TargetDirectory;
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string destDir = Path.Combine(baseDestDir, timestamp +"_"+job.Name+"_"+job.Type);
+            string destDir = Path.Combine(baseDestDir, timestamp);
             Directory.CreateDirectory(destDir);
 
             var backupStartTime = DateTime.Now;
@@ -305,17 +308,17 @@ namespace EasySave
             {
                 try
                 {
-                    var json = File.ReadAllText(ConfigFilePath);
-                    JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();
+                    var json = File.ReadAllText(ConfigFilePath);                                            //lire tout le json du fichier
+                    JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();        //transform json to config data via ModelConfig class
                 }
                 catch (JsonException)
                 {
-                    JsonConfig = new ModelConfig();
+                    JsonConfig = new ModelConfig();                                                         //je sais pas ce que c'est
                 }
             }
             else
             {
-                JsonConfig = new ModelConfig();
+                JsonConfig = new ModelConfig();                                                             //je sais pas ce que c'est
             }
 
             JsonConfig.Language ??= "en";
@@ -323,6 +326,9 @@ namespace EasySave
             JsonConfig.BackupJobs ??= [];
         }
 
+        /// <summary>
+        /// je sais pas ce que c'est
+        /// </summary>
         private void LoadStates()
         {
             if (File.Exists(StateFilePath))
@@ -343,26 +349,40 @@ namespace EasySave
             }
         }
 
+        /// <summary>
+        /// save data into desired json file
+        /// 
+        /// mais le <T> je sais pas ce que c'est
+        /// 
+        /// </summary>
         private static async Task SaveJsonAsync<T>(T data, string filePath)
         {
-            var directory = Path.GetDirectoryName(filePath);
+            var directory = Path.GetDirectoryName(filePath);                                                    //take the folder above the file
             if (!Directory.Exists(directory))
             {
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(directory);                                                           //create directory if it doesn't exist
             }
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(filePath, json);
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      //transform to json
+            await File.WriteAllTextAsync(filePath, json);                                                       //write to desired json file
         }
 
+        /// <summary>
+        /// for changing language via resx file
+        /// </summary>
         private static void SetCulture(string cultureName)
         {
-            CultureInfo culture = new(cultureName);
+            CultureInfo culture = new(cultureName);                 // to add more languages
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
         }
 
+
+
+        /// <summary>
+        /// create a cryptographic key via of the desired length via a random number generator
+        /// </summary>
         private static string GenerateKey(int bits)
         {
             byte[] key = new byte[bits / 8];
@@ -370,7 +390,7 @@ namespace EasySave
             {
                 rng.GetBytes(key);
             }
-            return Convert.ToBase64String(key);
+            return Convert.ToBase64String(key);         //transform to base64
         }
     }
 }
