@@ -28,40 +28,59 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
                 <TextBlock x:Name="Limit_size_file" Text="Limit Size File" Margin="0,0,10,0"/>
-                <TextBox x:Name="Limit_size_fileTextBox" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left"/>
+                <TextBox x:Name="Limit_size_fileTextBox" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" TextChanged="Limit_size_fileTextBox_TextChanged"/>
             </StackPanel>
-            <StackPanel Orientation="Vertical" Margin="0,40,0,0">
-                <TextBlock x:Name="Title_ExtensionsSettings" Text="Manage file extensions" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
 
-                    <!-- ListBox des extensions disponibles -->
-                    <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailableExtensions}" Width="100" Height="100" Grid.Column="0"/>
+                <StackPanel Orientation="Vertical" Margin="0,40,20,0">
+                    <TextBlock x:Name="Title_Priority_extension" Text="Priority extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Boutons de déplacement -->
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
-                        <Button Content="➜" Width="40" Click="MoveToSelected"/>
-                        <Button Content="➜➜" Width="40" Click="MoveAllToSelected" Margin="0,5,0,5"/>
-                        <Button Content="⬅" Width="40" Click="MoveToAvailable"/>
-                        <Button Content="⬅⬅" Width="40" Click="MoveAllToAvailable" Margin="0,5,0,0"/>
-                    </StackPanel>
+                        <!-- ListBox des extensions disponibles -->
+                        <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailableExtensions}" Width="100" Height="100" Grid.Column="0"/>
 
-                    <!-- ListBox des extensions sélectionnées -->
-                    <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Extension}" VerticalAlignment="Center" Width="100"/>
-                                    <CheckBox IsChecked="{Binding IsEncrypted}" Content="Encrypt" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
+                        <!-- Boutons de déplacement -->
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+                            <Button Content="➜" Width="40" Click="MoveToSelected"/>
+                            <Button x:Name="MoveAllToSelectedPriority" Content="➜➜" Width="40" Click="MoveAllToSelected" Margin="0,5,0,5"/>
+                            <Button Content="⬅" Width="40" Click="MoveToAvailable"/>
+                            <Button x:Name="MoveAllToAvailablePriority" Content="⬅⬅" Width="40" Click="MoveAllToAvailable" Margin="0,5,0,0"/>
+                        </StackPanel>
+
+                        <!-- ListBox des extensions sélectionnées -->
+                        <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Margin="20,40,0,0">
+                    <TextBlock x:Name="Title_Encrypted_extension" Text="Encrypted extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- ListBox des extensions disponibles -->
+                        <ListBox x:Name="AvailableEncryptExtensionsListBox" ItemsSource="{Binding AvailableEncryptedExtensions}" Width="100" Height="100" Grid.Column="0"/>
+
+                        <!-- Boutons de déplacement -->
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+                            <Button Content="➜" Width="40" Click="MoveToSelected"/>
+                            <Button x:Name="MoveAllToSelectedEncrypted" Content="➜➜" Width="40" Click="MoveAllToSelected" Margin="0,5,0,5"/>
+                            <Button Content="⬅" Width="40" Click="MoveToAvailable"/>
+                            <Button x:Name="MoveAllToAvailableEncrypted" Content="⬅⬅" Width="40" Click="MoveAllToAvailable" Margin="0,5,0,0"/>
+                        </StackPanel>
+
+                        <!-- ListBox des extensions sélectionnées -->
+                        <ListBox x:Name="SelectedEncryptExtensionsListBox" ItemsSource="{Binding SelectedEncryptedExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
+                    </Grid>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

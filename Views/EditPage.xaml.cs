@@ -18,8 +18,7 @@ namespace EasySave.Views
         // Used to keep the data on the current job to use it between methods
         private readonly ModelJob? Job = null;
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<ModelLog> SavesEntries { get; set; }
-
+        public ObservableCollection<ModelSave> SavesEntries { get; set; }
         public EditPage(ModelJob? job = null)
         {
             InitializeComponent();
@@ -180,37 +179,104 @@ namespace EasySave.Views
         }
         private async void DisplaySaves()
         {
-            SavesEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
+            // Stock all saves in a list
+            SavesEntries = new ObservableCollection<ModelSave>();
 
-            foreach (ModelLog el in SavesEntries.ToList()) // Convertir en liste temporaire pour éviter la modification pendant l'itération
+            ObservableCollection<string> SavesName = new ObservableCollection<string>();
+            // Go through each folders in the backUpJob target directory
+            foreach (string dir in Directory.GetDirectories(Job.TargetDirectory, "*", SearchOption.TopDirectoryOnly))
             {
-                // we check for saves that are not associated with the backUpJob to remove them
-                // !Directory.Exists(el.Destination) : we go check if the path exist or not (save could have been deleted)
-                // Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName : we check if the folder above is different than backUpJob directory or if the name of the backupJob is different
-                if (Job != null && (!Directory.Exists(el.Destination) || Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName))
+                string folderName = Path.GetFileName(dir); // Extraire le nom du dossier
+                long size = 0;
+                if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
                 {
-                    SavesEntries.Remove(el);
-                }
-                else
-                {
-                    // we check the type of the saves with the folder name
-                    string type = Path.GetFileName(el.Destination.TrimEnd(Path.DirectorySeparatorChar));
-                    el.BackupName = type;
-                    // we will stock the type of the save in the source of the element (because there are no type propriety for the save in logs)
-                    if (type.Contains("full"))
+                    // Get the size of the save
+                    if (!Directory.Exists(dir))
                     {
-                        el.Source = "Full";
-                    }
-                    else if (type.Contains("diff"))
-                    {
-                        el.Source = "Differential";
+                        // if the repertory doesn't exist we set the size to -1
+                        size = -1;
                     }
                     else
                     {
-                        el.Source = "";
+                        // Get all files and do a sum their size together
+                        foreach (string file in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
+                        {
+                            FileInfo fileInfo = new FileInfo(file);
+                            size += fileInfo.Length;
+                        }
                     }
+
+                    // Get the type of the save
+                    string type = "X";
+                    if (folderName.Contains("Diff"))
+                    {
+                        type = "Differential";
+                    }
+                    else if (folderName.Contains("Full"))
+                    {
+                        type = "Full";
+                    }
+
+                    // Get the date of creation of the file
+                    DirectoryInfo dirInfo = new DirectoryInfo(dir);
+
+                    SavesEntries.Add(new ModelSave
+                    {
+                        Name = folderName,
+                        Size = size,
+                        Type = type,
+                        Date = dirInfo.CreationTime,
+                    });
                 }
             }
+            //SavesEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
+
+            //foreach (ModelLog el in SavesEntries.ToList()) // Convertir en liste temporaire pour éviter la modification pendant l'itération
+            //{
+            //    // we check for saves that are not associated with the backUpJob to remove them
+            //    // !Directory.Exists(el.Destination) : we go check if the path exist or not (save could have been deleted)
+            //    // Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName : we check if the folder above is different than backUpJob directory or if the name of the backupJob is different
+            //    if (Job != null && (!Directory.Exists(el.Destination) || Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName))
+            //    {
+            //        SavesEntries.Remove(el);
+            //    }
+            //    else
+            //    {
+            //        // we check the type of the saves with the folder name
+            //        string name = Path.GetFileName(el.Destination.TrimEnd(Path.DirectorySeparatorChar));
+            //        el.BackupName = name;
+            //        // Test if repertory exist and calculate the size of the save
+            //        if (!Directory.Exists(el.Destination))
+            //        {
+            //            // if the repertory doesn't exist we set the size to -1
+            //            el.Size = -1;
+            //        }
+            //        else
+            //        {
+            //            el.Size = 0;
+            //            // Get all files and do a sum their size together
+            //            foreach (string file in Directory.GetFiles(el.Destination, "*", SearchOption.AllDirectories))
+            //            {
+            //                FileInfo fileInfo = new FileInfo(file);
+            //                el.Size += fileInfo.Length;
+            //            }
+            //        }
+
+            //        // we will stock the type of the save in the source of the element (because there are no type propriety for the save in logs)
+            //        if (name.Contains("full"))
+            //        {
+            //            el.Source = "Full";
+            //        }
+            //        else if (name.Contains("diff"))
+            //        {
+            //            el.Source = "Differential";
+            //        }
+            //        else
+            //        {
+            //            el.Source = "";
+            //        }
+            //    }
+            //}
         }
     }
 }

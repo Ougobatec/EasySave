@@ -135,7 +135,7 @@ namespace EasySave
             string sourceDir = job.SourceDirectory;
             string baseDestDir = job.TargetDirectory;
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string destDir = Path.Combine(baseDestDir, timestamp);
+            string destDir = Path.Combine(baseDestDir, timestamp +"_"+job.Name+"_"+job.Type);
             Directory.CreateDirectory(destDir);
 
             var backupStartTime = DateTime.Now;

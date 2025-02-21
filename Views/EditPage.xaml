@@ -95,7 +95,7 @@
             <DockPanel Margin="10,10,10,10">
                 <DataGrid Name="SavesDataGrid" ItemsSource="{Binding SavesEntries}" AutoGenerateColumns="False" SizeChanged="SavesDataGrid_SizeChanged" IsReadOnly="True" SelectionUnit="Cell">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="Header_Date" Header="Date" Binding="{Binding Timestamp}">
+                        <DataGridTextColumn x:Name="Header_Date" Header="Date" Binding="{Binding Date}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -103,7 +103,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="Header_BackupName" Header="Backup name" Binding="{Binding BackupName}">
+                        <DataGridTextColumn x:Name="Header_BackupName" Header="Backup name" Binding="{Binding Name}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -111,7 +111,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="Header_Type" Header="Type" Binding="{Binding Source}">
+                        <DataGridTextColumn x:Name="Header_Type" Header="Type" Binding="{Binding Type}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
