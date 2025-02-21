@@ -75,6 +75,12 @@ namespace EasySave
             await SaveJsonAsync(JsonState, StateFilePath);
         }
 
+
+        /// <summary>
+        /// Executes the backup job asynchronously.
+        /// </summary>
+        /// <param name="job">The backup job to execute.</param>
+        /// <exception cref="Exception">Thrown when the source directory is not found.</exception>
         public async Task ExecuteBackupJobAsync(ModelJob job)
         {
             if (!Directory.Exists(job.SourceDirectory))
@@ -88,6 +94,10 @@ namespace EasySave
             await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
         }
 
+
+        /// <summary>
+        /// delete a backup via a backup object
+        /// </summary>
         public async Task DeleteBackupJobAsync(ModelJob job)
         {
             JsonConfig.BackupJobs.Remove(job);
@@ -132,6 +142,11 @@ namespace EasySave
             await SaveJsonAsync(JsonConfig, ConfigFilePath);
         }
 
+
+
+        /// <summary>
+        /// c'est sale et c'est gros
+        /// </summary>
         private async Task CopyDirectoryAsync(ModelJob job)
         {
             var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
@@ -292,6 +307,10 @@ namespace EasySave
             });
         }
 
+
+        /// <summary>
+        /// c'est quoi ca?
+        /// </summary>
         private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
         {
             state.State = newState;
