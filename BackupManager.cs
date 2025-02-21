@@ -305,6 +305,12 @@ namespace EasySave
             var totalBackupTime = backupEndTime - backupStartTime;
             long totalSize = Directory.GetFiles(destDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
 
+
+
+            /// <summary>
+            /// 
+            /// pour l'utilisation de la classe logger dans la dll
+            /// </summary>
             await Logger<ModelLog>.GetInstance().Log(new ModelLog
             {
                 Timestamp = DateTime.Now,

@@ -1,6 +1,8 @@
 ﻿//using EasySave.Models;
+//using Logger;
 //using System;
 //using System.Collections.Generic;
+//using System.IO;
 //using System.Linq;
 //using System.Text;
 //using System.Text.Json;
@@ -11,30 +13,19 @@
 //    internal class temp
 //    {
 
-//        private void LoadConfig(string ConfigFilePath)
+//        public async Task AddBackupJobAsync(ModelJob job)
 //        {
-//            if (File.Exists(ConfigFilePath))
+//            if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
 //            {
-//                try
-//                {
-//                    var json = File.ReadAllText(ConfigFilePath);                                            //lire tout le json du fichier
-//                    JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();        //transform json to config data via ModelConfig class
-//                }
-//                catch (JsonException)
-//                {
-//                    JsonConfig = new ModelConfig();                                                         //je sais pas ce que c'est
-//                }
-//            }
-//            else
-//            {
-//                JsonConfig = new ModelConfig();                                                             //je sais pas ce que c'est
+//                throw new Exception("Message_NameExists");
 //            }
 
-//            JsonConfig.Language ??= "en";
-//            JsonConfig.LogFormat ??= "json";
-//            JsonConfig.BackupJobs ??= [];
+//            job.Key = GenerateKey(64);
+//            JsonConfig.BackupJobs.Add(job);
+//            JsonState.Add(new ModelState { Name = job.Name });
+//            await SaveJsonAsync(JsonConfig, ConfigFilePath);
+//            await SaveJsonAsync(JsonState, StateFilePath);
 //        }
-
 
 //    }
 //}
