@@ -7,27 +7,30 @@ namespace EasySave.Models
     /// <summary>
     /// setting for a backup job 
     /// </summary>
-    public class ModelJob
+    /// <remarks>
+    /// constructor for the backup job
+    /// </remarks>
+    public class ModelJob(string name, string sourceDirectory, string targetDirectory, BackupTypes type)
     {
         /// <summary>
         /// name of the backup
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = name;
 
         /// <summary>
         /// source folder for the backup
         /// </summary>
-        public string SourceDirectory { get; set; }
+        public string SourceDirectory { get; set; } = sourceDirectory;
 
         /// <summary>
         /// destination folder for the backup
         /// </summary>
-        public string TargetDirectory { get; set; }
+        public string TargetDirectory { get; set; } = targetDirectory;
 
         /// <summary>
         /// the type of the backup: diferential or full
         /// </summary>
-        public BackupTypes Type { get; set; }
+        public BackupTypes Type { get; set; } = type;
 
         /// <summary>
         /// encryption key
@@ -37,19 +40,7 @@ namespace EasySave.Models
         /// <summary>
         /// the state of the backup
         /// </summary>
-        public ModelState State { get; set; }
-
-        /// <summary>
-        /// constructor for the backup job
-        /// </summary>
-        public ModelJob(string name, string sourceDirectory, string targetDirectory, BackupTypes type)
-        {
-            Name = name;
-            SourceDirectory = sourceDirectory;
-            TargetDirectory = targetDirectory;
-            Type = type;
-            State = new ModelState(name);
-        }
+        public ModelState State { get; set; } = new ModelState(name);
 
         /// <summary>
         /// create a cryptographic key via of the desired length via a random number generator

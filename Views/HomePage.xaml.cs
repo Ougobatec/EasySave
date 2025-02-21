@@ -161,14 +161,12 @@ namespace EasySave.Views
 
         private void DisplayBackupJobs()
         {
-            BackupJobs = new ObservableCollection<ModelJob>(BackupManager.GetInstance().JsonConfig.BackupJobs);
+            BackupJobs = [.. BackupManager.GetInstance().JsonConfig.BackupJobs];
         }
 
-        private void UpdateProgression(ModelJob job, int newProgression )
+        private static void UpdateProgression(ModelJob job, int newProgression )
         {
                job.State.Progression = newProgression;
         }
-
-        
     }
 }

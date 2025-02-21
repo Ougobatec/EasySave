@@ -16,6 +16,8 @@ namespace EasySave
 
         public MainWindow()
         {
+            BackupManager.GetInstance().Load();
+
             InitializeComponent();
             MainWindow_Instance = this;
 

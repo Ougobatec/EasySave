@@ -23,17 +23,6 @@ namespace EasySave
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
 
         /// <summary>
-        /// principal method how retrieve the state, config and language
-        /// </summary>
-        private BackupManager()
-        {
-            JsonManager.LoadConfig(ConfigFilePath);
-            JsonManager.LoadStates(StateFilePath);
-            SetCulture(JsonConfig.Language);
-            Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
-        }
-
-        /// <summary>
         /// singleton isntancer
         /// </summary>
         public static BackupManager GetInstance()
@@ -42,6 +31,16 @@ namespace EasySave
             return BackupManager_Instance;
         }
 
+        /// <summary>
+        /// principal method how retrieve the state, config and language
+        /// </summary>
+        public void Load()
+        {
+            JsonManager.LoadConfig(ConfigFilePath);
+            JsonManager.LoadStates(StateFilePath);
+            SetCulture(JsonConfig.Language);
+            Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
+        }
 
         /// <summary>
         /// where a backup is created add it to state and config file
@@ -130,7 +129,7 @@ namespace EasySave
                     break;
                 // changement de la taille limite d'un fichier (pour qu'il soit consid�rer comme volumineux)
                 case "limitSizeFile":
-                    JsonConfig.limitSizeFile = Int32.Parse(value);
+                    JsonConfig.LimitSizeFile = Int32.Parse(value);
                     break;
                 // ajout, suppression d'une extension prioritaire
                 case "PriorityFiles":

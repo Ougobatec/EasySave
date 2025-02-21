@@ -21,7 +21,7 @@
         /// <summary>
         /// declare file size treshold to manage the limit at wich big file ar not tranfered at the same time
         /// </summary>
-        public int limitSizeFile { get; set; }
+        public int LimitSizeFile { get; set; }
 
         /// <summary>
         /// list of backup jobs 
@@ -31,6 +31,6 @@
         /// <summary>
         /// list of all priority extensions
         /// </summary>
-        public List<string> PriorityExtensions { get; set; } = new List<string>();
+        public List<string> PriorityExtensions { get; set; } = [];
     }
 }

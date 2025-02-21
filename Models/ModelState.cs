@@ -12,9 +12,9 @@ namespace EasySave.Models
     /// 
     /// 
     /// </summary>
-    public class ModelState
+    public class ModelState(string name)
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = name;
         /// <summary>
         /// esque c'est le chemin de source de la backup ou de un fichier ?
         /// 
@@ -76,10 +76,5 @@ namespace EasySave.Models
         }
 
         public event EventHandler? OnProgressChange;
-
-        public ModelState(string name)
-        {
-            Name = name;
-        }
     }
 }

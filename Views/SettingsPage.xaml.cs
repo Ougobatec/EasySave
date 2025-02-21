@@ -45,7 +45,7 @@ namespace EasySave.Views
             Title_Encrypted_extension.Text = ResourceManager.GetString("Title_Encrypted_extension");
             ComboBox_Language.Text = BackupManager.GetInstance().JsonConfig.Language.ToString();
             ComboBox_LogFormat.Text = BackupManager.GetInstance().JsonConfig.LogFormat.ToString();
-            Limit_size_fileTextBox.Text = BackupManager.GetInstance().JsonConfig.limitSizeFile.ToString();
+            Limit_size_fileTextBox.Text = BackupManager.GetInstance().JsonConfig.LimitSizeFile.ToString();
         }
 
         /// <summary>

@@ -10,5 +10,4 @@ namespace EasySave
     public partial class App : Application
     {
     }
-
 }
