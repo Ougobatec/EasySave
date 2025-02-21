@@ -60,8 +60,8 @@ namespace EasySave
             job.Key = GenerateKey(64);
             JsonConfig.BackupJobs.Add(job);
             JsonState.Add(new ModelState { Name = job.Name });
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace EasySave
             existingJob.TargetDirectory = newJob.TargetDirectory;
             existingJob.Type = newJob.Type;
 
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
         /// <summary>
@@ -120,8 +120,8 @@ namespace EasySave
                 JsonState.Remove(state);
             }
 
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
         public async Task ChangeSettingsAsync(string parameter, string value)
@@ -150,7 +150,7 @@ namespace EasySave
                     // code block
                     break;
             }
-            await SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonSaver.SaveJsonAsync(JsonConfig, ConfigFilePath);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace EasySave
                     state.TargetFilePath = destPath;
                     state.NbFilesLeftToDo--;
                     state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                    await SaveJsonAsync(JsonState, StateFilePath);
+                    await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
                 }
             }
             else if (job.Type == BackupTypes.Differential)
@@ -296,7 +296,7 @@ namespace EasySave
                         state.TargetFilePath = destPath;
                         state.NbFilesLeftToDo--;
                         state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                        await SaveJsonAsync(JsonState, StateFilePath);
+                        await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
                     }
                 }
             }
@@ -333,7 +333,7 @@ namespace EasySave
             state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
             state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
             state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await SaveJsonAsync(JsonState, StateFilePath);
+            await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
 
@@ -390,23 +390,7 @@ namespace EasySave
             }
         }
 
-        /// <summary>
-        /// save data into desired json file
-        /// 
-        /// mais le <T> je sais pas ce que c'est
-        /// 
-        /// </summary>
-        private static async Task SaveJsonAsync<T>(T data, string filePath)
-        {
-            var directory = Path.GetDirectoryName(filePath);                                                    //take the folder above the file
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);                                                           //create directory if it doesn't exist
-            }
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      //transform to json
-            await File.WriteAllTextAsync(filePath, json);                                                       //write to desired json file
-        }
 
         /// <summary>
         /// for changing language via resx file
