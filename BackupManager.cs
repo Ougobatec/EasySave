@@ -125,7 +125,7 @@ namespace EasySave
             await JsonSaver.SaveJsonAsync(JsonState, StateFilePath);
         }
 
-        public async Task ChangeSettingsAsync(string parameter, string value)
+        public async Task ChangeSettingsAsync(string parameter, string value, List<string>? list = null)
         {
             switch (parameter)
             {
@@ -143,7 +143,7 @@ namespace EasySave
                 case "limitSizeFile":
                     JsonConfig.limitSizeFile = Int32.Parse(value);
                     break;
-                // ajout, suppr�ssion d'une extension prioritaire
+                // ajout, suppression d'une extension prioritaire
                 case "PriorityFiles":
                     
                     break;

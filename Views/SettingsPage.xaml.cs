@@ -6,6 +6,7 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.IO;
+using System.Windows.Documents;
 
 namespace EasySave.Views
 {
@@ -65,6 +66,13 @@ namespace EasySave.Views
                     BackupManager.GetInstance().ChangeSettingsAsync("logFormat", (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString());
                 }
             }
+
+            List<string> priorityExtensions = new List<string>();
+            foreach (ListItem item in SelectedExtensionsListBox.Items)
+            {
+                priorityExtensions.Add(item.Name);
+            }
+            BackupManager.GetInstance().ChangeSettingsAsync("PriorityFiles",null, priorityExtensions);
             Refresh();
         }
 
