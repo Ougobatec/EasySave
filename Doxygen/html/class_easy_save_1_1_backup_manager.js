@@ -1,7 +1,7 @@
 var class_easy_save_1_1_backup_manager =
 [
     [ "AddBackupJobAsync", "class_easy_save_1_1_backup_manager.html#a3f7db6db7ab9c211f1652f18c7562e1a", null ],
-    [ "ChangeSettingsAsync", "class_easy_save_1_1_backup_manager.html#ac6253960b8bb9cbab56aafe34ee9e0c7", null ],
+    [ "ChangeSettingsAsync", "class_easy_save_1_1_backup_manager.html#a6982bc61ecfe04657485db36b31023f5", null ],
     [ "DeleteBackupJobAsync", "class_easy_save_1_1_backup_manager.html#ad60874d915d9d5df17e4eba109a74488", null ],
     [ "ExecuteBackupJobAsync", "class_easy_save_1_1_backup_manager.html#a5b35d3a46780349558b6484aac433fa6", null ],
     [ "UpdateBackupJobAsync", "class_easy_save_1_1_backup_manager.html#a9aca3326a1fdfddb1d8572465e9d5902", null ],

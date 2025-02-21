@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Libraries\" />
     <Folder Include="Doxygen\" />
+    <Folder Include="Libraries\" />
   </ItemGroup>
 
   <ItemGroup>
