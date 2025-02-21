@@ -72,7 +72,7 @@ namespace EasySave.Views
             DisplaySaves();
         }
 
-        private void Button_Submit_Click(object sender, RoutedEventArgs e)
+        private async void Button_Submit_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -98,12 +98,18 @@ namespace EasySave.Views
                 {
                     try
                     {
-                        BackupManager.GetInstance().AddBackupJobAsync(job);
+                        await BackupManager.GetInstance().AddBackupJobAsync(job);
                         MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        // Réinitialiser les champs après ajout
+                        Textbox_BackupName.Text = "";
+                        Textbox_SourceDirectory.Text = "";
+                        Textbox_TargetDirectory.Text = "";
+                        ComboBox_Type.SelectedIndex = -1;
                     }
                     catch (Exception ex)
                     {
-                        if (ex.Equals("Message_NameExists"))
+                        if (ex.Message.Contains("Message_NameExists"))
                         {
                             MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
@@ -117,12 +123,12 @@ namespace EasySave.Views
                 {
                     try
                     {
-                        BackupManager.GetInstance().UpdateBackupJobAsync(job, Job);
+                        await BackupManager.GetInstance().UpdateBackupJobAsync(job, Job);
                         MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch (Exception ex)
                     {
-                        if (ex.Equals("Message_NameExists"))
+                        if (ex.Message.Contains("Message_NameExists"))
                         {
                             MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
@@ -132,12 +138,6 @@ namespace EasySave.Views
                         }
                     }
                 }
-
-                // Réinitialiser les champs après ajout
-                Textbox_BackupName.Text = "";
-                Textbox_SourceDirectory.Text = "";
-                Textbox_TargetDirectory.Text = "";
-                ComboBox_Type.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -183,6 +183,12 @@ namespace EasySave.Views
             SavesEntries = new ObservableCollection<ModelSave>();
 
             ObservableCollection<string> SavesName = new ObservableCollection<string>();
+
+            if (!Directory.Exists(Job.TargetDirectory))
+            {
+                Directory.CreateDirectory(Job.TargetDirectory);                                              //create directory if it doesn't exist
+            }
+
             // Go through each folders in the backUpJob target directory
             foreach (string dir in Directory.GetDirectories(Job.TargetDirectory, "*", SearchOption.TopDirectoryOnly))
             {

@@ -68,7 +68,7 @@ namespace EasySave.Views
             }
         }
 
-        private void Button_Execute_Click(object sender, RoutedEventArgs e)
+        private async void Button_Execute_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -94,12 +94,12 @@ namespace EasySave.Views
                         {
                             try
                             {
-                                BackupManager.GetInstance().ExecuteBackupJobAsync(job);
+                                await BackupManager.GetInstance().ExecuteBackupJobAsync(job);
                                 MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                             catch (Exception ex)
                             {
-                                if (ex.Equals("Message_DirectoryNotFound"))
+                                if (ex.Message.Contains("Message_DirectoryNotFound"))
                                 {
                                     MessageBox.Show(string.Format(ResourceManager.GetString("Message_DirectoryNotFound"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
@@ -109,18 +109,17 @@ namespace EasySave.Views
                                 }
                             }
                         }
-
                         BackupJobsListView.Items.Refresh();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(ResourceManager.GetString("Message_ErrorExecute"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void Button_Delete_Click(object sender, RoutedEventArgs e)
+        private async void Button_Delete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -138,8 +137,16 @@ namespace EasySave.Views
                 {
                     foreach (var job in jobsToDelete)
                     {
-                        BackupJobs.Remove(job);
-                        BackupManager.GetInstance().DeleteBackupJobAsync(job);
+                        try
+                        {
+                            BackupJobs.Remove(job);
+                            await BackupManager.GetInstance().DeleteBackupJobAsync(job);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_DeleteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     Refresh();
                     BackupJobsListView.Items.Refresh();
