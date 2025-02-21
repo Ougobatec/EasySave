@@ -16,11 +16,14 @@ namespace EasySave.Views
     /// </summary>
     public partial class EditPage : Page
     {
-        // Used to keep the data on the current job to use it between methods
-        private readonly ModelJob? Job = null;
+        private readonly ModelJob? Job = null;      // Used to keep the data on the current job to use it between methods
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<ModelSave> SavesEntries { get; set; }
+        public ObservableCollection<ModelSave> SavesEntries { get; set; }       // List to store all SaveEntries
 
+        /// <summary>
+        /// Constructor of EditPage class
+        /// parameter (ModelJob? job) : used to get the infos of the BackUpJob if there's one (when you click on modify on a backUpJob), can be null
+        /// </summary>
         public EditPage(ModelJob? job = null)
         {
             InitializeComponent();
@@ -34,6 +37,9 @@ namespace EasySave.Views
             }
         }
 
+        /// <summary>
+        /// Refresh the UI of EditPage
+        /// </summary>
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
@@ -49,7 +55,9 @@ namespace EasySave.Views
             Header_Type.Header = ResourceManager.GetString("Text_Type");
             Header_Size.Header = ResourceManager.GetString("Text_Size");
         }
-
+        /// <summary>
+        /// Allows to make the grid that contains the save responsive
+        /// </summary>
         private void SavesDataGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (sender is DataGrid dataGrid)
@@ -61,7 +69,9 @@ namespace EasySave.Views
                 dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% pour "Emplacement cible"
             }
         }
-        
+        /// <summary>
+        /// Load the job by pre-filling the inputs if there's one
+        /// </summary>
         private void LoadJob(ModelJob job)
         {
             Title_Edit.Text = ResourceManager.GetString("Title_Edit") + " - " + job.Name;
@@ -73,7 +83,9 @@ namespace EasySave.Views
             SavesList.Visibility = Visibility.Visible;
             DisplaySaves();
         }
-
+        /// <summary>
+        /// Method called when the button submit is clicked, it is used to create or modify a backUpJob
+        /// </summary>
         private async void Button_Submit_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -146,39 +158,44 @@ namespace EasySave.Views
                 MessageBox.Show($"Erreur : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private void BrowseSourceDirectory_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Method used to browse directories with file explorer
+        /// </summary>
+        private void BrowseDirectory_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog
+            Button button = sender as Button;
+            if (button != null)
             {
-                CheckFileExists = false,
-                CheckPathExists = true,
-                FileName = "Dossier sélectionné",
-                Filter = "Dossiers|*.none",
-                Title = "Sélectionner le dossier source"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                Textbox_SourceDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+                if (button.Name == "BrowseSource")
+                {
+                    var Title = "Sélectionner le dossier de source";
+                }
+                else if (button.Name == "BrowseTarget")
+                {
+                    var Title = "Sélectionner le dossier de destination";
+                }
+                var dialog = new OpenFileDialog()
+                {
+                    CheckFileExists = false,
+                    CheckPathExists = true,
+                    FileName = "Dossier sélectionné",
+                    Filter = "Dossiers|*.none",
+                    Title = Title
+                };
+                dialog.ShowDialog();
+                if (button.Name == "BrowseSource")
+                {
+                    Textbox_SourceDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+                }
+                else if (button.Name == "BrowseTarget")
+                {
+                    Textbox_TargetDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
+                }
             }
         }
-
-        private void BrowseTargetDirectory_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog
-            {
-                CheckFileExists = false,
-                CheckPathExists = true,
-                FileName = "Dossier sélectionné",
-                Filter = "Dossiers|*.none",
-                Title = "Sélectionner le dossier de destination"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                Textbox_TargetDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
-            }
-        }
+        /// <summary>
+        /// Method to display saves of the backUpJob
+        /// </summary>
         private async void DisplaySaves()
         {
             // Stock all saves in a list
@@ -237,54 +254,6 @@ namespace EasySave.Views
                     });
                 }
             }
-            //SavesEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
-
-            //foreach (ModelLog el in SavesEntries.ToList()) // Convertir en liste temporaire pour éviter la modification pendant l'itération
-            //{
-            //    // we check for saves that are not associated with the backUpJob to remove them
-            //    // !Directory.Exists(el.Destination) : we go check if the path exist or not (save could have been deleted)
-            //    // Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName : we check if the folder above is different than backUpJob directory or if the name of the backupJob is different
-            //    if (Job != null && (!Directory.Exists(el.Destination) || Job.TargetDirectory != Path.GetDirectoryName(el.Destination.TrimEnd('\\')) || Job.Name != el.BackupName))
-            //    {
-            //        SavesEntries.Remove(el);
-            //    }
-            //    else
-            //    {
-            //        // we check the type of the saves with the folder name
-            //        string name = Path.GetFileName(el.Destination.TrimEnd(Path.DirectorySeparatorChar));
-            //        el.BackupName = name;
-            //        // Test if repertory exist and calculate the size of the save
-            //        if (!Directory.Exists(el.Destination))
-            //        {
-            //            // if the repertory doesn't exist we set the size to -1
-            //            el.Size = -1;
-            //        }
-            //        else
-            //        {
-            //            el.Size = 0;
-            //            // Get all files and do a sum their size together
-            //            foreach (string file in Directory.GetFiles(el.Destination, "*", SearchOption.AllDirectories))
-            //            {
-            //                FileInfo fileInfo = new FileInfo(file);
-            //                el.Size += fileInfo.Length;
-            //            }
-            //        }
-
-            //        // we will stock the type of the save in the source of the element (because there are no type propriety for the save in logs)
-            //        if (name.Contains("full"))
-            //        {
-            //            el.Source = "Full";
-            //        }
-            //        else if (name.Contains("diff"))
-            //        {
-            //            el.Source = "Differential";
-            //        }
-            //        else
-            //        {
-            //            el.Source = "";
-            //        }
-            //    }
-            //}
         }
     }
 }

@@ -27,5 +27,7 @@
         /// list of backup jobs 
         /// </summary>
         public List<ModelJob> BackupJobs { get; set; }
+
+        public List<string> PriorityExtensions { get; set; } = new List<string>();
     }
 }

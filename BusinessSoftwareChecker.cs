@@ -1,11 +1,15 @@
 ﻿using System.Diagnostics;
-using System.Linq;
-using System.Windows;
 
+/// <summary>
+/// Class to check business software
+/// </summary>
 public class BusinessSoftwareChecker
 {
-    private static readonly string[] businessSoftware = { "CalculatorApp", "calc", "mspaint" }; // Noms des logiciels métiers
+    private static readonly string[] businessSoftware = { "CalculatorApp", "calc", "mspaint" }; // Name of business softwares
 
+    /// <summary>
+    /// Checks if a business software is running and return true or false
+    /// </summary>
     public static bool IsBusinessSoftwareRunning()
     {
         return Process.GetProcesses()

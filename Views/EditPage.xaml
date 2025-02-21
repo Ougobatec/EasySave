@@ -49,7 +49,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox x:Name="Textbox_SourceDirectory" Height="30" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="0,5,0,0"/>
-                    <Button Content="..." Width="30" Height="30" Click="BrowseSourceDirectory_Click" Grid.Column="1" Margin="0,5,0,0"/>
+                    <Button Content="..." Width="30" Height="30" Click="BrowseDirectory_Click" Grid.Column="1" Margin="0,5,0,0"/>
                 </Grid>
             </StackPanel>
         </Grid>
@@ -72,7 +72,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox x:Name="Textbox_TargetDirectory" Height="30" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="0,5,0,0"/>
-                    <Button Content="..." Width="30" Height="30" Click="BrowseTargetDirectory_Click" Grid.Column="1" Margin="0,5,0,0"/>
+                    <Button Content="..." Width="30" Height="30" Click="BrowseDirectory_Click" Grid.Column="1" Margin="0,5,0,0"/>
                 </Grid>
             </StackPanel>
 

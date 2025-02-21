@@ -15,12 +15,12 @@ namespace EasySave.Views
     public partial class SettingsPage : Page
     {
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<string> AvailableExtensions { get; set; } = new ObservableCollection<string> { };
-        public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string> { };
-        public ObservableCollection<string> SelectedExtensions { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<ModelLog> LogEntries { get; set; }
-        public ObservableCollection<string> PathEntries { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> AvailableExtensions { get; set; } = new ObservableCollection<string> { };       // List for the available extensions for priority exentions
+        public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string> { };      // List for the available extensions for encrypted exentions
+        public ObservableCollection<string> SelectedExtensions { get; set; } = new ObservableCollection<string>();      // List for the selected extensions for priority exentions
+        public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();     // List for the selected extensions for encrypted exentions
+        public ObservableCollection<ModelJob> BackupJobs { get; set; }      // List to get all backupJobs 
+        public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();     // List to store all extensions used in backUps
 
         public SettingsPage()
         {
@@ -31,6 +31,9 @@ namespace EasySave.Views
             Refresh();
         }
 
+        /// <summary>
+        /// Refresh the UI of SettingsPage
+        /// </summary>
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
@@ -65,7 +68,9 @@ namespace EasySave.Views
             Refresh();
         }
 
-        // Déplacer un élément vers la liste sélectionnée
+        /// <summary>
+        /// move one elements to the selectionned list
+        /// </summary>
         private void MoveToSelected(object sender, RoutedEventArgs e)
         {
             if (AvailableExtensionsListBox.SelectedItem is string selectedExtension)
@@ -80,7 +85,9 @@ namespace EasySave.Views
             }
         }
 
-        // Déplacer tous les éléments vers la liste sélectionnée
+        /// <summary>
+        /// move all elements to the selectionned list
+        /// </summary>
         private void MoveAllToSelected(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -104,7 +111,9 @@ namespace EasySave.Views
             }
         }
 
-        // Déplacer un élément vers la liste disponible
+        /// <summary>
+        /// move one element to the available list
+        /// </summary>
         private void MoveToAvailable(object sender, RoutedEventArgs e)
         {
             if (SelectedExtensionsListBox.SelectedItem is string selectedExtension)
@@ -119,7 +128,9 @@ namespace EasySave.Views
             }
         }
 
-        // Déplacer tous les éléments vers la liste disponible
+        /// <summary>
+        /// Move all elements to the avaialble list
+        /// </summary>
         private void MoveAllToAvailable(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -152,41 +163,35 @@ namespace EasySave.Views
                 }
             }
         }
+        /// <summary>
+        /// allow to get all extensions used in the saves files and list them in available lists
+        /// </summary>
         private async void Get_all_extension()
         {
-            //LogEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
+            BackupJobs = new ObservableCollection<ModelJob>(BackupManager.GetInstance().JsonConfig.BackupJobs);
 
-            //foreach (ModelLog el in LogEntries.ToList())
-            //{
-            //    // Extraction des extensions et suppression des doublons
-            //    HashSet<string> fileExtensions = new HashSet<string>(
-            //        PathEntries.Select(path => Path.GetExtension(path).ToLower())
-            //                 .Where(ext => !string.IsNullOrEmpty(ext))
-            //    );
-            //}
-
-            LogEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
-
-            // Création d'un HashSet pour éviter les doublons
+            // Creation of a hashset to avoid duplicates
             HashSet<string> fileExtensions = new HashSet<string>();
 
-            foreach (ModelLog el in LogEntries)
+            foreach (ModelJob job in BackupJobs)
             {
-                // Vérifie si destination n'est pas vide ou null
-                if (!string.IsNullOrEmpty(el.Destination))
+                if (Directory.Exists(job.TargetDirectory)) // Verify if the folder exist
                 {
-                    string ext = Path.GetExtension(el.Destination).ToLower();
-                    if (!string.IsNullOrEmpty(ext))
+                    foreach (string file in Directory.GetFiles(job.TargetDirectory, "*.*", SearchOption.AllDirectories))
                     {
-                        fileExtensions.Add(ext);
+                        string extension = Path.GetExtension(file).ToLower();
+                        if (!string.IsNullOrEmpty(extension))
+                        {
+                            fileExtensions.Add(extension);
+                        }
                     }
                 }
             }
 
-            // Mettre à jour la liste PathEntries sans doublons
-            PathEntries = new ObservableCollection<string>(fileExtensions);
+            // Add the extensions to the list
+            Extensions = new ObservableCollection<string>(fileExtensions);
 
-            foreach (string el in PathEntries)
+            foreach (string el in Extensions)
             {
                 AvailableExtensions.Add(el);
                 AvailableEncryptedExtensions.Add(el);
