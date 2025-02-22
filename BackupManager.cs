@@ -96,9 +96,45 @@ namespace EasySave
 
             var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
 
-            await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
-            await CopyDirectoryAsync(job);
-            await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
+            // Get the size of the save
+            long size = GetSizeRepertory(job.TargetDirectory);
+
+            // Get the free space still available on the disk
+            DriveInfo drive = new DriveInfo(job.TargetDirectory);
+
+            if (drive.AvailableFreeSpace < size)
+            {
+                throw new Exception("Message_NotEnoughSpace");
+            }
+            else
+            {
+                await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
+                await CopyDirectoryAsync(job);
+                await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
+            }
+        }
+
+        /// <summary>
+        /// Calculate the size of a repertory
+        /// </summary>
+        public long GetSizeRepertory(string sourceDir)
+        {
+            long size = 0;
+            if (!Directory.Exists(sourceDir))
+            {
+                // if the repertory doesn't exist we set the size to -1
+                return size = -1;
+            }
+            else
+            {
+                // Get all files and do a sum their size together
+                foreach (string file in Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories))
+                {
+                    FileInfo fileInfo = new FileInfo(file);
+                    size += fileInfo.Length;
+                }
+                return size;
+            }
         }
 
         /// <summary>
@@ -133,7 +169,16 @@ namespace EasySave
                     break;
                 // ajout, suppression d'une extension prioritaire
                 case "PriorityFiles":
-                    
+                    if (list != null)
+                    {
+                        JsonConfig.PriorityExtensions = list;
+                    }
+                    break;
+                case "EncryptedFiles":
+                    if (list != null)
+                    {
+                        JsonConfig.EncryptedExtensions = list;
+                    }
                     break;
                 default:
                     // code block
@@ -155,7 +200,12 @@ namespace EasySave
             Directory.CreateDirectory(destDir);
 
             var backupStartTime = DateTime.Now;
-            var extensionsToEncrypt = new List<string> { ".txt", ".docx", ".jpg" };
+            var extensionsToEncrypt = new List<string>();
+
+            foreach (string el in BackupManager.GetInstance().JsonConfig.EncryptedExtensions)
+            {
+                extensionsToEncrypt.Add(el);
+            }
 
             if (job.Type == BackupTypes.Full)
             {

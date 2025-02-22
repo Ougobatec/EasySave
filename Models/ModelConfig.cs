@@ -31,6 +31,11 @@
         /// <summary>
         /// list of all priority extensions
         /// </summary>
-        public List<string> PriorityExtensions { get; set; } = [];
+        public List<string> PriorityExtensions { get; set; } = new List<string>();
+
+        /// <summary>
+        /// list of all encrpyted extensions
+        /// </summary>
+        public List<string> EncryptedExtensions { get; set; } = new List<string>();
     }
 }

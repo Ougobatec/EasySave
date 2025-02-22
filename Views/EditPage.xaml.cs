@@ -216,20 +216,7 @@ namespace EasySave.Views
                 if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
                 {
                     // Get the size of the save
-                    if (!Directory.Exists(dir))
-                    {
-                        // if the repertory doesn't exist we set the size to -1
-                        size = -1;
-                    }
-                    else
-                    {
-                        // Get all files and do a sum their size together
-                        foreach (string file in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
-                        {
-                            FileInfo fileInfo = new FileInfo(file);
-                            size += fileInfo.Length;
-                        }
-                    }
+                    size = BackupManager.GetInstance().GetSizeRepertory(dir);
 
                     // Get the type of the save
                     string type = "X";

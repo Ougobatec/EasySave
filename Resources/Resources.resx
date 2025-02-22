@@ -225,9 +225,6 @@
   <data name="Message_DirectoryNotFound" xml:space="preserve">
     <value>Directory not found for backup '{0}'.</value>
   </data>
-  <data name="Title_ExtensionsSettings" xml:space="preserve">
-    <value>Manage file extensions</value>
-  </data>
   <data name="Message_ExecuteSuccess" xml:space="preserve">
     <value>Backup '{0}' completed successfully.</value>
   </data>
@@ -242,5 +239,17 @@
   </data>
   <data name="Message_UpdateSuccess" xml:space="preserve">
     <value>Backup '{0}' updated successfully.</value>
+  </data>
+  <data name="Message_NotEnoughSpace " xml:space="preserve">
+    <value>You don't have enough space on the disk</value>
+  </data>
+  <data name="Title_Priority_extension" xml:space="preserve">
+    <value>Priority extensions</value>
+  </data>
+  <data name="Title_Encrypted_extension" xml:space="preserve">
+    <value>Encrypted extensions</value>
+  </data>
+  <data name="Title_Limit_size_file" xml:space="preserve">
+    <value>Limit Size File (Mo)</value>
   </data>
 </root>

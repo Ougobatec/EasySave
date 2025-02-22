@@ -225,9 +225,6 @@
   <data name="Message_DirectoryNotFound" xml:space="preserve">
     <value>Répertoire non trouvé pour la sauvegarde '{0}'.</value>
   </data>
-  <data name="Title_ExtensionsSettings" xml:space="preserve">
-    <value>Gérer les extensions de fichiers</value>
-  </data>
   <data name="Message_ExecuteSuccess" xml:space="preserve">
     <value>La sauvegarde '{0}' a été effectuée avec succès.</value>
   </data>
@@ -242,5 +239,17 @@
   </data>
   <data name="Message_UpdateSuccess" xml:space="preserve">
     <value>La sauvegarde '{0}' a été modifiée avec succès.</value>
+  </data>
+  <data name="Message_NotEnoughSpace " xml:space="preserve">
+    <value>Vous n'avez pas assez d'espace sur le disque</value>
+  </data>
+  <data name="Title_Priority_extension" xml:space="preserve">
+    <value>Extensions prioritaire</value>
+  </data>
+  <data name="Title_Encrypted_extension" xml:space="preserve">
+    <value>Extensions encryptés</value>
+  </data>
+  <data name="Title_Limit_size_file" xml:space="preserve">
+    <value>Taille llimite fichier (Mo)</value>
   </data>
 </root>

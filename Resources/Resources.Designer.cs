@@ -223,6 +223,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à You don&apos;t have enough space on the disk.
+        /// </summary>
+        internal static string Message_NotEnoughSpace_ {
+            get {
+                return ResourceManager.GetString("Message_NotEnoughSpace ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Please select at least one backup..
         /// </summary>
         internal static string Message_Selection {
@@ -394,11 +403,11 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Manage file extensions.
+        ///   Recherche une chaîne localisée semblable à Encrypted extensions.
         /// </summary>
-        internal static string Title_ExtensionsSettings {
+        internal static string Title_Encrypted_extension {
             get {
-                return ResourceManager.GetString("Title_ExtensionsSettings", resourceCulture);
+                return ResourceManager.GetString("Title_Encrypted_extension", resourceCulture);
             }
         }
         
@@ -412,11 +421,29 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Limit Size File (Mo).
+        /// </summary>
+        internal static string Title_Limit_size_file {
+            get {
+                return ResourceManager.GetString("Title_Limit_size_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Logs.
         /// </summary>
         internal static string Title_Logs {
             get {
                 return ResourceManager.GetString("Title_Logs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Priority extensions.
+        /// </summary>
+        internal static string Title_Priority_extension {
+            get {
+                return ResourceManager.GetString("Title_Priority_extension", resourceCulture);
             }
         }
         

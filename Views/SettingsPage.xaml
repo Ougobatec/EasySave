@@ -27,7 +27,7 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-                <TextBlock x:Name="Limit_size_file" Text="Limit Size File" Margin="0,0,10,0"/>
+                <TextBlock x:Name="Title_Limit_size_file" Text="Limit Size File (Mo)" Margin="0,0,10,0"/>
                 <TextBox x:Name="Limit_size_fileTextBox" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" TextChanged="Limit_size_fileTextBox_TextChanged"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
@@ -46,9 +46,9 @@
 
                         <!-- Boutons de déplacement -->
                         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
-                            <Button Content="➜" Width="40" Click="MoveToSelected"/>
+                            <Button x:Name="MoveToSelectedPriority" Content="➜" Width="40" Click="MoveToSelected"/>
                             <Button x:Name="MoveAllToSelectedPriority" Content="➜➜" Width="40" Click="MoveAllToSelected" Margin="0,5,0,5"/>
-                            <Button Content="⬅" Width="40" Click="MoveToAvailable"/>
+                            <Button x:Name="MoveToAvailablePriority" Content="⬅" Width="40" Click="MoveToAvailable"/>
                             <Button x:Name="MoveAllToAvailablePriority" Content="⬅⬅" Width="40" Click="MoveAllToAvailable" Margin="0,5,0,0"/>
                         </StackPanel>
 
@@ -71,9 +71,9 @@
 
                         <!-- Boutons de déplacement -->
                         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
-                            <Button Content="➜" Width="40" Click="MoveToSelected"/>
+                            <Button x:Name="MoveToSelectedEncrypted" Content="➜" Width="40" Click="MoveToSelected"/>
                             <Button x:Name="MoveAllToSelectedEncrypted" Content="➜➜" Width="40" Click="MoveAllToSelected" Margin="0,5,0,5"/>
-                            <Button Content="⬅" Width="40" Click="MoveToAvailable"/>
+                            <Button x:Name="MoveToAvailableEncrypted" Content="⬅" Width="40" Click="MoveToAvailable"/>
                             <Button x:Name="MoveAllToAvailableEncrypted" Content="⬅⬅" Width="40" Click="MoveAllToAvailable" Margin="0,5,0,0"/>
                         </StackPanel>
 
