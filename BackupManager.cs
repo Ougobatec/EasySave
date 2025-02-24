@@ -220,8 +220,8 @@ namespace EasySave
             Directory.CreateDirectory(saveDestDir);                                                                                             // Create the target directory
 
             var backupStartTime = DateTime.Now;
-            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);
-            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase); // Extensions prioritaires
+            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);                    // Extensions to encrypt
+            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase);                      // Priority extensions
             TimeSpan totalEncryptionTime = TimeSpan.Zero;
 
             IEnumerable<string> filesToCopy;                                                                                                    // Get the files to copy
@@ -244,9 +244,7 @@ namespace EasySave
                     });
             }
 
-            // Prioritizing files with priority extensions
-            filesToCopy = filesToCopy.OrderBy(file =>
-                priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);
+            filesToCopy = filesToCopy.OrderBy(file => priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);                            // Prioritizing files with priority extensions
 
             var totalFilesToCopy = filesToCopy.Count();
             var nbFilesLeftToDo = filesToCopy.Count();
@@ -303,23 +301,23 @@ namespace EasySave
         /// </summary>
         private async Task UpdateStateAsync(ModelJob job, string source, string target, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo)
         {
-            job.State.SourceFilePath = source;                                                                          // Update the job state source file path
-            job.State.TargetFilePath = target;                                                                          // Update the job state target file path
-            job.State.State = state;                                                                                    // Update the job state state value
-            job.State.TotalFilesToCopy = totalFilesToCopy;                                                              // Update the job state total files to copy
-            job.State.TotalFilesSize = totalFilesSize;                                                                  // Update the job state total files size
-            job.State.NbFilesLeftToDo = nbFilesLeftToDo;                                                                // Update the job state number of files left to do
-            job.State.Progression = (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);     // Update the job state progression
+            job.State.SourceFilePath = source;                                                                                                      // Update the job state source file path
+            job.State.TargetFilePath = target;                                                                                                      // Update the job state target file path
+            job.State.State = state;                                                                                                                // Update the job state state value
+            job.State.TotalFilesToCopy = totalFilesToCopy;                                                                                          // Update the job state total files to copy
+            job.State.TotalFilesSize = totalFilesSize;                                                                                              // Update the job state total files size
+            job.State.NbFilesLeftToDo = nbFilesLeftToDo;                                                                                            // Update the job state number of files left to do
+            job.State.Progression = totalFilesToCopy == 0 ? 100 : (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);   // Update the job state progression
 
-            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                 // Get the job state by name
+            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                             // Get the job state by name
             if (modelState != null)
             {
-                JsonState.Remove(modelState);                                                                           // Remove the job state
+                JsonState.Remove(modelState);                                                                                                       // Remove the job state
             }
-            JsonState.Add(job.State);                                                                                   // Add the job state
+            JsonState.Add(job.State);                                                                                                               // Add the job state
 
-            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                  // Save the state file
-            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                // Save the config file
+            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                                              // Save the state file
+            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                                            // Save the config file
         }
 
 

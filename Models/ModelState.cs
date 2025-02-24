@@ -45,6 +45,6 @@ namespace EasySave.Models
         /// <summary>
         /// The progression of the backup
         /// </summary>
-        public int Progression;
+        public int Progression { get; set; }
     }
 }
