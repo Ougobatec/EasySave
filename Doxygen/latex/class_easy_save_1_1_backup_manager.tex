@@ -1,0 +1,138 @@
+\doxysection{Easy\+Save.\+Backup\+Manager Class Reference}
+\hypertarget{class_easy_save_1_1_backup_manager}{}\label{class_easy_save_1_1_backup_manager}\index{EasySave.BackupManager@{EasySave.BackupManager}}
+
+
+manage all the backup logic  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+async Task \mbox{\hyperlink{class_easy_save_1_1_backup_manager_a3f7db6db7ab9c211f1652f18c7562e1a}{Add\+Backup\+Job\+Async}} (Model\+Job job)
+\begin{DoxyCompactList}\small\item\em where a backup is created add it to state and config file \end{DoxyCompactList}\item 
+async Task \mbox{\hyperlink{class_easy_save_1_1_backup_manager_a9aca3326a1fdfddb1d8572465e9d5902}{Update\+Backup\+Job\+Async}} (Model\+Job new\+Job, Model\+Job existing\+Job)
+\begin{DoxyCompactList}\small\item\em where a backup is updated modify it in config and state \end{DoxyCompactList}\item 
+async Task \mbox{\hyperlink{class_easy_save_1_1_backup_manager_a5b35d3a46780349558b6484aac433fa6}{Execute\+Backup\+Job\+Async}} (Model\+Job job)
+\begin{DoxyCompactList}\small\item\em Executes the backup job asynchronously. \end{DoxyCompactList}\item 
+async Task \mbox{\hyperlink{class_easy_save_1_1_backup_manager_ad60874d915d9d5df17e4eba109a74488}{Delete\+Backup\+Job\+Async}} (Model\+Job job)
+\begin{DoxyCompactList}\small\item\em delete a backup via a backup object \end{DoxyCompactList}\item 
+async Task \mbox{\hyperlink{class_easy_save_1_1_backup_manager_a6982bc61ecfe04657485db36b31023f5}{Change\+Settings\+Async}} (string parameter, string value, List$<$ string $>$? list=null)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_easy_save_1_1_backup_manager}{Backup\+Manager}} \mbox{\hyperlink{class_easy_save_1_1_backup_manager_a50c7aa91eb3ed08b15f847e65d4f37fa}{Get\+Instance}} ()
+\begin{DoxyCompactList}\small\item\em singleton isntancer \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Resource\+Manager \mbox{\hyperlink{class_easy_save_1_1_backup_manager_a1e0ff976e7cb2e50e9e7431b491e40a1}{resource\+Manager}} = new("{}Easy\+Save.\+Resources.\+Resources"{}, Assembly.\+Get\+Executing\+Assembly())
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Model\+Config \mbox{\hyperlink{class_easy_save_1_1_backup_manager_aba34d4b33c215a0645e7e02f034dbf61}{Json\+Config}} = new Model\+Config()\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+List$<$ Model\+State $>$ \mbox{\hyperlink{class_easy_save_1_1_backup_manager_ae75562ccf82b24e4c69bcbb6e3790751}{Json\+State}} = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+manage all the backup logic 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_easy_save_1_1_backup_manager_a3f7db6db7ab9c211f1652f18c7562e1a}\index{EasySave.BackupManager@{EasySave.BackupManager}!AddBackupJobAsync@{AddBackupJobAsync}}
+\index{AddBackupJobAsync@{AddBackupJobAsync}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{AddBackupJobAsync()}{AddBackupJobAsync()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_a3f7db6db7ab9c211f1652f18c7562e1a} 
+async Task Easy\+Save.\+Backup\+Manager.\+Add\+Backup\+Job\+Async (\begin{DoxyParamCaption}\item[{Model\+Job}]{job}{}\end{DoxyParamCaption})}
+
+
+
+where a backup is created add it to state and config file 
+
+\Hypertarget{class_easy_save_1_1_backup_manager_a6982bc61ecfe04657485db36b31023f5}\index{EasySave.BackupManager@{EasySave.BackupManager}!ChangeSettingsAsync@{ChangeSettingsAsync}}
+\index{ChangeSettingsAsync@{ChangeSettingsAsync}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{ChangeSettingsAsync()}{ChangeSettingsAsync()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_a6982bc61ecfe04657485db36b31023f5} 
+async Task Easy\+Save.\+Backup\+Manager.\+Change\+Settings\+Async (\begin{DoxyParamCaption}\item[{string}]{parameter}{, }\item[{string}]{value}{, }\item[{List$<$ string $>$?}]{list}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+\Hypertarget{class_easy_save_1_1_backup_manager_ad60874d915d9d5df17e4eba109a74488}\index{EasySave.BackupManager@{EasySave.BackupManager}!DeleteBackupJobAsync@{DeleteBackupJobAsync}}
+\index{DeleteBackupJobAsync@{DeleteBackupJobAsync}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{DeleteBackupJobAsync()}{DeleteBackupJobAsync()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_ad60874d915d9d5df17e4eba109a74488} 
+async Task Easy\+Save.\+Backup\+Manager.\+Delete\+Backup\+Job\+Async (\begin{DoxyParamCaption}\item[{Model\+Job}]{job}{}\end{DoxyParamCaption})}
+
+
+
+delete a backup via a backup object 
+
+\Hypertarget{class_easy_save_1_1_backup_manager_a5b35d3a46780349558b6484aac433fa6}\index{EasySave.BackupManager@{EasySave.BackupManager}!ExecuteBackupJobAsync@{ExecuteBackupJobAsync}}
+\index{ExecuteBackupJobAsync@{ExecuteBackupJobAsync}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{ExecuteBackupJobAsync()}{ExecuteBackupJobAsync()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_a5b35d3a46780349558b6484aac433fa6} 
+async Task Easy\+Save.\+Backup\+Manager.\+Execute\+Backup\+Job\+Async (\begin{DoxyParamCaption}\item[{Model\+Job}]{job}{}\end{DoxyParamCaption})}
+
+
+
+Executes the backup job asynchronously. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em job} & The backup job to execute.\\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & Thrown when the source directory is not found.\\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_easy_save_1_1_backup_manager_a50c7aa91eb3ed08b15f847e65d4f37fa}\index{EasySave.BackupManager@{EasySave.BackupManager}!GetInstance@{GetInstance}}
+\index{GetInstance@{GetInstance}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{GetInstance()}{GetInstance()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_a50c7aa91eb3ed08b15f847e65d4f37fa} 
+static \mbox{\hyperlink{class_easy_save_1_1_backup_manager}{Backup\+Manager}} Easy\+Save.\+Backup\+Manager.\+Get\+Instance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+singleton isntancer 
+
+\Hypertarget{class_easy_save_1_1_backup_manager_a9aca3326a1fdfddb1d8572465e9d5902}\index{EasySave.BackupManager@{EasySave.BackupManager}!UpdateBackupJobAsync@{UpdateBackupJobAsync}}
+\index{UpdateBackupJobAsync@{UpdateBackupJobAsync}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{UpdateBackupJobAsync()}{UpdateBackupJobAsync()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_a9aca3326a1fdfddb1d8572465e9d5902} 
+async Task Easy\+Save.\+Backup\+Manager.\+Update\+Backup\+Job\+Async (\begin{DoxyParamCaption}\item[{Model\+Job}]{new\+Job}{, }\item[{Model\+Job}]{existing\+Job}{}\end{DoxyParamCaption})}
+
+
+
+where a backup is updated modify it in config and state 
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_easy_save_1_1_backup_manager_a1e0ff976e7cb2e50e9e7431b491e40a1}\index{EasySave.BackupManager@{EasySave.BackupManager}!resourceManager@{resourceManager}}
+\index{resourceManager@{resourceManager}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{resourceManager}{resourceManager}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_a1e0ff976e7cb2e50e9e7431b491e40a1} 
+Resource\+Manager Easy\+Save.\+Backup\+Manager.\+resource\+Manager = new("{}Easy\+Save.\+Resources.\+Resources"{}, Assembly.\+Get\+Executing\+Assembly())}
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_easy_save_1_1_backup_manager_aba34d4b33c215a0645e7e02f034dbf61}\index{EasySave.BackupManager@{EasySave.BackupManager}!JsonConfig@{JsonConfig}}
+\index{JsonConfig@{JsonConfig}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{JsonConfig}{JsonConfig}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_aba34d4b33c215a0645e7e02f034dbf61} 
+Model\+Config Easy\+Save.\+Backup\+Manager.\+Json\+Config = new Model\+Config()\hspace{0.3cm}{\ttfamily [get]}}
+
+\Hypertarget{class_easy_save_1_1_backup_manager_ae75562ccf82b24e4c69bcbb6e3790751}\index{EasySave.BackupManager@{EasySave.BackupManager}!JsonState@{JsonState}}
+\index{JsonState@{JsonState}!EasySave.BackupManager@{EasySave.BackupManager}}
+\doxysubsubsection{\texorpdfstring{JsonState}{JsonState}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_backup_manager_ae75562ccf82b24e4c69bcbb6e3790751} 
+List$<$Model\+State$>$ Easy\+Save.\+Backup\+Manager.\+Json\+State = \mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_backup_manager_8cs}{Backup\+Manager.\+cs}}\end{DoxyCompactItemize}

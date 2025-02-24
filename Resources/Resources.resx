@@ -117,118 +117,145 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Menu_AddBackupJob" xml:space="preserve">
-    <value>Add a backup Job</value>
+  <data name="Button_Home" xml:space="preserve">
+    <value>Home</value>
   </data>
-  <data name="Menu_ChangeSettings" xml:space="preserve">
-    <value>Change settings</value>
+  <data name="Button_Logs" xml:space="preserve">
+    <value>Logs</value>
   </data>
-  <data name="Prompt_ChooseOption" xml:space="preserve">
-    <value>Choose an option: </value>
-  </data>
-  <data name="Menu_ExecuteBackups" xml:space="preserve">
-    <value>Execute a backup</value>
-  </data>
-  <data name="Menu_Quit" xml:space="preserve">
+  <data name="Button_Quit" xml:space="preserve">
     <value>Quit</value>
   </data>
-  <data name="Title_Menu" xml:space="preserve">
-    <value>----- MENU -----</value>
+  <data name="Button_Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
-  <data name="Menu_UpdateBackupJob" xml:space="preserve">
-    <value>Update a backup job</value>
+  <data name="Text_Language" xml:space="preserve">
+    <value>Language</value>
   </data>
-  <data name="Prompt_BackupType" xml:space="preserve">
-    <value>Type (Full/Differential): </value>
+  <data name="Text_LogFormat" xml:space="preserve">
+    <value>Log Format</value>
   </data>
-  <data name="Prompt_JobName" xml:space="preserve">
-    <value>Backup Name: </value>
+  <data name="Title_Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
-  <data name="Prompt_SourceDirectory" xml:space="preserve">
-    <value>Source directory: </value>
+  <data name="Title_Home" xml:space="preserve">
+    <value>Select the backups to modify or execute</value>
   </data>
-  <data name="Prompt_TargetDirectory" xml:space="preserve">
-    <value>Target directory: </value>
+  <data name="Text_SourceDirectory" xml:space="preserve">
+    <value>Source directory</value>
   </data>
-  <data name="Error_Empty" xml:space="preserve">
-    <value>This field cannot be empty!</value>
+  <data name="Text_TargetDirectory" xml:space="preserve">
+    <value>Target directory</value>
   </data>
-  <data name="Error_InvalidOption" xml:space="preserve">
-    <value>Invalid option!</value>
+  <data name="Text_Type" xml:space="preserve">
+    <value>Type</value>
   </data>
-  <data name="Message_BackupJobAdded" xml:space="preserve">
-    <value>Backup job '{0}' added.</value>
+  <data name="Text_Modify" xml:space="preserve">
+    <value>Modify</value>
   </data>
-  <data name="Title_ChooseBackupJobsToExecute" xml:space="preserve">
-    <value>----- Choose backups to execute (e.g., 1,2,3 or 1-3 or all) -----</value>
+  <data name="Text_State" xml:space="preserve">
+    <value>State</value>
   </data>
-  <data name="Title_ChooseBackupJobToUpdate" xml:space="preserve">
-    <value>----- Choose backup to update -----</value>
+  <data name="Button_Create" xml:space="preserve">
+    <value>Create backup</value>
   </data>
-  <data name="Message_BackupJobUpdated" xml:space="preserve">
-    <value>Backup job '{0}' updated.</value>
+  <data name="Button_Execute" xml:space="preserve">
+    <value>Execute backups</value>
   </data>
-  <data name="Message_BackupJobDetails" xml:space="preserve">
-    <value>{0}: Name: {1}, Source: {2}, Target: {3}, Type: {4}.</value>
+  <data name="Button_Delete" xml:space="preserve">
+    <value>Delete backups</value>
   </data>
-  <data name="Title_ChooseBackupJobToAdd" xml:space="preserve">
-    <value>----- Add a backup job -----</value>
+  <data name="Message_Selection" xml:space="preserve">
+    <value>Please select at least one backup.</value>
   </data>
-  <data name="Error_InvalidIndex" xml:space="preserve">
-    <value>Invalid index: {0}</value>
+  <data name="MessageTitle_Success" xml:space="preserve">
+    <value>Succes</value>
   </data>
-  <data name="Error_InvalidBackupType" xml:space="preserve">
-    <value>Invalid type!</value>
+  <data name="Message_BusinessSoftware" xml:space="preserve">
+    <value>Business software is running. Please close it before starting a backup.</value>
   </data>
-  <data name="Title_ChooseSettingToChange" xml:space="preserve">
-    <value>----- Change settings -----</value>
+  <data name="MessageTitle_Attention" xml:space="preserve">
+    <value>Attention</value>
   </data>
-  <data name="Menu_ChangeLanguage" xml:space="preserve">
-    <value>Change language</value>
+  <data name="MessageTitle_Error" xml:space="preserve">
+    <value>Error</value>
   </data>
-  <data name="Menu_ChangeLogFormat" xml:space="preserve">
-    <value>Change log format</value>
+  <data name="MessageTitle_Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
   </data>
-  <data name="Menu_SaveAndReturn" xml:space="preserve">
-    <value>Save and return to menu</value>
+  <data name="Message_Execute" xml:space="preserve">
+    <value>Are you sure you want to execute the selected backups?</value>
   </data>
-  <data name="Prompt_ChooseLanguage" xml:space="preserve">
-    <value>Choose language (en/fr): </value>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Are you sure you want to delete the selected backups?</value>
   </data>
-  <data name="Message_LanguageSet" xml:space="preserve">
-    <value>Language set to '{0}'.</value>
+  <data name="Title_Logs" xml:space="preserve">
+    <value>Logs</value>
   </data>
-  <data name="Prompt_ChooseLogFormat" xml:space="preserve">
-    <value>Choose log format (json/xml): </value>
+  <data name="Text_BackupName" xml:space="preserve">
+    <value>Backup name</value>
   </data>
-  <data name="Message_SettingsSaved" xml:space="preserve">
-    <value>Settings saved.</value>
+  <data name="Text_Size" xml:space="preserve">
+    <value>Size</value>
   </data>
-  <data name="Message_PressEnterToContinue" xml:space="preserve">
-    <value>----- Press ENTER to continue -----</value>
+  <data name="Text_TransferTime" xml:space="preserve">
+    <value>Transfert time</value>
   </data>
-  <data name="Error_MaxBackupJobs" xml:space="preserve">
-    <value>Cannot add more than 5 backup jobs!</value>
+  <data name="Text_EncryptionTime" xml:space="preserve">
+    <value>Encryption time</value>
   </data>
-  <data name="Error_DuplicateBackupJob" xml:space="preserve">
-    <value>A backup job with the same name already exists!</value>
+  <data name="Title_Edit" xml:space="preserve">
+    <value>Create a backupJob</value>
   </data>
-  <data name="Error_SourceDirectoryNotFound" xml:space="preserve">
-    <value>Source directory not found for '{0}': {1}</value>
+  <data name="Button_Submit" xml:space="preserve">
+    <value>Submit</value>
   </data>
-  <data name="Message_BackupJobExecuted" xml:space="preserve">
-    <value>Backup job '{0}' executed.</value>
+  <data name="Title_SavesList" xml:space="preserve">
+    <value>Saves list</value>
   </data>
-  <data name="Message_LogFormatSet" xml:space="preserve">
-    <value>Log format set to '{0}'.</value>
+  <data name="Text_Date" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="Menu_DeleteBackupJob" xml:space="preserve">
-    <value>Delete a backup job</value>
+  <data name="Message_Fill" xml:space="preserve">
+    <value>Please fill in all fields.</value>
   </data>
-  <data name="Title_ChooseBackupJobToDelete" xml:space="preserve">
-    <value>----- Delete a backup job -----</value>
+  <data name="Message_NameExists" xml:space="preserve">
+    <value>A backup already has this name.</value>
   </data>
-  <data name="Message_BackupJobDeleted" xml:space="preserve">
-    <value>Backup job '{0}' deleted.</value>
+  <data name="Message_DirectoryNotFound" xml:space="preserve">
+    <value>Directory not found for backup '{0}'.</value>
+  </data>
+  <data name="Message_ExecuteSuccess" xml:space="preserve">
+    <value>Backup '{0}' completed successfully.</value>
+  </data>
+  <data name="Message_AddSuccess" xml:space="preserve">
+    <value>Backup '{0}' added successfully.</value>
+  </data>
+  <data name="Message_DeleteSuccess" xml:space="preserve">
+    <value>Backup '{0}' deleted successfully.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error : '{0}'</value>
+  </data>
+  <data name="Message_UpdateSuccess" xml:space="preserve">
+    <value>Backup '{0}' updated successfully.</value>
+  </data>
+  <data name="Message_NotEnoughSpace " xml:space="preserve">
+    <value>You don't have enough space on the disk</value>
+  </data>
+  <data name="Title_PriorityExtension" xml:space="preserve">
+    <value>Priority extensions</value>
+  </data>
+  <data name="Title_EncryptedExtension" xml:space="preserve">
+    <value>Encrypted extensions</value>
+  </data>
+  <data name="Text_LimitSize" xml:space="preserve">
+    <value>Limit size file (Mo)</value>
+  </data>
+  <data name="Message_JobNotFound" xml:space="preserve">
+    <value>Backup '{0}' not found.</value>
+  </data>
+  <data name="Message_AlreadyActive" xml:space="preserve">
+    <value>Backup '{0}' is already active.</value>
   </data>
 </root>
