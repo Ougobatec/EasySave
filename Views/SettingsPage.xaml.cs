@@ -202,7 +202,7 @@ namespace EasySave.Views
         {
             if (sender is TextBox textBox)
             {
-                if (textBox.Name == "Limit_size_fileTextBox")
+                if (textBox.Name == "TextBox_LimitSize")
                 {
                     BackupManager.ChangeSettingsAsync("limitSizeFile", textBox.Text.ToString());
                 }
