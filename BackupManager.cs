@@ -286,7 +286,7 @@ namespace EasySave
 
             await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
 
-            await UpdateStateAsync(job, "", "", "END", 0, 0, 0);                                      // Update the job state
+            await UpdateStateAsync(job, "", "", "END", 0, 0, 0);                                                                                // Update the job state
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace EasySave
             job.State.TotalFilesToCopy = totalFilesToCopy;                                                                                          // Update the job state total files to copy
             job.State.TotalFilesSize = totalFilesSize;                                                                                              // Update the job state total files size
             job.State.NbFilesLeftToDo = nbFilesLeftToDo;                                                                                            // Update the job state number of files left to do
-            job.State.Progression = totalFilesToCopy == 0 ? 100 : (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);   // Update the job state progression
+            job.State.Progression = totalFilesToCopy == 0 ? 0 : (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);   // Update the job state progression
 
             ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                             // Get the job state by name
             if (modelState != null)

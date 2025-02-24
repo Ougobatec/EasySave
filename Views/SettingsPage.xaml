@@ -42,7 +42,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- ListBox des extensions disponibles -->
-                        <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailableExtensions}" Width="100" Height="100" Grid.Column="0"/>
+                        <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailablePriorityExtensions}" Width="100" Height="100" Grid.Column="0"/>
 
                         <!-- Boutons de déplacement -->
                         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
@@ -53,7 +53,7 @@
                         </StackPanel>
 
                         <!-- ListBox des extensions sélectionnées -->
-                        <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
+                        <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedPriorityExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
                     </Grid>
                 </StackPanel>
 

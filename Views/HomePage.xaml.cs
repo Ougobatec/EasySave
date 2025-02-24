@@ -188,13 +188,7 @@ namespace EasySave.Views
         /// </summary>
         private void DisplayBackupJobs()
         {
-            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];
-            BackupJobs = new ObservableCollection<ModelJob>(BackupJobs);
-
-            
-        }
-
-       
-        
+            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];            
+        }        
     }
 }
