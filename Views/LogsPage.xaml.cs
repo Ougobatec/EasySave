@@ -8,13 +8,17 @@ using Logger;
 namespace EasySave.Views
 {
     /// <summary>
-    /// Logique d'interaction pour LogsPage.xaml
+    /// Interaction logic for LogsPage.xaml
     /// </summary>
     public partial class LogsPage : Page
     {
-        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<ModelLog> LogEntries { get; set; }
+        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
+        private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
+        public ObservableCollection<ModelLog> LogEntries { get; set; }                      // List to get all logs
 
+        /// <summary>
+        /// LogsPage constructor to initialize the page and display logs
+        /// </summary>
         public LogsPage()
         {
             InitializeComponent();
@@ -22,6 +26,9 @@ namespace EasySave.Views
             Refresh();
         }
 
+        /// <summary>
+        /// Refresh the LogsPage content
+        /// </summary>
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
@@ -36,21 +43,27 @@ namespace EasySave.Views
             DisplayLogs();
         }
 
+        /// <summary>
+        /// LogsDataGrid size changed event
+        /// </summary>
         private void LogsDataGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (sender is DataGrid dataGrid)
             {
                 double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                dataGrid.Columns[0].Width = totalWidth * 0.1;   // 10% pour "Horodatage"
-                dataGrid.Columns[1].Width = totalWidth * 0.14;  // 10% pour "Nom sauvegarde"
-                dataGrid.Columns[2].Width = totalWidth * 0.24;  // 30% pour "Emplacement source"
-                dataGrid.Columns[3].Width = totalWidth * 0.24;  // 30% pour "Emplacement cible"
-                dataGrid.Columns[4].Width = totalWidth * 0.08;  // 10% pour "Taille"
-                dataGrid.Columns[5].Width = totalWidth * 0.1;   // 10% pour "Temps de cryptage"
-                dataGrid.Columns[6].Width = totalWidth * 0.1;   // 10% pour "Temps de transfert"
+                dataGrid.Columns[0].Width = totalWidth * 0.1;   // 10% for "Date"
+                dataGrid.Columns[1].Width = totalWidth * 0.14;  // 10% for "Backup name"
+                dataGrid.Columns[2].Width = totalWidth * 0.24;  // 30% for "Source directory"
+                dataGrid.Columns[3].Width = totalWidth * 0.24;  // 30% for "Target directory"
+                dataGrid.Columns[4].Width = totalWidth * 0.08;  // 10% for "Size"
+                dataGrid.Columns[5].Width = totalWidth * 0.1;   // 10% for "Encryption time"
+                dataGrid.Columns[6].Width = totalWidth * 0.1;   // 10% for "Transfer time"
             }
         }
 
+        /// <summary>
+        /// Display all logs
+        /// </summary>
         private void DisplayLogs()
         {
             LogEntries = new ObservableCollection<ModelLog>(Logger<ModelLog>.GetInstance().GetLogs());

@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using EasySave.Enumerations;
 using EasySave.Models;
-using Logger;
 using Microsoft.Win32;
 
 
@@ -16,13 +15,14 @@ namespace EasySave.Views
     /// </summary>
     public partial class EditPage : Page
     {
-        private readonly ModelJob? Job = null;      // Used to keep the data on the current job to use it between methods
-        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<ModelSave> SavesEntries { get; set; }       // List to store all SaveEntries
+        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
+        private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
+        public ObservableCollection<ModelSave> SavesEntries { get; set; }                   // List to store all SaveEntries
+        private readonly ModelJob? Job = null;                                              // Used to keep the data on the current job to use it between methods
 
         /// <summary>
-        /// Constructor of EditPage class
-        /// parameter (ModelJob? job) : used to get the infos of the BackUpJob if there's one (when you click on modify on a backUpJob), can be null
+        /// EditPage constructor to initialize the page and display the job if there's one
+        /// <param name="job">The job to edit</param>
         /// </summary>
         public EditPage(ModelJob? job = null)
         {
@@ -38,7 +38,7 @@ namespace EasySave.Views
         }
 
         /// <summary>
-        /// Refresh the UI of EditPage
+        /// Refresh the EditPage content
         /// </summary>
         private void Refresh()
         {
@@ -56,21 +56,21 @@ namespace EasySave.Views
             Header_Size.Header = ResourceManager.GetString("Text_Size");
         }
         /// <summary>
-        /// Allows to make the grid that contains the save responsive
+        /// SavesDataGrid size changed event
         /// </summary>
         private void SavesDataGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (sender is DataGrid dataGrid)
             {
                 double totalWidth = dataGrid.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                dataGrid.Columns[0].Width = totalWidth * 0.25;  // 25% pour "Horodatage"
-                dataGrid.Columns[1].Width = totalWidth * 0.25;  // 25% pour "Nom sauvegarde"
-                dataGrid.Columns[2].Width = totalWidth * 0.2;   // 20% pour "Emplacement source"
-                dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% pour "Emplacement cible"
+                dataGrid.Columns[0].Width = totalWidth * 0.25;  // 25% for "Date"
+                dataGrid.Columns[1].Width = totalWidth * 0.25;  // 25% for "Backup name"
+                dataGrid.Columns[2].Width = totalWidth * 0.2;   // 20% for "Type"
+                dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% for "Size"
             }
         }
         /// <summary>
-        /// Load the job by pre-filling the inputs if there's one
+        /// Method to load the job in the form
         /// </summary>
         private void LoadJob(ModelJob job)
         {
@@ -84,7 +84,7 @@ namespace EasySave.Views
             DisplaySaves();
         }
         /// <summary>
-        /// Method called when the button submit is clicked, it is used to create or modify a backUpJob
+        /// Button Submit click event
         /// </summary>
         private async void Button_Submit_Click(object sender, RoutedEventArgs e)
         {
@@ -106,7 +106,7 @@ namespace EasySave.Views
                 {
                     try
                     {
-                        await BackupManager.GetInstance().AddBackupJobAsync(job);
+                        await BackupManager.AddBackupJobAsync(job);
                         MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
 
                         // Réinitialiser les champs après ajout
@@ -131,7 +131,7 @@ namespace EasySave.Views
                 {
                     try
                     {
-                        await BackupManager.GetInstance().UpdateBackupJobAsync(job, Job);
+                        await BackupManager.UpdateBackupJobAsync(job, Job);
                         MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch (Exception ex)
@@ -153,7 +153,7 @@ namespace EasySave.Views
             }
         }
         /// <summary>
-        /// Method used to browse directories with file explorer
+        /// Button Browse click event
         /// </summary>
         private void BrowseDirectory_Click(object sender, RoutedEventArgs e)
         {
@@ -188,7 +188,7 @@ namespace EasySave.Views
             }
         }
         /// <summary>
-        /// Method to display saves of the backUpJob
+        /// Display all saves in the SavesDataGrid  
         /// </summary>
         private async void DisplaySaves()
         {
@@ -210,7 +210,7 @@ namespace EasySave.Views
                 if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
                 {
                     // Get the size of the save
-                    size = BackupManager.GetInstance().GetDirectorySize(dir);
+                    size = BackupManager.GetDirectorySize(dir);
 
                     // Get the type of the save
                     string type = "X";

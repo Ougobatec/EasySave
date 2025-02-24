@@ -1,7 +1,7 @@
 ﻿namespace EasySave.Enumerations
 {
     /// <summary>
-    /// to define the format of the log
+    /// To define the format of the log
     /// </summary>  
     public enum LogFormats
     {

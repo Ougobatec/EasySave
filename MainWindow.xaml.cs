@@ -9,8 +9,9 @@ namespace EasySave
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static MainWindow? MainWindow_Instance;                                                     // MainWindow instance
-        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;      // Resource manager instance
+        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
+        private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
+        private static MainWindow? MainWindow_Instance;                                     // MainWindow instance
 
         /// <summary>
         /// MainWindow constructor

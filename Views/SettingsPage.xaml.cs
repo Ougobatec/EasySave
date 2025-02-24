@@ -1,28 +1,30 @@
-﻿using EasySave.Models;
-using Logger;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
-using System.IO;
-using System.Windows.Documents;
+using EasySave.Models;
 
 namespace EasySave.Views
 {
     /// <summary>
-    /// Logique d'interaction pour SettingsPage.xaml
+    /// Interaction logic for SettingsPage.xaml
     /// </summary>
     public partial class SettingsPage : Page
     {
-        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<string> AvailableExtensions { get; set; } = new ObservableCollection<string>();                 // List for the available extensions for priority exentions
-        public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string>();        // List for the available extensions for encrypted exentions
-        public ObservableCollection<string> SelectedExtensions { get; set; } = new ObservableCollection<string>();                  // List for the selected extensions for priority exentions
-        public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();         // List for the selected extensions for encrypted exentions
-        public ObservableCollection<ModelJob> BackupJobs { get; set; }                                                              // List to get all backupJobs 
-        public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();                          // List to store all extensions used in backUps
+        private static BackupManager BackupManager => BackupManager.GetInstance();                                              // BackupManager instance
+        private static ResourceManager ResourceManager => BackupManager.resourceManager;                                        // Resource manager instance
+        public ObservableCollection<string> AvailablePriorityExtensions { get; set; } = new ObservableCollection<string>();     // List for the available extensions for priority exentions
+        public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string>();    // List for the available extensions for encrypted exentions
+        public ObservableCollection<string> SelectedPriorityExtensions { get; set; } = new ObservableCollection<string>();      // List for the selected extensions for priority exentions
+        public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();     // List for the selected extensions for encrypted exentions
+        public ObservableCollection<ModelJob> BackupJobs { get; set; }                                                          // List to get all backupJobs 
+        public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();                      // List to get all extensions
 
+        /// <summary>
+        /// SettingsPage constructor to initialize the page and display settings
+        /// </summary>
         public SettingsPage()
         {
             InitializeComponent();
@@ -30,12 +32,12 @@ namespace EasySave.Views
             DataContext = this;
             Get_all_extension();
             //SelectedExtensionsListBox.ItemsSource = BackupManager.GetInstance().JsonConfig.PriorityExtensions;
-            foreach (string el in BackupManager.GetInstance().JsonConfig.PriorityExtensions)
+            foreach (string el in BackupManager.JsonConfig.PriorityExtensions)
             {
-                AvailableExtensions.Remove(el);
-                SelectedExtensions.Add(el);
+                AvailablePriorityExtensions.Remove(el);
+                SelectedPriorityExtensions.Add(el);
             }
-            foreach (string el in BackupManager.GetInstance().JsonConfig.EncryptedExtensions)
+            foreach (string el in BackupManager.JsonConfig.EncryptedExtensions)
             {
                 AvailableEncryptedExtensions.Remove(el);
                 SelectedEncryptedExtensions.Add(el);
@@ -44,7 +46,7 @@ namespace EasySave.Views
         }
 
         /// <summary>
-        /// Refresh the UI of SettingsPage
+        /// Refresh the SettingsPage content
         /// </summary>
         private void Refresh()
         {
@@ -55,9 +57,9 @@ namespace EasySave.Views
             Text_Language.Text = ResourceManager.GetString("Text_Language");
             Text_LogFormat.Text = ResourceManager.GetString("Text_LogFormat");
             Text_LimitSize.Text = ResourceManager.GetString("Text_LimitSize");
-            ComboBox_Language.Text = BackupManager.GetInstance().JsonConfig.Language.ToString();
-            ComboBox_LogFormat.Text = BackupManager.GetInstance().JsonConfig.LogFormat.ToString();
-            TextBox_LimitSize.Text = BackupManager.GetInstance().JsonConfig.LimitSizeFile.ToString();
+            ComboBox_Language.Text = BackupManager.JsonConfig.Language.ToString();
+            ComboBox_LogFormat.Text = BackupManager.JsonConfig.LogFormat.ToString();
+            TextBox_LimitSize.Text = BackupManager.JsonConfig.LimitSizeFile.ToString();
         }
 
         /// <summary>
@@ -70,12 +72,12 @@ namespace EasySave.Views
             {
                 if (comboBox.Name == "ComboBox_Language")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync("language", (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString());
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(BackupManager.GetInstance().JsonConfig.Language.ToString());
+                    BackupManager.ChangeSettingsAsync("language", (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString());
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(BackupManager.JsonConfig.Language.ToString());
                 }
                 else if (comboBox.Name == "ComboBox_LogFormat")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync("logFormat", (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString());
+                    BackupManager.ChangeSettingsAsync("logFormat", (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString());
                 }
             }
             if (sender is Button button)
@@ -90,7 +92,7 @@ namespace EasySave.Views
                             LitsExtensions.Add(extension);
                         }
                     }
-                    BackupManager.GetInstance().ChangeSettingsAsync("PriorityFiles", null, LitsExtensions);
+                    BackupManager.ChangeSettingsAsync("PriorityFiles", null, LitsExtensions);
                 }
                 else if (button.Name.Contains("Encrypted"))
                 {
@@ -101,7 +103,7 @@ namespace EasySave.Views
                             LitsExtensions.Add(extension);
                         }
                     }
-                    BackupManager.GetInstance().ChangeSettingsAsync("EncryptedFiles", null, LitsExtensions);
+                    BackupManager.ChangeSettingsAsync("EncryptedFiles", null, LitsExtensions);
                 }
             }
             Refresh();
@@ -114,8 +116,8 @@ namespace EasySave.Views
         {
             if (AvailableExtensionsListBox.SelectedItem is string selectedExtension)
             {
-                AvailableExtensions.Remove(selectedExtension);
-                SelectedExtensions.Add(selectedExtension);
+                AvailablePriorityExtensions.Remove(selectedExtension);
+                SelectedPriorityExtensions.Add(selectedExtension);
             }
             else if (AvailableEncryptExtensionsListBox.SelectedItem is string SelectedEncryptedExtension)
             {
@@ -133,11 +135,11 @@ namespace EasySave.Views
             Button button = sender as Button;
             if (button.Name == "MoveAllToSelectedPriority")
             {
-                while (AvailableExtensions.Count > 0)
+                while (AvailablePriorityExtensions.Count > 0)
                 {
-                    string ext = AvailableExtensions[0];
-                    AvailableExtensions.RemoveAt(0);
-                    SelectedExtensions.Add(ext);
+                    string ext = AvailablePriorityExtensions[0];
+                    AvailablePriorityExtensions.RemoveAt(0);
+                    SelectedPriorityExtensions.Add(ext);
                 }
             }
             else if (button.Name == "MoveAllToSelectedEncrypted")
@@ -159,8 +161,8 @@ namespace EasySave.Views
         {
             if (SelectedExtensionsListBox.SelectedItem is string selectedExtension)
             {
-                SelectedExtensions.Remove(selectedExtension);
-                AvailableExtensions.Add(selectedExtension);
+                SelectedPriorityExtensions.Remove(selectedExtension);
+                AvailablePriorityExtensions.Add(selectedExtension);
             }
             else if (SelectedEncryptExtensionsListBox.SelectedItem is string SelectedEncryptedExtension)
             {
@@ -178,11 +180,11 @@ namespace EasySave.Views
             Button button = sender as Button;
             if (button.Name == "MoveAllToAvailablePriority")
             {
-                while (SelectedExtensions.Count > 0)
+                while (SelectedPriorityExtensions.Count > 0)
                 {
-                    string ext = SelectedExtensions[0];
-                    SelectedExtensions.RemoveAt(0);
-                    AvailableExtensions.Add(ext);
+                    string ext = SelectedPriorityExtensions[0];
+                    SelectedPriorityExtensions.RemoveAt(0);
+                    AvailablePriorityExtensions.Add(ext);
                 }
             }
             else if (button.Name == "MoveAllToAvailableEncrypted")
@@ -202,7 +204,7 @@ namespace EasySave.Views
             {
                 if (textBox.Name == "Limit_size_fileTextBox")
                 {
-                    BackupManager.GetInstance().ChangeSettingsAsync("limitSizeFile", textBox.Text.ToString());
+                    BackupManager.ChangeSettingsAsync("limitSizeFile", textBox.Text.ToString());
                 }
             }
         }
@@ -211,7 +213,7 @@ namespace EasySave.Views
         /// </summary>
         private async void Get_all_extension()
         {
-            BackupJobs = new ObservableCollection<ModelJob>(BackupManager.GetInstance().JsonConfig.BackupJobs);
+            BackupJobs = new ObservableCollection<ModelJob>(BackupManager.JsonConfig.BackupJobs);
 
             // Creation of a hashset to avoid duplicates
             HashSet<string> fileExtensions = new HashSet<string>();
@@ -236,7 +238,7 @@ namespace EasySave.Views
 
             foreach (string el in Extensions)
             {
-                AvailableExtensions.Add(el);
+                AvailablePriorityExtensions.Add(el);
                 AvailableEncryptedExtensions.Add(el);
             }
         }

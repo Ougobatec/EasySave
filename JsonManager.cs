@@ -10,9 +10,9 @@ namespace EasySave
     {
         /// <summary>
         /// Load data from desired json file into desired object
-        /// </summary>
         /// <param name="filePath">Json file path</param>
         /// <param name="defaultValue">Default value if file does not exist</param>
+        /// </summary>
         public static T LoadJson<T>(string filePath, T defaultValue) where T : new()
         {
             if (File.Exists(filePath))
@@ -24,17 +24,17 @@ namespace EasySave
                 }
                 catch (JsonException)
                 {
-                    return defaultValue;
+                    return defaultValue;                                            // Return default value if json is invalid
                 }
             }
-            return defaultValue;
+            return defaultValue;                                                    // Return default value if file does not exist
         }
 
         /// <summary>
         /// Save data into desired json file from desired object
-        /// </summary>
         /// <param name="data">Data to save</param>
         /// <param name="filePath">Json file path</param>
+        /// </summary>
         public static async Task SaveJsonAsync<T>(T data, string filePath)
         {
             string? directoryPath = Path.GetDirectoryName(filePath);

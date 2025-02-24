@@ -44,8 +44,8 @@ namespace EasySave
 
         /// <summary>
         /// Add a new backup job to the config and state files
-        /// </summary>
         /// <param name="job">The backup job to add</param>
+        /// </summary>
         public async Task AddBackupJobAsync(ModelJob job)
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
@@ -61,9 +61,9 @@ namespace EasySave
 
         /// <summary>
         /// Update an existing backup job in the config and state files
-        /// </summary>
         /// <param name="newJob">The new backup job</param>
         /// <param name="existingJob">The existing backup job to update</param>
+        /// </summary>
         public async Task UpdateBackupJobAsync(ModelJob newJob, ModelJob job)
         {
             ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);                                         // Get the backup job by name
@@ -100,8 +100,8 @@ namespace EasySave
 
         /// <summary>
         /// Execute an existing backup job and update its state
-        /// </summary>
         /// <param name="job">The backup job to execute</param>
+        /// </summary>
         public async Task ExecuteBackupJobAsync(ModelJob job)
         {
             ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);             // Get the backup job by name
@@ -119,7 +119,7 @@ namespace EasySave
                 throw new Exception("Message_DirectoryNotFound");                                           // Throw an exception if the source directory does not exist
             }
 
-            long backupSize = GetDirectorySize(modelJob.SourceDirectory);                                   // Get the total size of the backup
+            long backupSize = Directory.EnumerateFiles(modelJob.SourceDirectory, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
             DriveInfo drive = new DriveInfo(Path.GetPathRoot(modelJob.TargetDirectory) ?? string.Empty);    // Get disk info from the target directory
             if (drive.AvailableFreeSpace < backupSize)                                                      // Check if there is enough space on the disk
             {
@@ -131,8 +131,8 @@ namespace EasySave
 
         /// <summary>
         /// Delete an existing backup job from the config and state files
-        /// </summary>
         /// <param name="job">The backup job to delete</param>
+        /// </summary>
         public async Task DeleteBackupJobAsync(ModelJob job)
         {
             ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);     // Get the backup job by name
@@ -155,10 +155,10 @@ namespace EasySave
 
         /// <summary>
         /// Change the settings of the application and save them in the config file
-        /// </summary>
         /// <param name="parameter">The parameter to change</param>
         /// <param name="value">The new value of the parameter</param>
         /// <param name="list">The list of values to change</param>
+        /// </summary>
         public async Task ChangeSettingsAsync(string parameter, string value, List<string>? list = null)
         {
             switch (parameter)
@@ -194,8 +194,8 @@ namespace EasySave
 
         /// <summary>
         /// Get the total size of a directory
-        /// </summary>
         /// <param name="sourceDir">The source directory</param>
+        /// </summary>
         public long GetDirectorySize(string sourceDir)
         {
             if (!Directory.Exists(sourceDir))
@@ -208,8 +208,8 @@ namespace EasySave
 
         /// <summary>
         /// Copy a directory and its files to a target directory
-        /// </summary>
         /// <param name="job">The backup job to execute</param>
+        /// </summary>
         private async Task CopyDirectoryAsync(ModelJob job)
         {
             string sourceDir = job.SourceDirectory;
@@ -288,7 +288,6 @@ namespace EasySave
 
         /// <summary>
         /// Update the state of a backup job and save it to JsonState and JsonConfig
-        /// </summary>
         /// <param name="job">The backup job to update</param>
         /// <param name="source">The source file path</param>
         /// <param name="target">The target file path</param>
@@ -296,6 +295,7 @@ namespace EasySave
         /// <param name="totalFilesToCopy">The total files to copy</param>
         /// <param name="totalFilesSize">The total files size</param>
         /// <param name="nbFilesLeftToDo">The number of files left to do</param>
+        /// </summary>
         private async Task UpdateStateAsync(ModelJob job, string source, string target, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo)
         {
             job.State.SourceFilePath = source;                                                                          // Update the job state source file path
@@ -320,8 +320,8 @@ namespace EasySave
 
         /// <summary>
         /// Set the culture of the application
-        /// </summary>
         /// <param name="cultureName">The culture name</param>
+        /// </summary>
         private static void SetCulture(string cultureName)
         {
             CultureInfo culture = new(cultureName);                 // Create a new culture info

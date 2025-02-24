@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,13 +8,17 @@ using EasySave.Models;
 namespace EasySave.Views
 {
     /// <summary>
-    /// Logique d'interaction pour Home.xaml
+    /// Interaction logic for HomePage.xaml
     /// </summary>
     public partial class HomePage : Page
     {
-        public ObservableCollection<ModelJob> BackupJobs { get; set; }
-        private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
+        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
+        private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
+        public ObservableCollection<ModelJob> BackupJobs { get; set; }                      // List to get all backup jobs
 
+        /// <summary>
+        /// HomePage constructor to initialize the page and display backup jobs
+        /// </summary>
         public HomePage()
         {
             InitializeComponent();
@@ -23,6 +26,9 @@ namespace EasySave.Views
             Refresh();
         }
 
+        /// <summary>
+        /// Refresh the HomePage content
+        /// </summary>
         private void Refresh()
         {
             MainWindow.GetInstance().Refresh();
@@ -39,20 +45,26 @@ namespace EasySave.Views
             DisplayBackupJobs();
         }
 
+        /// <summary>
+        /// BackupJobsListView size changed event
+        /// </summary>
         private void BackupJobsListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (BackupJobsListView.View is GridView gridView)
             {
                 double totalWidth = BackupJobsListView.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                gridView.Columns[0].Width = totalWidth * 0.2;  // 20% pour "Nom de sauvegarde"
-                gridView.Columns[1].Width = totalWidth * 0.25; // 25% pour "Répertoire source"
-                gridView.Columns[2].Width = totalWidth * 0.25; // 25% pour "Répertoire cible"
-                gridView.Columns[3].Width = totalWidth * 0.1;  // 10% pour "Type"
-                gridView.Columns[4].Width = totalWidth * 0.1;  // 10% pour "Modifier"
-                gridView.Columns[5].Width = totalWidth * 0.1;  // 10% pour "Etat"
+                gridView.Columns[0].Width = totalWidth * 0.2;  // 20% for "Backup name"
+                gridView.Columns[1].Width = totalWidth * 0.25; // 25% for "Source directory"
+                gridView.Columns[2].Width = totalWidth * 0.25; // 25% for "Target directory"
+                gridView.Columns[3].Width = totalWidth * 0.1;  // 10% for "Type"
+                gridView.Columns[4].Width = totalWidth * 0.1;  // 10% for "Modify"
+                gridView.Columns[5].Width = totalWidth * 0.1;  // 10% for "State"
             }
         }
 
+        /// <summary>
+        /// Button Create click event
+        /// </summary>
         private void Button_Create_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
@@ -68,6 +80,9 @@ namespace EasySave.Views
             }
         }
 
+        /// <summary>
+        /// Button Execute click event
+        /// </summary>
         private async void Button_Execute_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -94,7 +109,7 @@ namespace EasySave.Views
                         {
                             try
                             {
-                                await BackupManager.GetInstance().ExecuteBackupJobAsync(job);
+                                await BackupManager.ExecuteBackupJobAsync(job);
                                 UpdateProgression(job, job.State.Progression);
                                 MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
@@ -120,6 +135,9 @@ namespace EasySave.Views
             }
         }
 
+        /// <summary>
+        /// Button Delete click event
+        /// </summary>
         private async void Button_Delete_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -141,7 +159,7 @@ namespace EasySave.Views
                         try
                         {
                             BackupJobs.Remove(job);
-                            await BackupManager.GetInstance().DeleteBackupJobAsync(job);
+                            await BackupManager.DeleteBackupJobAsync(job);
                             MessageBox.Show(string.Format(ResourceManager.GetString("Message_DeleteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         catch (Exception ex)
@@ -159,11 +177,20 @@ namespace EasySave.Views
             }
         }
 
+        /// <summary>
+        /// Display all backup jobs
+        /// </summary>
         private void DisplayBackupJobs()
         {
-            BackupJobs = [.. BackupManager.GetInstance().JsonConfig.BackupJobs];
+            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];
+            BackupJobs = new ObservableCollection<ModelJob>(BackupJobs);
         }
 
+        /// <summary>
+        /// Update the progression of a job
+        /// <param name="job">the job to update</param>
+        /// <param name="newProgression">the new progression</param>
+        /// </summary>
         private static void UpdateProgression(ModelJob job, int newProgression )
         {
                job.State.Progression = newProgression;

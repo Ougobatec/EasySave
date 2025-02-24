@@ -62,7 +62,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_TransferTime" Header="Temps de transfert" Binding="{Binding TransfertTime}">
+                    <DataGridTextColumn x:Name="Header_TransferTime" Header="Temps de transfert" Binding="{Binding TransferTime}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
