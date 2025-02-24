@@ -27,13 +27,13 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-                <TextBlock x:Name="Title_Limit_size_file" Text="Limit Size File (Mo)" Margin="0,0,10,0"/>
-                <TextBox x:Name="Limit_size_fileTextBox" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" TextChanged="Limit_size_fileTextBox_TextChanged"/>
+                <TextBlock x:Name="Text_LimitSize" Text="Limit Size File (Mo)" Margin="0,0,10,0"/>
+                <TextBox x:Name="TextBox_LimitSize" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" TextChanged="Limit_size_fileTextBox_TextChanged"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
 
                 <StackPanel Orientation="Vertical" Margin="0,40,20,0">
-                    <TextBlock x:Name="Title_Priority_extension" Text="Priority extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="Title_PriorityExtension" Text="Priority extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -58,7 +58,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Margin="20,40,0,0">
-                    <TextBlock x:Name="Title_Encrypted_extension" Text="Encrypted extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="Title_EncryptedExtension" Text="Encrypted extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

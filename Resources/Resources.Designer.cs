@@ -151,6 +151,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is already active..
+        /// </summary>
+        internal static string Message_AlreadyActive {
+            get {
+                return ResourceManager.GetString("Message_AlreadyActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Business software is running. Please close it before starting a backup..
         /// </summary>
         internal static string Message_BusinessSoftware {
@@ -210,6 +219,15 @@ namespace EasySave.Resources {
         internal static string Message_Fill {
             get {
                 return ResourceManager.GetString("Message_Fill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; not found..
+        /// </summary>
+        internal static string Message_JobNotFound {
+            get {
+                return ResourceManager.GetString("Message_JobNotFound", resourceCulture);
             }
         }
         
@@ -322,6 +340,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Limit size file (Mo).
+        /// </summary>
+        internal static string Text_LimitSize {
+            get {
+                return ResourceManager.GetString("Text_LimitSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Log Format.
         /// </summary>
         internal static string Text_LogFormat {
@@ -405,9 +432,9 @@ namespace EasySave.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Encrypted extensions.
         /// </summary>
-        internal static string Title_Encrypted_extension {
+        internal static string Title_EncryptedExtension {
             get {
-                return ResourceManager.GetString("Title_Encrypted_extension", resourceCulture);
+                return ResourceManager.GetString("Title_EncryptedExtension", resourceCulture);
             }
         }
         
@@ -417,15 +444,6 @@ namespace EasySave.Resources {
         internal static string Title_Home {
             get {
                 return ResourceManager.GetString("Title_Home", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Limit Size File (Mo).
-        /// </summary>
-        internal static string Title_Limit_size_file {
-            get {
-                return ResourceManager.GetString("Title_Limit_size_file", resourceCulture);
             }
         }
         
@@ -441,9 +459,9 @@ namespace EasySave.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Priority extensions.
         /// </summary>
-        internal static string Title_Priority_extension {
+        internal static string Title_PriorityExtension {
             get {
-                return ResourceManager.GetString("Title_Priority_extension", resourceCulture);
+                return ResourceManager.GetString("Title_PriorityExtension", resourceCulture);
             }
         }
         

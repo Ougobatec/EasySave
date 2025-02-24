@@ -51,9 +51,9 @@ namespace EasySave.Views
             }
         }
 
-        private async void DisplayLogs()
+        private void DisplayLogs()
         {
-            LogEntries = new ObservableCollection<ModelLog>(await Logger<ModelLog>.GetInstance().GetLogs());
+            LogEntries = new ObservableCollection<ModelLog>(Logger<ModelLog>.GetInstance().GetLogs());
         }
     }
 }

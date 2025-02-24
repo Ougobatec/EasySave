@@ -243,13 +243,19 @@
   <data name="Message_NotEnoughSpace " xml:space="preserve">
     <value>You don't have enough space on the disk</value>
   </data>
-  <data name="Title_Priority_extension" xml:space="preserve">
+  <data name="Title_PriorityExtension" xml:space="preserve">
     <value>Priority extensions</value>
   </data>
-  <data name="Title_Encrypted_extension" xml:space="preserve">
+  <data name="Title_EncryptedExtension" xml:space="preserve">
     <value>Encrypted extensions</value>
   </data>
-  <data name="Title_Limit_size_file" xml:space="preserve">
-    <value>Limit Size File (Mo)</value>
+  <data name="Text_LimitSize" xml:space="preserve">
+    <value>Limit size file (Mo)</value>
+  </data>
+  <data name="Message_JobNotFound" xml:space="preserve">
+    <value>Backup '{0}' not found.</value>
+  </data>
+  <data name="Message_AlreadyActive" xml:space="preserve">
+    <value>Backup '{0}' is already active.</value>
   </data>
 </root>

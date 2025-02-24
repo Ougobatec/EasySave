@@ -5,15 +5,12 @@ using EasySave.Enumerations;
 namespace EasySave.Models
 {
     /// <summary>
-    /// setting for a backup job 
+    /// model to describe a backup job
     /// </summary>
-    /// <remarks>
-    /// constructor for the backup job
-    /// </remarks>
     public class ModelJob(string name, string sourceDirectory, string targetDirectory, BackupTypes type)
     {
         /// <summary>
-        /// name of the backup
+        /// the name of the backup
         /// </summary>
         public string Name { get; set; } = name;
 
@@ -23,17 +20,17 @@ namespace EasySave.Models
         public string SourceDirectory { get; set; } = sourceDirectory;
 
         /// <summary>
-        /// destination folder for the backup
+        /// the target folder for the backup
         /// </summary>
         public string TargetDirectory { get; set; } = targetDirectory;
 
         /// <summary>
-        /// the type of the backup: diferential or full
+        /// the type of the backup
         /// </summary>
         public BackupTypes Type { get; set; } = type;
 
         /// <summary>
-        /// encryption key
+        /// the key to encrypt the backup
         /// </summary>
         public string Key { get; set; } = GenerateKey(64);
 
@@ -43,7 +40,8 @@ namespace EasySave.Models
         public ModelState State { get; set; } = new ModelState(name);
 
         /// <summary>
-        /// create a cryptographic key via of the desired length via a random number generator
+        /// the generation of a key
+        /// <param name="bits">the number of bits of the key</param>
         /// </summary>
         private static string GenerateKey(int bits)
         {

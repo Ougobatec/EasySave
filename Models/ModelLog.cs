@@ -2,51 +2,44 @@ using Logger;
 
 namespace EasySave.Models
 {
-
-
     /// <summary>
-    /// model of log
-    /// 
-    /// 
-    /// je sais pas ce que c'est ILogModel
-    /// 
-    /// 
-    /// 
+    /// model to describe a log
     /// </summary>
-    public class ModelLog : ILogModel
+    public class ModelLog(string backupName = "", string source = "", string destination = "", long size = 0, TimeSpan encryptionTime = default, TimeSpan transferTime = default) : ILogModel
     {
-
         /// <summary>
         /// the time at the log creation
         /// </summary>
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// the name og the actuak backup
+        /// the name of the backup
         /// </summary>  
-        public string BackupName { get; set; } = string.Empty;
+        public string BackupName { get; set; } = backupName;
 
         /// <summary>
         /// the source of the moving file
         /// </summary>  
-        public string Source { get; set; } = string.Empty;
+        public string Source { get; set; } = source;
+
         /// <summary>
         /// the destination of the moving file
         /// </summary>  
-        public string Destination { get; set; } = string.Empty;
+        public string Destination { get; set; } = destination;
+
         /// <summary>
-        /// the size of te moving file in Bytes
+        /// the size of the moving file
         /// </summary>  
-        public long Size { get; set; }
+        public long Size { get; set; } = size;
 
         /// <summary>
-        /// time takken to encrypt the file
+        /// the time taken to encrypt the file
         /// </summary>
-        public TimeSpan EncryptionTime { get; set; }
+        public TimeSpan EncryptionTime { get; set; } = encryptionTime;
 
         /// <summary>
-        /// time takken to transfert the file
+        /// the time taken to move the file
         /// </summary>
-        public TimeSpan TransfertTime { get; set; }
+        public TimeSpan TransferTime { get; set; } = transferTime;
     }
 }

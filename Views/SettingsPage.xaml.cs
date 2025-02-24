@@ -16,12 +16,12 @@ namespace EasySave.Views
     public partial class SettingsPage : Page
     {
         private static ResourceManager ResourceManager => BackupManager.GetInstance().resourceManager;
-        public ObservableCollection<string> AvailableExtensions { get; set; } = new ObservableCollection<string>();       // List for the available extensions for priority exentions
-        public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string>();      // List for the available extensions for encrypted exentions
-        public ObservableCollection<string> SelectedExtensions { get; set; } = new ObservableCollection<string>();      // List for the selected extensions for priority exentions
-        public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();     // List for the selected extensions for encrypted exentions
-        public ObservableCollection<ModelJob> BackupJobs { get; set; }      // List to get all backupJobs 
-        public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();     // List to store all extensions used in backUps
+        public ObservableCollection<string> AvailableExtensions { get; set; } = new ObservableCollection<string>();                 // List for the available extensions for priority exentions
+        public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string>();        // List for the available extensions for encrypted exentions
+        public ObservableCollection<string> SelectedExtensions { get; set; } = new ObservableCollection<string>();                  // List for the selected extensions for priority exentions
+        public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();         // List for the selected extensions for encrypted exentions
+        public ObservableCollection<ModelJob> BackupJobs { get; set; }                                                              // List to get all backupJobs 
+        public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();                          // List to store all extensions used in backUps
 
         public SettingsPage()
         {
@@ -50,14 +50,14 @@ namespace EasySave.Views
         {
             MainWindow.GetInstance().Refresh();
             Title_Settings.Text = ResourceManager.GetString("Title_Settings");
+            Title_PriorityExtension.Text = ResourceManager.GetString("Title_PriorityExtension");
+            Title_EncryptedExtension.Text = ResourceManager.GetString("Title_EncryptedExtension");
             Text_Language.Text = ResourceManager.GetString("Text_Language");
             Text_LogFormat.Text = ResourceManager.GetString("Text_LogFormat");
-            Title_Priority_extension.Text = ResourceManager.GetString("Title_Priority_extension");
-            Title_Encrypted_extension.Text = ResourceManager.GetString("Title_Encrypted_extension");
-            Title_Limit_size_file.Text = ResourceManager.GetString("Title_Limit_size_file");
+            Text_LimitSize.Text = ResourceManager.GetString("Text_LimitSize");
             ComboBox_Language.Text = BackupManager.GetInstance().JsonConfig.Language.ToString();
             ComboBox_LogFormat.Text = BackupManager.GetInstance().JsonConfig.LogFormat.ToString();
-            Limit_size_fileTextBox.Text = BackupManager.GetInstance().JsonConfig.LimitSizeFile.ToString();
+            TextBox_LimitSize.Text = BackupManager.GetInstance().JsonConfig.LimitSizeFile.ToString();
         }
 
         /// <summary>

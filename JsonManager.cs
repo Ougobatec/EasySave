@@ -1,79 +1,50 @@
 ﻿using System.IO;
 using System.Text.Json;
-using EasySave.Models;
 
 namespace EasySave
 {
+    /// <summary>
+    /// Json manager class to load and save json files
+    /// </summary>
     public class JsonManager
     {
         /// <summary>
-        /// save data into desired json file
-        /// 
-        /// mais le <T> je sais pas ce que c'est
-        /// 
+        /// Load data from desired json file into desired object
         /// </summary>
+        /// <param name="filePath">Json file path</param>
+        /// <param name="defaultValue">Default value if file does not exist</param>
+        public static T LoadJson<T>(string filePath, T defaultValue) where T : new()
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var json = File.ReadAllText(filePath);                          // Read json from file
+                    return JsonSerializer.Deserialize<T>(json) ?? defaultValue;     // Deserialize json to object
+                }
+                catch (JsonException)
+                {
+                    return defaultValue;
+                }
+            }
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Save data into desired json file from desired object
+        /// </summary>
+        /// <param name="data">Data to save</param>
+        /// <param name="filePath">Json file path</param>
         public static async Task SaveJsonAsync<T>(T data, string filePath)
         {
-            var directory = Path.GetDirectoryName(filePath);                                                    //take the folder above the file
-            if (!Directory.Exists(directory))
+            string? directoryPath = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(directoryPath))
             {
-                Directory.CreateDirectory(directory);                                                           //create directory if it doesn't exist
+                Directory.CreateDirectory(directoryPath);                                                       // Create directory if not exists
             }
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      //transform to json
-            await File.WriteAllTextAsync(filePath, json);                                                       //write to desired json file
-        }
-
-        /// <summary>
-        /// Load config from the config file
-        /// </summary>
-        /// <exception cref="Exception">creation of a new config </exception>
-        public static void LoadConfig(string pathConfig)
-        {
-            if (File.Exists(pathConfig))
-            {
-                try
-                {
-                    var json = File.ReadAllText(pathConfig);                                            //lire tout le json du fichier
-                    BackupManager.GetInstance().JsonConfig = JsonSerializer.Deserialize<ModelConfig>(json) ?? new ModelConfig();        //transform json to config data via ModelConfig class
-                }
-                catch (JsonException)
-                {
-                    BackupManager.GetInstance().JsonConfig = new ModelConfig();                                                         //je sais pas ce que c'est
-                }
-            }
-            else
-            {
-                BackupManager.GetInstance().JsonConfig = new ModelConfig();                                                             //je sais pas ce que c'est
-            }
-
-            BackupManager.GetInstance().JsonConfig.Language ??= "en";
-            BackupManager.GetInstance().JsonConfig.LogFormat ??= "json";
-            BackupManager.GetInstance().JsonConfig.BackupJobs ??= [];
-        }
-
-        /// <summary>
-        /// je sais pas ce que c'est
-        /// </summary>
-        /// <exception cref="Exception">creation of a new state </exception>
-        public static void LoadStates(string filepath)
-        {
-            if (File.Exists(filepath))
-            {
-                try
-                {
-                    var json = File.ReadAllText(filepath);
-                    BackupManager.GetInstance().JsonState = JsonSerializer.Deserialize<List<ModelState>>(json) ?? [];
-                }
-                catch (JsonException)
-                {
-                    BackupManager.GetInstance().JsonState = [];             //if there is a problem with the actual json create a new jsonstate
-                }
-            }
-            else
-            {
-                BackupManager.GetInstance().JsonState = [];                 //if there is no json create a new jsonstate
-            }
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      // Serialize object to json
+            await File.WriteAllTextAsync(filePath, json);                                                       // Write json to file
         }
     }
 }

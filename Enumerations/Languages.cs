@@ -1,8 +1,7 @@
 ﻿namespace EasySave.Enumerations
 {
-
     /// <summary>
-    /// nothing is happening at the moment
+    /// to define the language of the application
     /// </summary>  
     public enum Languages
     {

@@ -5,7 +5,6 @@
     /// </summary>  
     public enum BackupTypes
     {
-
         /// <summary>
         /// all files are being transfered
         /// </summary>  

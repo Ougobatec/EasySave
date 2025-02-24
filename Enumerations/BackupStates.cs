@@ -1,26 +1,33 @@
 ﻿namespace EasySave.Enumerations
 {
-
-
     /// <summary>
     /// to describe global state of a backup
     /// </summary>
     public enum BackupStates
     {
-
         /// <summary>
-        /// nothing is happening at the moment
+        /// the backup has not been started
         /// </summary>  
-        IDLE,
+        INACTIVE,
 
         /// <summary>
-        /// file are being transfered
+        /// the backup is currently running
         /// </summary>  
         ACTIVE,
 
         /// <summary>
+        /// the backup has been stopped
+        /// </summary>
+        PAUSED,
+
+        /// <summary>
         /// the backup is finished
         /// </summary>  
-        END
+        END,
+
+        /// <summary>
+        /// the backup has failed
+        /// </summary>
+        ERROR
     }
 }

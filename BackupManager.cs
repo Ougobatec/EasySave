@@ -10,376 +10,324 @@ using Logger;
 namespace EasySave
 {
     /// <summary>
-    /// manage all the backup logic
+    /// Backup manager class to manage the backup jobs
     /// </summary>
     public class BackupManager
     {
-        public ResourceManager resourceManager = new("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());
-        public ModelConfig JsonConfig { get; set; } = new ModelConfig();
-        public List<ModelState> JsonState { get; set; } = [];
-        private static BackupManager? BackupManager_Instance;
-        private static readonly string ConfigFilePath = "Config\\config.json";
-        private static readonly string StateFilePath = "Config\\state.json";
-        private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");
+        public ResourceManager resourceManager = new("EasySave.Resources.Resources", Assembly.GetExecutingAssembly());  // Resource manager instance
+        public ModelConfig JsonConfig { get; set; } = new ModelConfig();                                                // Config model instance
+        public List<ModelState> JsonState { get; set; } = [];                                                           // State model instance
+        private static BackupManager? BackupManager_Instance;                                                           // Backup manager instance
+        private static readonly string ConfigFilePath = "Config\\config.json";                                          // Config file path
+        private static readonly string StateFilePath = "Config\\state.json";                                            // State file path
+        private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");                  // Log directory path
 
         /// <summary>
-        /// singleton isntancer
+        /// Backup manager constructor to load the config and state files and set the culture and logger
+        /// </summary>
+        private BackupManager()
+        {
+            JsonConfig = JsonManager.LoadJson(ConfigFilePath, new ModelConfig());           // Load config file
+            JsonState = JsonManager.LoadJson(StateFilePath, new List<ModelState>());        // Load state file
+            SetCulture(JsonConfig.Language);                                                // Set culture
+            Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);    // Set logger settings
+        }
+
+        /// <summary>
+        /// Get the backup manager instance or create it if it doesn't exist
         /// </summary>
         public static BackupManager GetInstance()
         {
-            BackupManager_Instance ??= new BackupManager();
-            return BackupManager_Instance;
+            BackupManager_Instance ??= new BackupManager();     // Create backup manager instance if not exists
+            return BackupManager_Instance;                      // Return backup manager instance
         }
 
         /// <summary>
-        /// principal method how retrieve the state, config and language
+        /// Add a new backup job to the config and state files
         /// </summary>
-        public void Load()
-        {
-            JsonManager.LoadConfig(ConfigFilePath);
-            JsonManager.LoadStates(StateFilePath);
-            SetCulture(JsonConfig.Language);
-            Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
-        }
-
-        /// <summary>
-        /// where a backup is created add it to state and config file
-        /// </summary>
+        /// <param name="job">The backup job to add</param>
         public async Task AddBackupJobAsync(ModelJob job)
         {
             if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(job.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new Exception("Message_NameExists");
+                throw new Exception("Message_NameExists");                                                      // Throw an exception if the job name already exists
             }
 
-            JsonConfig.BackupJobs.Add(job);
-            JsonState.Add(job.State);
-            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);
+            JsonConfig.BackupJobs.Add(job);                                                                     // Add the backup job to the config file
+            JsonState.Add(job.State);                                                                           // Add the backup job state to the state file
+            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                        // Save the config file
+            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                          // Save the state file
         }
 
         /// <summary>
-        /// where a backup is updated modify it in config and state
+        /// Update an existing backup job in the config and state files
         /// </summary>
-        public async Task UpdateBackupJobAsync(ModelJob newJob, ModelJob existingJob)
+        /// <param name="newJob">The new backup job</param>
+        /// <param name="existingJob">The existing backup job to update</param>
+        public async Task UpdateBackupJobAsync(ModelJob newJob, ModelJob job)
         {
-            if (JsonConfig.BackupJobs.Any(b => b.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && b != existingJob))
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);                                         // Get the backup job by name
+            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                 // Get the job state by name
+
+            if (modelJob == null)
             {
-                throw new Exception("Message_NameExists");
+                throw new Exception("Message_JobNotFound");                                                                             // Throw an exception if the job is not found
             }
-            
-            var job = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == existingJob.Name);
-            job.Name = newJob.Name;
-            job.SourceDirectory = newJob.SourceDirectory;
-            job.TargetDirectory = newJob.TargetDirectory;
-            job.Type = newJob.Type;
-            job.State.Name = newJob.Name;
 
-            var state = JsonState.FirstOrDefault(s => s.Name == existingJob.Name);
-            state.Name = newJob.Name;
+            if (JsonConfig.BackupJobs.Any(j => j.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && j.Name != job.Name))
+            {
+                throw new Exception("Message_NameExists");                                                                              // Throw an exception if the job name already exists
+            }
 
-            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);
+            modelJob.Name = newJob.Name;                                                                                                // Update the existing backup job name
+            modelJob.SourceDirectory = newJob.SourceDirectory;                                                                          // Update the existing backup job source directory
+            modelJob.TargetDirectory = newJob.TargetDirectory;                                                                          // Update the existing backup job target directory
+            modelJob.Type = newJob.Type;                                                                                                // Update the existing backup job type
+            modelJob.State.Name = newJob.Name;                                                                                          // Update the existing backup job state name
+
+            if (modelState == null)
+            {
+                JsonState.Add(modelJob.State);                                                                                          // Add the existing backup job state if not found
+            }
+            else
+            {
+                modelState.Name = newJob.Name;                                                                                          // Update the existing backup job state name
+            }
+
+            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                                // Save the config file
+            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                                  // Save the state file
         }
 
         /// <summary>
-        /// Executes the backup job asynchronously.
+        /// Execute an existing backup job and update its state
         /// </summary>
-        /// <param name="job">The backup job to execute.</param>
-        /// <exception cref="Exception">Thrown when the source directory is not found.</exception>
+        /// <param name="job">The backup job to execute</param>
         public async Task ExecuteBackupJobAsync(ModelJob job)
         {
-            if (!Directory.Exists(job.SourceDirectory))
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);             // Get the backup job by name
+
+            if (modelJob == null)
             {
-                throw new Exception("Message_DirectoryNotFound");
+                throw new Exception("Message_JobNotFound");                                                 // Throw an exception if the job is not found
+            }
+            if (modelJob.State.State == "ACTIVE")
+            {
+                throw new Exception("Message_AlreadyActive");                                               // Throw an exception if the job is already active
+            }
+            if (!Directory.Exists(modelJob.SourceDirectory))
+            {
+                throw new Exception("Message_DirectoryNotFound");                                           // Throw an exception if the source directory does not exist
             }
 
-            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
-
-            // Get the size of the save
-            long size = GetSizeRepertory(job.TargetDirectory);
-
-            // Get the free space still available on the disk
-            DriveInfo drive = new DriveInfo(job.TargetDirectory);
-
-            if (drive.AvailableFreeSpace < size)
+            long backupSize = GetDirectorySize(modelJob.SourceDirectory);                                   // Get the total size of the backup
+            DriveInfo drive = new DriveInfo(Path.GetPathRoot(modelJob.TargetDirectory) ?? string.Empty);    // Get disk info from the target directory
+            if (drive.AvailableFreeSpace < backupSize)                                                      // Check if there is enough space on the disk
             {
-                throw new Exception("Message_NotEnoughSpace");
+                throw new Exception("Message_NotEnoughSpace");                                              // Throw an exception if there is not enough space on the disk
             }
-            else
-            {
-                await UpdateStateAsync(state, "ACTIVE", job.SourceDirectory);
-                await CopyDirectoryAsync(job);
-                await UpdateStateAsync(state, "END", job.SourceDirectory, 0, 100);
-            }
+
+            await CopyDirectoryAsync(modelJob);                                                             // Start the backup process
         }
 
         /// <summary>
-        /// Calculate the size of a repertory
+        /// Delete an existing backup job from the config and state files
         /// </summary>
-        public long GetSizeRepertory(string sourceDir)
-        {
-            long size = 0;
-            if (!Directory.Exists(sourceDir))
-            {
-                // if the repertory doesn't exist we set the size to -1
-                return size = -1;
-            }
-            else
-            {
-                // Get all files and do a sum their size together
-                foreach (string file in Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories))
-                {
-                    FileInfo fileInfo = new FileInfo(file);
-                    size += fileInfo.Length;
-                }
-                return size;
-            }
-        }
-
-        /// <summary>
-        /// delete a backup via a backup object
-        /// </summary>
+        /// <param name="job">The backup job to delete</param>
         public async Task DeleteBackupJobAsync(ModelJob job)
         {
-            JsonConfig.BackupJobs.Remove(job);
-            JsonState.Remove(JsonState.FirstOrDefault(s => s.Name == job.Name));
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);     // Get the backup job by name
+            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);             // Get the job state by name
 
-            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);
-            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);
+            if (modelJob == null)
+            {
+                throw new Exception("Message_JobNotFound");                                         // Throw an exception if the job is not found
+            }
+            JsonConfig.BackupJobs.Remove(modelJob);                                                 // Remove the backup job
+
+            if (modelState != null)
+            {
+                JsonState.Remove(modelState);                                                       // Remove the job state
+            }
+
+            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                            // Save the config file
+            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);                              // Save the state file
         }
 
+        /// <summary>
+        /// Change the settings of the application and save them in the config file
+        /// </summary>
+        /// <param name="parameter">The parameter to change</param>
+        /// <param name="value">The new value of the parameter</param>
+        /// <param name="list">The list of values to change</param>
         public async Task ChangeSettingsAsync(string parameter, string value, List<string>? list = null)
         {
             switch (parameter)
             {
-                // changement de la langue
-                case "language":
+                case "language":                                                                    // Change the language
                     JsonConfig.Language = value;
                     SetCulture(value);
                     break;
-                // changement du logFormat
-                case "logFormat":
+                case "logFormat":                                                                   // Change the log format
                     JsonConfig.LogFormat = value;
                     Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);
                     break;
-                // changement de la taille limite d'un fichier (pour qu'il soit consid�rer comme volumineux)
-                case "limitSizeFile":
+                case "limitSizeFile":                                                               // Change the limit size of a file
                     JsonConfig.LimitSizeFile = Int32.Parse(value);
                     break;
-                // ajout, suppression d'une extension prioritaire
-                case "PriorityFiles":
+                case "PriorityFiles":                                                               // Change the priority extensions
                     if (list != null)
                     {
                         JsonConfig.PriorityExtensions = list;
                     }
                     break;
-                case "EncryptedFiles":
+                case "EncryptedFiles":                                                              // Change the encrypted extensions
                     if (list != null)
                     {
                         JsonConfig.EncryptedExtensions = list;
                     }
                     break;
-                default:
-                    // code block
+                default:                                                                            // Default case
                     break;
             }
-            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);
+            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                            // Save the config file
         }
 
         /// <summary>
-        /// c'est sale et c'est gros
+        /// Get the total size of a directory
         /// </summary>
+        /// <param name="sourceDir">The source directory</param>
+        public long GetDirectorySize(string sourceDir)
+        {
+            if (!Directory.Exists(sourceDir))
+            {
+                return -1;                                                                                                          // Return -1 if the directory does not exist
+            }
+
+            return Directory.EnumerateFiles(sourceDir, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);    // Return the total size of the directory
+        }
+
+        /// <summary>
+        /// Copy a directory and its files to a target directory
+        /// </summary>
+        /// <param name="job">The backup job to execute</param>
         private async Task CopyDirectoryAsync(ModelJob job)
         {
-            var state = JsonState.FirstOrDefault(s => s.Name == job.Name);
             string sourceDir = job.SourceDirectory;
-            string baseDestDir = job.TargetDirectory;
+            string destDir = job.TargetDirectory;
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string destDir = Path.Combine(baseDestDir, timestamp + "_" + job.Name + "_" + job.Type);
-            Directory.CreateDirectory(destDir);
+            string saveDestDir = Path.Combine(destDir, $"{timestamp}_{job.Name}_{job.Type}");
+
+            Directory.CreateDirectory(saveDestDir);                                                                                             // Create the target directory
 
             var backupStartTime = DateTime.Now;
-            var extensionsToEncrypt = new List<string>();
+            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);
+            TimeSpan totalEncryptionTime = TimeSpan.Zero;
 
-            foreach (string el in BackupManager.GetInstance().JsonConfig.EncryptedExtensions)
-            {
-                extensionsToEncrypt.Add(el);
-            }
-
+            IEnumerable<string> filesToCopy;                                                                                                    // Get the files to copy
             if (job.Type == BackupTypes.Full)
             {
-                foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
-                {
-                    Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
-                }
-
-                foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
-                {
-                    string destPath = newPath.Replace(sourceDir, destDir);
-                    var fileInfo = new FileInfo(newPath);
-                    var startTime = DateTime.Now;
-
-                    await Task.Run(() => File.Copy(newPath, destPath, true));
-
-                    if (extensionsToEncrypt.Contains(fileInfo.Extension))
-                    {
-                        var fileManager = new FileManager(destPath, job.Key);
-                        int encryptionTime = fileManager.TransformFile();
-                        var endTime = DateTime.Now;
-                        var transferTime = endTime - startTime;
-
-                        await Logger<ModelLog>.GetInstance().Log(new ModelLog
-                        {
-                            Timestamp = DateTime.Now,
-                            BackupName = job.Name,
-                            Source = newPath,
-                            Destination = destPath,
-                            Size = fileInfo.Length,
-                            EncryptionTime = TimeSpan.FromMilliseconds(encryptionTime),
-                            TransfertTime = transferTime
-                        });
-                    }
-                    else
-                    {
-                        var endTime = DateTime.Now;
-                        var transferTime = endTime - startTime;
-
-                        await Logger<ModelLog>.GetInstance().Log(new ModelLog
-                        {
-                            Timestamp = DateTime.Now,
-                            BackupName = job.Name,
-                            Source = newPath,
-                            Destination = destPath,
-                            Size = fileInfo.Length,
-                            TransfertTime = transferTime
-                        });
-                    }
-
-                    state.SourceFilePath = newPath;
-                    state.TargetFilePath = destPath;
-                    state.NbFilesLeftToDo--;
-                    state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                    await JsonManager.SaveJsonAsync(JsonState, StateFilePath);
-                }
+                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);                                                // Get all files to copy if the backup type is full
             }
-            else if (job.Type == BackupTypes.Differential)
+            else
             {
-                var backupDirs = Directory.GetDirectories(baseDestDir).OrderBy(d => d).ToList();
+                var previousBackups = Directory.GetDirectories(destDir).OrderByDescending(d => d).ToList();                                     // Get the previous backups
+                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)                                                 // Get the files to copy if the backup type is differential
+                    .Where(file =>
+                    {
+                        string relativePath = file.Substring(sourceDir.Length + 1);
+                        return previousBackups.All(backupDir =>
+                        {
+                            string backupFilePath = Path.Combine(backupDir, relativePath);
+                            return !File.Exists(backupFilePath) || new FileInfo(file).LastWriteTime > File.GetLastWriteTime(backupFilePath);    // Check if the file is more recent than the last backup
+                        });
+                    });
+            }
 
-                foreach (string dirPath in Directory.GetDirectories(sourceDir, "*", SearchOption.AllDirectories))
+            var totalFilesToCopy = filesToCopy.Count();
+            var nbFilesLeftToDo = filesToCopy.Count();
+            var totalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length);
+
+            await UpdateStateAsync(job, sourceDir, saveDestDir, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                   // Update the job state
+
+            foreach (string file in filesToCopy)
+            {
+                var fileInfo = new FileInfo(file);
+                string relativePath = file.Substring(sourceDir.Length + 1);
+                string destPath = Path.Combine(saveDestDir, relativePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);                                                                    // Create the target directory
+
+                await UpdateStateAsync(job, file, destPath, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                       // Update the job state
+
+                var transferStartTime = DateTime.Now;
+                await Task.Run(() => File.Copy(file, destPath, true));                                                                          // Copy the file
+                var transferEndTime = DateTime.Now;
+                var transferTime = transferEndTime - transferStartTime;
+
+                if (extensionsToEncrypt.Contains(fileInfo.Extension))                                                                           // Encrypt the file if it is in the encrypted extensions list
                 {
-                    Directory.CreateDirectory(dirPath.Replace(sourceDir, destDir));
+                    var fileManager = new FileManager(destPath, job.Key);
+                    TimeSpan encryptionTime = TimeSpan.FromMilliseconds(fileManager.TransformFile());
+                    totalEncryptionTime += encryptionTime;
+                    await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, file, destPath, fileInfo.Length, encryptionTime, transferTime));
+                }
+                else
+                {
+                    await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, file, destPath, fileInfo.Length, TimeSpan.Zero, transferTime));
                 }
 
-                foreach (string newPath in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
-                {
-                    string relativePath = newPath[(sourceDir.Length + 1)..];
-                    string destPath = Path.Combine(destDir, relativePath);
-                    var fileInfo = new FileInfo(newPath);
-
-                    bool fileModified = true;
-                    foreach (var backupDir in backupDirs)
-                    {
-                        string backupFilePath = Path.Combine(backupDir, relativePath);
-                        if (File.Exists(backupFilePath) && fileInfo.LastWriteTime <= File.GetLastWriteTime(backupFilePath))
-                        {
-                            fileModified = false;
-                            break;
-                        }
-                    }
-
-                    if (fileModified)
-                    {
-                        var startTime = DateTime.Now;
-
-                        await Task.Run(() => File.Copy(newPath, destPath, true));
-
-                        if (extensionsToEncrypt.Contains(fileInfo.Extension))
-                        {
-                            var fileManager = new FileManager(destPath, job.Key);
-                            int encryptionTime = fileManager.TransformFile();
-                            var endTime = DateTime.Now;
-                            var transferTime = endTime - startTime;
-
-                            await Logger<ModelLog>.GetInstance().Log(new ModelLog
-                            {
-                                Timestamp = DateTime.Now,
-                                BackupName = job.Name,
-                                Source = newPath,
-                                Destination = destPath,
-                                Size = fileInfo.Length,
-                                EncryptionTime = TimeSpan.FromMilliseconds(encryptionTime),
-                                TransfertTime = transferTime
-                            });
-                        }
-                        else
-                        {
-                            var endTime = DateTime.Now;
-                            var transferTime = endTime - startTime;
-
-                            await Logger<ModelLog>.GetInstance().Log(new ModelLog
-                            {
-                                Timestamp = DateTime.Now,
-                                BackupName = job.Name,
-                                Source = newPath,
-                                Destination = destPath,
-                                Size = fileInfo.Length,
-                                TransfertTime = transferTime
-                            });
-                        }
-
-
-                        state.SourceFilePath = newPath;
-                        state.TargetFilePath = destPath;
-                        state.NbFilesLeftToDo--;
-                        state.Progression = (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-                        await JsonManager.SaveJsonAsync(JsonState, StateFilePath);
-                    }
-                }
+                nbFilesLeftToDo--;
             }
 
             var backupEndTime = DateTime.Now;
             var totalBackupTime = backupEndTime - backupStartTime;
-            long totalSize = Directory.GetFiles(destDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
 
-            /// <summary>
-            /// pour l'utilisation de la classe logger dans la dll
-            /// </summary>
-            await Logger<ModelLog>.GetInstance().Log(new ModelLog
-            {
-                Timestamp = DateTime.Now,
-                BackupName = job.Name,
-                Source = sourceDir,
-                Destination = destDir,
-                Size = totalSize,
-                TransfertTime = totalBackupTime
-            });
+            await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
+
+            await UpdateStateAsync(job, "", "", "END", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                                      // Update the job state
         }
 
         /// <summary>
-        /// 
-        /// update of a new state if it change
+        /// Update the state of a backup job and save it to JsonState and JsonConfig
         /// </summary>
-        private async Task UpdateStateAsync(ModelState state, string newState, string sourceDir, int? nbFilesLeftToDo = null, int? progression = null)
+        /// <param name="job">The backup job to update</param>
+        /// <param name="source">The source file path</param>
+        /// <param name="target">The target file path</param>
+        /// <param name="state">The state value</param>
+        /// <param name="totalFilesToCopy">The total files to copy</param>
+        /// <param name="totalFilesSize">The total files size</param>
+        /// <param name="nbFilesLeftToDo">The number of files left to do</param>
+        private async Task UpdateStateAsync(ModelJob job, string source, string target, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo)
         {
-            state.State = newState;
-            state.TotalFilesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Length;
-            state.TotalFilesSize = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories).Sum(f => new FileInfo(f).Length);
-            state.NbFilesLeftToDo = nbFilesLeftToDo ?? state.TotalFilesToCopy;
-            state.Progression = progression ?? (int)(((double)(state.TotalFilesToCopy - state.NbFilesLeftToDo) / state.TotalFilesToCopy) * 100);
-            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);
+            job.State.SourceFilePath = source;                                                                          // Update the job state source file path
+            job.State.TargetFilePath = target;                                                                          // Update the job state target file path
+            job.State.State = state;                                                                                    // Update the job state state value
+            job.State.TotalFilesToCopy = totalFilesToCopy;                                                              // Update the job state total files to copy
+            job.State.TotalFilesSize = totalFilesSize;                                                                  // Update the job state total files size
+            job.State.NbFilesLeftToDo = nbFilesLeftToDo;                                                                // Update the job state number of files left to do
+            job.State.Progression = (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);     // Update the job state progression
+
+            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                 // Get the job state by name
+            if (modelState != null)
+            {
+                JsonState.Remove(modelState);                                                                           // Remove the job state
+            }
+            JsonState.Add(job.State);                                                                                   // Add the job state
+
+            await JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                  // Save the state file
+            await JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                // Save the config file
         }
 
+
         /// <summary>
-        /// for changing language via resx file
+        /// Set the culture of the application
         /// </summary>
+        /// <param name="cultureName">The culture name</param>
         private static void SetCulture(string cultureName)
         {
-            CultureInfo culture = new(cultureName);                 // to add more languages
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo culture = new(cultureName);                 // Create a new culture info
+            CultureInfo.DefaultThreadCurrentCulture = culture;      // Set the default thread current culture
+            CultureInfo.DefaultThreadCurrentUICulture = culture;    // Set the default thread current UI culture
+            Thread.CurrentThread.CurrentUICulture = culture;        // Set the current UI culture
         }
     }
 }

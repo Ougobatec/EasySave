@@ -102,12 +102,6 @@ namespace EasySave.Views
                 }
 
                 var job = new ModelJob(name, source, target, Enum.Parse<BackupTypes>(type));
-                //    {
-                //    Name = name,
-                //    SourceDirectory = source,
-                //    TargetDirectory = target,
-                //    Type = Enum.Parse<BackupTypes>(type),
-                //};)
                 if (Job == null)
                 {
                     try
@@ -216,7 +210,7 @@ namespace EasySave.Views
                 if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
                 {
                     // Get the size of the save
-                    size = BackupManager.GetInstance().GetSizeRepertory(dir);
+                    size = BackupManager.GetInstance().GetDirectorySize(dir);
 
                     // Get the type of the save
                     string type = "X";
@@ -232,13 +226,7 @@ namespace EasySave.Views
                     // Get the date of creation of the file
                     DirectoryInfo dirInfo = new DirectoryInfo(dir);
 
-                    SavesEntries.Add(new ModelSave
-                    {
-                        Name = folderName,
-                        Size = size,
-                        Type = type,
-                        Date = dirInfo.CreationTime,
-                    });
+                    SavesEntries.Add(new ModelSave(folderName, type, size, dirInfo.CreationTime));
                 }
             }
         }

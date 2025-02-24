@@ -243,13 +243,19 @@
   <data name="Message_NotEnoughSpace " xml:space="preserve">
     <value>Vous n'avez pas assez d'espace sur le disque</value>
   </data>
-  <data name="Title_Priority_extension" xml:space="preserve">
-    <value>Extensions prioritaire</value>
+  <data name="Title_PriorityExtension" xml:space="preserve">
+    <value>Extensions prioritaires</value>
   </data>
-  <data name="Title_Encrypted_extension" xml:space="preserve">
-    <value>Extensions encryptés</value>
+  <data name="Title_EncryptedExtension" xml:space="preserve">
+    <value>Extensions encryptées</value>
   </data>
-  <data name="Title_Limit_size_file" xml:space="preserve">
-    <value>Taille llimite fichier (Mo)</value>
+  <data name="Text_LimitSize" xml:space="preserve">
+    <value>Taille limite de fichier (Mo)</value>
+  </data>
+  <data name="Message_JobNotFound" xml:space="preserve">
+    <value>La sauvegarde '{0}' n'a pas été trouvée.</value>
+  </data>
+  <data name="Message_AlreadyActive" xml:space="preserve">
+    <value>La sauvegarde '{0}' est déjà active.</value>
   </data>
 </root>

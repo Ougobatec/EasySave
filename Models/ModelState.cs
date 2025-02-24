@@ -2,67 +2,53 @@
 
 namespace EasySave.Models
 {
-
     /// <summary>
     /// model to describe the state of a backup
-    /// 
-    /// 
-    /// je sais pas ce que c'est ILogModel
-    /// 
-    /// 
-    /// 
     /// </summary>
     public class ModelState(string name)
     {
-        public string Name { get; set; } = name;
         /// <summary>
-        /// esque c'est le chemin de source de la backup ou de un fichier ?
-        /// 
-        /// 
+        /// the name of the backup
+        /// </summary>
+        public string Name { get; set; } = name;
+
+        /// <summary>
+        /// the source of the moving file
         /// </summary>
         public string SourceFilePath { get; set; } = string.Empty;
 
         /// <summary>
-        /// esque c'est le chemin de destination de la backup ou de un fichier ?
-        /// 
-        /// 
+        /// the destination of the moving file
         /// </summary>
         public string TargetFilePath { get; set; } = string.Empty;
 
         /// <summary>
-        /// the actual state of the backup with IDLE defautl value
-        /// 
-        /// 
+        /// the state of the backup
         /// </summary>
         public string State { get; set; } = "IDLE";
 
         /// <summary>
-        /// esque c'est la taille des fichiers à copier ?
-        /// 
-        /// 
+        /// the number of files to transfer
         /// </summary>
         public int TotalFilesToCopy { get; set; }
 
         /// <summary>
-        /// esque c'est la taille des fichiers à copier ?
-        /// 
-        /// 
+        /// the size of the files to transfer
         /// </summary>
         public long TotalFilesSize { get; set; }
 
         /// <summary>
-        /// how many file are left to do in this backup
-        /// 
-        /// 
+        /// the number of files left to transfer
         /// </summary>
         public int NbFilesLeftToDo { get; set; }
 
-
-        private int progression;    
         /// <summary>
-        /// je sais pas ce que c'est
-        /// 
-        /// 
+        /// the progression of the backup
+        /// </summary>
+        private int progression;
+
+        /// <summary>
+        /// the progression of the backup
         /// </summary>
         public int Progression 
         {
@@ -75,6 +61,9 @@ namespace EasySave.Models
             
         }
 
+        /// <summary>
+        /// event to trigger when the progression of the backup changes
+        /// </summary>
         public event EventHandler? OnProgressChange;
     }
 }

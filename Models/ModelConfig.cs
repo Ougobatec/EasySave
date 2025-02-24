@@ -1,41 +1,38 @@
 ﻿namespace EasySave.Models
 {
-
-
     /// <summary>
-    /// Model for the configuration file
+    /// model to describe the general setting of the application
     /// </summary>
     public class ModelConfig
     {
+        /// <summary>
+        /// the language of the application
+        /// </summary>
+        public string Language { get; set; } = "en";
 
         /// <summary>
-        /// the saved language choice
+        /// the format of the log
         /// </summary>
-        public string Language { get; set; }
+        public string LogFormat { get; set; } = "json";
 
         /// <summary>
-        /// to know if hte log is in xmlf format or json format
+        /// the maximum size of a file that can be transferred without being managed
         /// </summary>
-        public string LogFormat { get; set; }
+        public int LimitSizeFile { get; set; } = 1000000;
 
         /// <summary>
-        /// declare file size treshold to manage the limit at wich big file ar not tranfered at the same time
+        /// the list of all backup jobs
         /// </summary>
-        public int LimitSizeFile { get; set; }
+        public List<ModelJob> BackupJobs { get; set; } = [];
 
         /// <summary>
-        /// list of backup jobs 
+        /// the list of all priority extensions
         /// </summary>
-        public List<ModelJob> BackupJobs { get; set; }
+        public List<string> PriorityExtensions { get; set; } = [];
 
         /// <summary>
-        /// list of all priority extensions
+        /// the list of all encrpyted extensions
         /// </summary>
-        public List<string> PriorityExtensions { get; set; } = new List<string>();
-
-        /// <summary>
-        /// list of all encrpyted extensions
-        /// </summary>
-        public List<string> EncryptedExtensions { get; set; } = new List<string>();
+        public List<string> EncryptedExtensions { get; set; } = [];
     }
 }
