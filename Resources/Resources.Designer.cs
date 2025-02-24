@@ -61,6 +61,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add.
+        /// </summary>
+        internal static string Add_BusinessSoftware {
+            get {
+                return ResourceManager.GetString("Add_BusinessSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Create backup.
         /// </summary>
         internal static string Button_Create {
@@ -160,6 +169,15 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à The business software is already in the list..
+        /// </summary>
+        internal static string Message_AlreadyInListBusinessSoftware {
+            get {
+                return ResourceManager.GetString("Message_AlreadyInListBusinessSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Business software is running. Please close it before starting a backup..
         /// </summary>
         internal static string Message_BusinessSoftware {
@@ -243,9 +261,9 @@ namespace EasySave.Resources {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à You don&apos;t have enough space on the disk.
         /// </summary>
-        internal static string Message_NotEnoughSpace_ {
+        internal static string Message_NotEnoughSpace {
             get {
-                return ResourceManager.GetString("Message_NotEnoughSpace ", resourceCulture);
+                return ResourceManager.GetString("Message_NotEnoughSpace", resourceCulture);
             }
         }
         
@@ -258,6 +276,26 @@ namespace EasySave.Resources {
             }
         }
         
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Please select a business software from the list..
+        /// </summary>
+        internal static string Message_SelectionBusinessSoftware {
+            get {
+                return ResourceManager.GetString("Message_SelectionBusinessSoftware", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à The business software is already in the list..
+        /// </summary>
+        //internal static string Message_AlreadyInListBusinessSoftware
+        //{
+        //    get
+        //    {
+        //        return ResourceManager.GetString("Message_AlreadyInListBusinessSoftware", resourceCulture);
+        //    }
+        //}
+
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; updated successfully..
         /// </summary>
@@ -300,6 +338,15 @@ namespace EasySave.Resources {
         internal static string MessageTitle_Success {
             get {
                 return ResourceManager.GetString("MessageTitle_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Remove.
+        /// </summary>
+        internal static string Remove_BusinessSoftware {
+            get {
+                return ResourceManager.GetString("Remove_BusinessSoftware", resourceCulture);
             }
         }
         

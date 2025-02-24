@@ -240,7 +240,7 @@
   <data name="Message_UpdateSuccess" xml:space="preserve">
     <value>La sauvegarde '{0}' a été modifiée avec succès.</value>
   </data>
-  <data name="Message_NotEnoughSpace " xml:space="preserve">
+  <data name="Message_NotEnoughSpace" xml:space="preserve">
     <value>Vous n'avez pas assez d'espace sur le disque</value>
   </data>
   <data name="Title_PriorityExtension" xml:space="preserve">
@@ -257,5 +257,17 @@
   </data>
   <data name="Message_AlreadyActive" xml:space="preserve">
     <value>La sauvegarde '{0}' est déjà active.</value>
+  </data>
+  <data name="Add_BusinessSoftware" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Remove_BusinessSoftware" xml:space="preserve">
+    <value>Enlever</value>
+  </data>
+  <data name="Message_SelectionBusinessSoftware" xml:space="preserve">
+    <value>Veuillez sélectionner un logiciel à supprimer.</value>
+  </data>
+  <data name="Message_AlreadyInListBusinessSoftware" xml:space="preserve">
+    <value>Le logiciel métier est déjà dnas la liste.</value>
   </data>
 </root>
