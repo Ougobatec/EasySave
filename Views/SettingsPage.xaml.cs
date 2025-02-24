@@ -21,6 +21,8 @@ namespace EasySave.Views
         public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();     // List for the selected extensions for encrypted exentions
         public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();                      // List to get all extensions
         public ObservableCollection<ModelJob> BackupJobs { get; set; }                                                          // List to get all backupJobs 
+        public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();                      // List to get all extensions
+        public ObservableCollection<string> BusinessSoftwares { get; set; } = new ObservableCollection<string>();                      // List to of all business softwares
 
         /// <summary>
         /// SettingsPage constructor to initialize the page and display settings
@@ -31,7 +33,6 @@ namespace EasySave.Views
             // Liaison avec le DataContext
             DataContext = this;
             Get_all_extension();
-            //SelectedExtensionsListBox.ItemsSource = BackupManager.GetInstance().JsonConfig.PriorityExtensions;
             foreach (string el in BackupManager.JsonConfig.PriorityExtensions)
             {
                 AvailablePriorityExtensions.Remove(el);
@@ -41,6 +42,10 @@ namespace EasySave.Views
             {
                 AvailableEncryptedExtensions.Remove(el);
                 SelectedEncryptedExtensions.Add(el);
+            }
+            foreach (string el in BackupManager.JsonConfig.BusinessSoftwares)
+            {
+                BusinessSoftwares.Add(el);
             }
             Refresh();
         }
@@ -57,6 +62,8 @@ namespace EasySave.Views
             Text_Language.Text = ResourceManager.GetString("Text_Language");
             Text_LogFormat.Text = ResourceManager.GetString("Text_LogFormat");
             Text_LimitSize.Text = ResourceManager.GetString("Text_LimitSize");
+            Add_BusinessSoftwareButton.Content = ResourceManager.GetString("Add_BusinessSoftware");
+            Remove_BusinessSoftwareButton.Content = ResourceManager.GetString("Remove_BusinessSoftware");
             ComboBox_Language.Text = BackupManager.JsonConfig.Language.ToString();
             ComboBox_LogFormat.Text = BackupManager.JsonConfig.LogFormat.ToString();
             TextBox_LimitSize.Text = BackupManager.JsonConfig.LimitSizeFile.ToString();
@@ -105,8 +112,73 @@ namespace EasySave.Views
                     }
                     BackupManager.ChangeSettingsAsync("EncryptedFiles", null, LitsExtensions);
                 }
+                else if (button.Name.Contains("Add_BusinessSoftwareButton"))
+                {
+                    BackupManager.ChangeSettingsAsync("Add_BusinessSoftware", TextBox_BusinessSoftwares.Text);
+                    // We remove the text in the input after adding a business software
+                    TextBox_BusinessSoftwares.Text = "";
+                }
+                else if (button.Name.Contains("Remove_BusinessSoftwareButton"))
+                {
+                    if (TextBox_BusinessSoftwares.Text != "")
+                    {
+                        BackupManager.ChangeSettingsAsync("Remove_BusinessSoftware", TextBox_BusinessSoftwares.Text);
+                    }
+                    if (BusinessSoftwaresListBox.SelectedItem != null)
+                    {
+                        BackupManager.ChangeSettingsAsync("Remove_BusinessSoftware", BusinessSoftwaresListBox.SelectedItem.ToString());
+                        // We remove the selected item from the list
+                        if (BusinessSoftwaresListBox.SelectedItem != null)
+                        {
+                            BusinessSoftwares.Remove(BusinessSoftwaresListBox.SelectedItem.ToString());
+                        }
+                    }
+                    else if(TextBox_BusinessSoftwares.Text != "" && BusinessSoftwaresListBox.SelectedItem != null)
+                    {
+                        throw new Exception("Message_SelectionBusinessSoftware");
+                    }
+                }
             }
             Refresh();
+        }
+
+        /// <summary>
+        /// Add a business software to the list
+        /// </summary>
+        private void Add_BusinessSoftware(object sender, RoutedEventArgs e)
+        {
+            if (TextBox_BusinessSoftwares.Text != "")
+            {
+                bool already_in_list = false;
+                foreach (var el in BusinessSoftwares)
+                {
+                    if (TextBox_BusinessSoftwares.Text == el.ToString())
+                    {
+                        already_in_list = true;
+                    }
+                }
+                if (already_in_list)
+                {
+                    //throw new Exception("Message_AlreadyInListBusinessSoftware");
+                }
+                else
+                {
+                    BusinessSoftwares.Add(TextBox_BusinessSoftwares.Text);
+                }
+                Setting_Changed(sender);
+            }
+        }
+
+        /// <summary>
+        /// Remove a business software to the list
+        /// </summary>
+        private void Remove_BusinessSoftware(object sender, RoutedEventArgs e)
+        {
+            if (TextBox_BusinessSoftwares.Text != "")
+            {
+                BusinessSoftwares.Remove(TextBox_BusinessSoftwares.Text);
+            }
+            Setting_Changed(sender);
         }
 
         /// <summary>

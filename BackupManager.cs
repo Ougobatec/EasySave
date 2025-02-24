@@ -189,6 +189,18 @@ namespace EasySave
                         JsonConfig.EncryptedExtensions = list;
                     }
                     break;
+                case "Add_BusinessSoftware":                                                        // Add a business software
+                    if (value != null)
+                    {
+                        JsonConfig.BusinessSoftwares.Add(value);
+                    }
+                    break;
+                case "Remove_BusinessSoftware":                                                        // Remove a business software
+                    if (value != null)
+                    {
+                        JsonConfig.BusinessSoftwares.Remove(value);
+                    }
+                    break;
                 default:                                                                            // Default case
                     break;
             }
