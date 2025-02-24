@@ -26,7 +26,20 @@ namespace EasySave.Models
         /// <summary>
         /// The state of the backup
         /// </summary>
-        public string State { get; set; } = "IDLE";
+        
+        private string _state = "IDLE";
+        public string State
+        {
+            get { return _state; }
+            set
+            {
+                if (_state != value)
+                {
+                    _state = value;
+                    OnPropertyChanged(nameof(State));
+                }
+            }
+        }
 
         /// <summary>
         /// The number of files to transfer
