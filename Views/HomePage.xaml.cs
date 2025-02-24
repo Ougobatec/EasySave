@@ -25,8 +25,6 @@ namespace EasySave.Views
         {
             InitializeComponent();
             DataContext = this;
-            
-
             Refresh();
         }
 
@@ -47,7 +45,6 @@ namespace EasySave.Views
             Button_Execute.Content = ResourceManager.GetString("Button_Execute");
             Button_Delete.Content = ResourceManager.GetString("Button_Delete");
             DisplayBackupJobs();
-            
         }
 
         /// <summary>
@@ -110,13 +107,11 @@ namespace EasySave.Views
                     var result = MessageBox.Show(ResourceManager.GetString("Message_Execute"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
-                        foreach (var job in jobsToExecute)
+                        var backupTasks = jobsToExecute.Select(async job =>
                         {
                             try
                             {
-                                
                                 await BackupManager.ExecuteBackupJobAsync(job);
-                                
                                 MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                             catch (Exception ex)
@@ -130,7 +125,9 @@ namespace EasySave.Views
                                     MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
                             }
-                        }
+                        });
+
+                        await Task.WhenAll(backupTasks);
                         BackupJobsListView.Items.Refresh();
                     }
                 }
@@ -188,7 +185,7 @@ namespace EasySave.Views
         /// </summary>
         private void DisplayBackupJobs()
         {
-            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];            
-        }        
+            BackupJobs = new ObservableCollection<ModelJob>(BackupManager.JsonConfig.BackupJobs);
+        }
     }
 }
