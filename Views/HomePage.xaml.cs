@@ -16,7 +16,7 @@ namespace EasySave.Views
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
         public ObservableCollection<ModelJob> BackupJobs { get; set; }                      // List to get all backup jobs
-        public ObservableCollection<ModelState> BackupStates { get; set; }                   // List to get all backup states
+        
 
         /// <summary>
         /// HomePage constructor to initialize the page and display backup jobs
@@ -24,9 +24,7 @@ namespace EasySave.Views
         public HomePage()
         {
             InitializeComponent();
-            DataContext = this;
-            
-
+            DataContext = this;         
             Refresh();
         }
 
@@ -188,7 +186,7 @@ namespace EasySave.Views
         /// </summary>
         private void DisplayBackupJobs()
         {
-            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];            
+            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];        
         }        
     }
 }

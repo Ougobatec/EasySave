@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Resources;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace EasySave
         private static readonly string StateFilePath = "Config\\state.json";                                            // State file path
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");                  // Log directory path
         private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1); // 1 seule tâche à la fois pour gros fichiers
-
+        
 
         /// <summary>
         /// Backup manager constructor to load the config and state files and set the culture and logger
@@ -389,5 +390,7 @@ namespace EasySave
             CultureInfo.DefaultThreadCurrentUICulture = culture;    // Set the default thread current UI culture
             Thread.CurrentThread.CurrentUICulture = culture;        // Set the current UI culture
         }
+
+        
     }
 }

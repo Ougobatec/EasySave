@@ -14,13 +14,16 @@
     </Window.Resources>
     <Grid>
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Padding="0,0,0,48"/>
-        
+
         <Grid Background="#FFFFFF" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
                 <Button x:Name="Button_Quit" Content="Quit" Background="Red" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Quit_Click"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <TextBlock x:Name="TextBlock_Status_Server" Text="{Binding ServerStatus }" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock x:Name="TextBlock_Status_Connection" Text="{Binding ConnectionStatus}" VerticalAlignment="Center" Margin="5"/>
+                <Button x:Name="Button_Start_Serveur" Content="Start Server" Style="{StaticResource ButtonStyle}" Click="Button_Start_Server_Click"/>
                 <Button x:Name="Button_Home" Content="Home" Style="{StaticResource ButtonStyle}" Click="Button_Home_Click"/>
                 <Button x:Name="Button_Settings" Content="Settings" Style="{StaticResource ButtonStyle}" Click="Button_Settings_Click"/>
                 <Button x:Name="Button_Logs" Content="Logs" Style="{StaticResource ButtonStyle}" Click="Button_Logs_Click"/>

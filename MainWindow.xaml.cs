@@ -1,5 +1,9 @@
-﻿using System.Resources;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net.Sockets;
+using System.Resources;
 using System.Windows;
+using EasySave.Models;
 using EasySave.Views;
 
 namespace EasySave
@@ -12,6 +16,17 @@ namespace EasySave
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
         private static MainWindow? MainWindow_Instance;                                     // MainWindow instance
+        
+        
+        
+        private EasySaveServer EasySaveServer = new EasySaveServer();
+        private Socket ServerSocket;
+        private Socket ClientSocket;
+        public ModelConnection Connection { get; set; }
+
+
+
+
 
         /// <summary>
         /// MainWindow constructor
@@ -19,8 +34,13 @@ namespace EasySave
         public MainWindow()
         {
             InitializeComponent();
+
+            
             MainWindow_Instance = this;
             MainFrame.NavigationService.Navigate(new HomePage());
+
+            //Connection = new ModelConnection();
+            DataContext = EasySaveServer.ModelConnection;
         }
 
         /// <summary>
@@ -42,6 +62,10 @@ namespace EasySave
             Button_Settings.Content = ResourceManager.GetString("Button_Settings");
             Button_Logs.Content = ResourceManager.GetString("Button_Logs");
         }
+        
+
+        
+
 
         /// <summary>
         /// Button Home click event
@@ -72,8 +96,57 @@ namespace EasySave
         /// </summary>
         private void Button_Quit_Click(object sender, RoutedEventArgs e)
         {
+            EasySaveServer.StopSocketServer(ClientSocket);
             Application.Current.Shutdown();
             Environment.Exit(0);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private async void Button_Start_Server_Click(object sender, RoutedEventArgs e)
+        {
+            ServerSocket = EasySaveServer.StartSocketServer(12345);
+
+            // Attendre une connexion de manière asynchrone
+            ClientSocket = await EasySaveServer.AcceptConnectionAsync(ServerSocket);
+
+            // Afficher une MessageBox pour demander à l'utilisateur s'il souhaite accepter la connexion
+            MessageBoxResult result = MessageBox.Show("Accepter la connexion entrante ?", "Connexion entrante", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                EasySaveServer.ModelConnection.ConnectionStatus = "Connected";
+                Thread Listen = new Thread(()=>EasySaveServer.ListenToClient(ClientSocket)); // Commencer à écouter le client
+            }
+            else
+            {
+                EasySaveServer.ModelConnection.ConnectionStatus = "Not Connected";
+                EasySaveServer.StopSocketServer(ClientSocket); // Fermer la connexion si refusée
+            }
+        }
+
+        //private void DisplayConnectionStatus()
+        //{
+        //    Connections = new ObservableCollection<ModelConnection> { EasySaveServer.ModelConnection };
+        //}
+
+
+
+
+
     }
 }
