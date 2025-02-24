@@ -19,8 +19,8 @@ namespace EasySave.Views
         public ObservableCollection<string> AvailableEncryptedExtensions { get; set; } = new ObservableCollection<string>();    // List for the available extensions for encrypted exentions
         public ObservableCollection<string> SelectedPriorityExtensions { get; set; } = new ObservableCollection<string>();      // List for the selected extensions for priority exentions
         public ObservableCollection<string> SelectedEncryptedExtensions { get; set; } = new ObservableCollection<string>();     // List for the selected extensions for encrypted exentions
-        public ObservableCollection<ModelJob> BackupJobs { get; set; }                                                          // List to get all backupJobs 
         public ObservableCollection<string> Extensions { get; set; } = new ObservableCollection<string>();                      // List to get all extensions
+        public ObservableCollection<ModelJob> BackupJobs { get; set; }                                                          // List to get all backupJobs 
 
         /// <summary>
         /// SettingsPage constructor to initialize the page and display settings

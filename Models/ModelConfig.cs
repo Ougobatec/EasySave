@@ -18,7 +18,7 @@
         /// <summary>
         /// The maximum size of a file that can be transferred without being managed
         /// </summary>
-        public int LimitSizeFile { get; set; } = 1000000;
+        public int LimitSizeFile { get; set; } = 50;
 
         /// <summary>
         /// The list of all backup jobs

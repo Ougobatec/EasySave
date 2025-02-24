@@ -210,7 +210,7 @@ namespace EasySave.Views
                 if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
                 {
                     // Get the size of the save
-                    size = BackupManager.GetDirectorySize(dir);
+                    size = Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
 
                     // Get the type of the save
                     string type = "X";

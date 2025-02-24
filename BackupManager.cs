@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Threading;
 using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
@@ -20,10 +18,12 @@ namespace EasySave
         public ModelConfig JsonConfig { get; set; } = new ModelConfig();                                                // Config model instance
         public List<ModelState> JsonState { get; set; } = [];                                                           // State model instance
         private static BackupManager? BackupManager_Instance;                                                           // Backup manager instance
+        private static FileManager fileManager = FileManager.GetInstance();                                             // File manager instance
+        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);                                              // Semaphore slim instance
+        private static readonly object logLock = new object();
         private static readonly string ConfigFilePath = "Config\\config.json";                                          // Config file path
         private static readonly string StateFilePath = "Config\\state.json";                                            // State file path
         private static readonly string LogDirectory = Path.Join(Path.GetTempPath(), "easysave\\logs");                  // Log directory path
-        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1); // 1 seule tâche à la fois pour gros fichiers
 
 
         /// <summary>
@@ -77,7 +77,6 @@ namespace EasySave
             {
                 throw new Exception("Message_JobNotFound");                                                                             // Throw an exception if the job is not found
             }
-
             if (JsonConfig.BackupJobs.Any(j => j.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && j.Name != job.Name))
             {
                 throw new Exception("Message_NameExists");                                                                              // Throw an exception if the job name already exists
@@ -197,20 +196,6 @@ namespace EasySave
         }
 
         /// <summary>
-        /// Get the total size of a directory
-        /// <param name="sourceDir">The source directory</param>
-        /// </summary>
-        public long GetDirectorySize(string sourceDir)
-        {
-            if (!Directory.Exists(sourceDir))
-            {
-                return -1;                                                                                                          // Return -1 if the directory does not exist
-            }
-
-            return Directory.EnumerateFiles(sourceDir, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);    // Return the total size of the directory
-        }
-
-        /// <summary>
         /// Copy a directory and its files to a target directory
         /// <param name="job">The backup job to execute</param>
         /// </summary>
@@ -221,127 +206,156 @@ namespace EasySave
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
             string saveDestDir = Path.Combine(destDir, $"{timestamp}_{job.Name}_{job.Type}");
 
-            Directory.CreateDirectory(saveDestDir);
+            Directory.CreateDirectory(saveDestDir);                                                                                             // Create the target directory
 
             var backupStartTime = DateTime.Now;
-            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);
-            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase);
-            long limitSizeFile = JsonConfig.LimitSizeFile * 1024 * 1024; // Convertir Mo → octets
+            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);                    // Get the extensions to encrypt
+            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase);                      // Get the extensions to prioritize
+            long limitSizeFile = JsonConfig.LimitSizeFile * 1024 * 1024;                                                                        // Get the limit size of a file
             TimeSpan totalEncryptionTime = TimeSpan.Zero;
 
             IEnumerable<string> filesToCopy;
             if (job.Type == BackupTypes.Full)
             {
-                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);
+                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);                                                // Get all files in the source directory for a full backup
             }
             else
             {
-                var previousBackups = Directory.GetDirectories(destDir).OrderByDescending(d => d).ToList();
-                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)
+                var previousBackups = Directory.GetDirectories(destDir).OrderByDescending(d => d).ToList();                                     // Get the previous backups
+                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)                                                 // Get all files in the source directory for an incremental backup
                     .Where(file =>
                     {
                         string relativePath = file.Substring(sourceDir.Length + 1);
-                        return previousBackups.All(backupDir =>
+                        return previousBackups.All(backupDir =>                                                                                 // Check if the file is not in the previous backups or if it has been modified
                         {
                             string backupFilePath = Path.Combine(backupDir, relativePath);
-                            return !File.Exists(backupFilePath) || new FileInfo(file).LastWriteTime > File.GetLastWriteTime(backupFilePath);
+                            return !File.Exists(backupFilePath) || new FileInfo(file).LastWriteTime > File.GetLastWriteTime(backupFilePath);    // Check if the file is not in the backup or if it has been modified
                         });
                     });
             }
 
-            // Prioriser les fichiers avec les extensions prioritaires
-            filesToCopy = filesToCopy.OrderBy(file => priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);
+            filesToCopy = filesToCopy.OrderBy(file => priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);                            // Order the files to copy by priority extensions
 
             var totalFilesToCopy = filesToCopy.Count();
             var nbFilesLeftToDo = totalFilesToCopy;
             var totalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length);
 
-            await UpdateStateAsync(job, sourceDir, saveDestDir, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);
+            await UpdateStateAsync(job, sourceDir, saveDestDir, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                   // Update the job state
 
-            List<Task<TimeSpan>> copyTasks = new List<Task<TimeSpan>>();
-            SemaphoreSlim semaphore = new SemaphoreSlim(3); // Max 3 fichiers en parallèle
-            SemaphoreSlim largeFileSemaphore = new SemaphoreSlim(1); // Max 1 fichier volumineux à la fois
+            List<Task<TimeSpan>> copyTasks = new List<Task<TimeSpan>>();                                                                        // List of copy tasks
+            SemaphoreSlim semaphore = new SemaphoreSlim(3);                                                                                     // Max 3 files to copy at a time
+            SemaphoreSlim largeFileSemaphore = new SemaphoreSlim(1);                                                                            // Max 1 large file to copy at a time
 
             foreach (string file in filesToCopy)
             {
                 var fileInfo = new FileInfo(file);
                 string relativePath = file.Substring(sourceDir.Length + 1);
                 string destPath = Path.Combine(saveDestDir, relativePath);
-                Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);
+                Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);                                                                    // Create the target directory
 
-                await UpdateStateAsync(job, file, destPath, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);
+                await UpdateStateAsync(job, file, destPath, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                       // Update the job state
 
                 if (fileInfo.Length > limitSizeFile)
                 {
-                    // Fichier volumineux : attendre la fin des petits fichiers en cours et respecter la règle 1 seul gros fichier à la fois
-                    await largeFileSemaphore.WaitAsync();
-                    await Task.WhenAll(copyTasks);
-                    copyTasks.Clear();
+                    await largeFileSemaphore.WaitAsync();                                                                                       // Wait for the semaphore
+                    await Task.WhenAll(copyTasks);                                                                                              // Wait for the copy tasks
+                    copyTasks.Clear();                                                                                                          // Clear the copy tasks
 
                     try
                     {
-                        totalEncryptionTime += await CopyFileAsync(file, destPath, job, fileInfo, extensionsToEncrypt);
+                        totalEncryptionTime += await CopyFileAsync(file, destPath, job, fileInfo, extensionsToEncrypt);                         // Copy the large file
                     }
                     finally
                     {
-                        largeFileSemaphore.Release();
+                        largeFileSemaphore.Release();                                                                                           // Release the semaphore
                     }
                 }
                 else
                 {
-                    // Petits fichiers : copier en parallèle avec un max de 3 simultanés
-                    copyTasks.Add(Task.Run(async () =>
+                    copyTasks.Add(Task.Run(async () =>                                                                                          // Add the copy task
                     {
-                        await semaphore.WaitAsync();
+                        await semaphore.WaitAsync();                                                                                            // Wait for the semaphore
                         try
                         {
-                            return await CopyFileAsync(file, destPath, job, fileInfo, extensionsToEncrypt);
+                            return await CopyFileAsync(file, destPath, job, fileInfo, extensionsToEncrypt);                                     // Copy the file
                         }
                         finally
                         {
-                            semaphore.Release();
+                            semaphore.Release();                                                                                                // Release the semaphore
                         }
                     }));
                 }
+                nbFilesLeftToDo--;                                                                                                              // Decrease the number of files left to do
             }
 
-            // Attendre la fin des petits fichiers restants
-            var results = await Task.WhenAll(copyTasks);
+            var results = await Task.WhenAll(copyTasks);                                                                                        // Wait for the copy tasks
             totalEncryptionTime += new TimeSpan(results.Sum(r => r.Ticks));
 
             var backupEndTime = DateTime.Now;
             var totalBackupTime = backupEndTime - backupStartTime;
 
-            await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
+            await semaphoreSlim.WaitAsync();                                                                                                    // Wait for the semaphore
+            try
+            {
+                await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
+            }
+            finally
+            {
+                semaphoreSlim.Release();                                                                                                        // Release the semaphore
+            }
 
-            await UpdateStateAsync(job, "", "", "END", 0, 0, 0);
+            await UpdateStateAsync(job, "", "", "END", 0, 0, 0);                                                                                // Update the job state
         }
 
+        /// <summary>
+        /// Copy a file to a target directory and encrypt it if it has an encrypted extension
+        /// <param name="source">The source file path</param>
+        /// <param name="destination">The target file path</param>
+        /// <param name="job">The backup job</param>
+        /// <param name="fileInfo">The file info</param>
+        /// <param name="encryptedExtensions">The encrypted extensions</param>
+        /// </summary>
         private async Task<TimeSpan> CopyFileAsync(string source, string destination, ModelJob job, FileInfo fileInfo, HashSet<string> encryptedExtensions)
         {
             var transferStartTime = DateTime.Now;
 
             try
             {
-                await Task.Run(() => File.Copy(source, destination, true));
+                await Task.Run(() => File.Copy(source, destination, true));                                                     // Copy the file
             }
             catch (Exception ex)
             {
-                await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, source, destination, fileInfo.Length, TimeSpan.Zero, TimeSpan.Zero));
-                return TimeSpan.Zero;
+                await semaphoreSlim.WaitAsync();                                                                                // Wait for the semaphore
+                try
+                {
+                    await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, source, destination, fileInfo.Length, TimeSpan.Zero, TimeSpan.Zero));
+                }
+                finally
+                {
+                    semaphoreSlim.Release();                                                                                    // Release the semaphore
+                }
+                return TimeSpan.Zero;                                                                                           // Return zero if an exception occurs
             }
 
             var transferEndTime = DateTime.Now;
             var transferTime = transferEndTime - transferStartTime;
             TimeSpan encryptionTime = TimeSpan.Zero;
 
-            if (encryptedExtensions.Contains(fileInfo.Extension))
+            if (encryptedExtensions.Contains(fileInfo.Extension))                                                               // Check if the file has an encrypted extension
             {
-                var fileManager = new FileManager(destination, job.Key);
-                encryptionTime = TimeSpan.FromMilliseconds(fileManager.TransformFile());
+                fileManager.Settings(destination, job.Key);                                                                     // Set the file manager settings
+                encryptionTime = TimeSpan.FromMilliseconds(fileManager.TransformFile());                                        // Encrypt the file
             }
 
-            await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, source, destination, fileInfo.Length, encryptionTime, transferTime));
+            await semaphoreSlim.WaitAsync();                                                                                    // Wait for the semaphore
+            try
+            {
+                await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, source, destination, fileInfo.Length, encryptionTime, transferTime));
+            }
+            finally
+            {
+                semaphoreSlim.Release();                                                                                        // Release the semaphore
+            }
 
             return encryptionTime;
         }
@@ -364,7 +378,7 @@ namespace EasySave
             job.State.TotalFilesToCopy = totalFilesToCopy;                                                                                          // Update the job state total files to copy
             job.State.TotalFilesSize = totalFilesSize;                                                                                              // Update the job state total files size
             job.State.NbFilesLeftToDo = nbFilesLeftToDo;                                                                                            // Update the job state number of files left to do
-            job.State.Progression = totalFilesToCopy == 0 ? 0 : (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);   // Update the job state progression
+            job.State.Progression = totalFilesToCopy == 0 ? 0 : (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);     // Update the job state progression
 
             ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                             // Get the job state by name
             if (modelState != null)
