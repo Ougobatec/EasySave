@@ -3,6 +3,7 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using EasySave.Enumerations;
 using EasySave.Models;
 
 namespace EasySave.Views
@@ -15,6 +16,7 @@ namespace EasySave.Views
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
         public ObservableCollection<ModelJob> BackupJobs { get; set; }                      // List to get all backup jobs
+        public ObservableCollection<ModelState> BackupStates { get; set; }                   // List to get all backup states
 
         /// <summary>
         /// HomePage constructor to initialize the page and display backup jobs
@@ -23,6 +25,8 @@ namespace EasySave.Views
         {
             InitializeComponent();
             DataContext = this;
+            
+
             Refresh();
         }
 
@@ -43,6 +47,7 @@ namespace EasySave.Views
             Button_Execute.Content = ResourceManager.GetString("Button_Execute");
             Button_Delete.Content = ResourceManager.GetString("Button_Delete");
             DisplayBackupJobs();
+            
         }
 
         /// <summary>
@@ -109,8 +114,9 @@ namespace EasySave.Views
                         {
                             try
                             {
+                                
                                 await BackupManager.ExecuteBackupJobAsync(job);
-                                UpdateProgression(job, job.State.Progression);
+                                
                                 MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                             catch (Exception ex)
@@ -184,16 +190,11 @@ namespace EasySave.Views
         {
             BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];
             BackupJobs = new ObservableCollection<ModelJob>(BackupJobs);
+
+            
         }
 
-        /// <summary>
-        /// Update the progression of a job
-        /// <param name="job">the job to update</param>
-        /// <param name="newProgression">the new progression</param>
-        /// </summary>
-        private static void UpdateProgression(ModelJob job, int newProgression )
-        {
-               job.State.Progression = newProgression;
-        }
+       
+        
     }
 }

@@ -286,7 +286,7 @@ namespace EasySave
 
             await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
 
-            await UpdateStateAsync(job, "", "", "END", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                                      // Update the job state
+            await UpdateStateAsync(job, "", "", "END", 0, 0, 0);                                      // Update the job state
         }
 
         /// <summary>

@@ -61,8 +61,8 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel>
-                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progression}" Width="100" Height="20" />
-                                            <TextBlock Text="{Binding Progression, StringFormat={}{0}%}" HorizontalAlignment="Center" />
+                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding State.Progression}" Width="100" Height="20" />
+                                            <TextBlock Text="{Binding State.Progression, StringFormat={}{0}%}" HorizontalAlignment="Center" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
