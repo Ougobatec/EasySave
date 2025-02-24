@@ -221,6 +221,7 @@ namespace EasySave
 
             var backupStartTime = DateTime.Now;
             var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);
+            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase); // Extensions prioritaires
             TimeSpan totalEncryptionTime = TimeSpan.Zero;
 
             IEnumerable<string> filesToCopy;                                                                                                    // Get the files to copy
@@ -242,6 +243,10 @@ namespace EasySave
                         });
                     });
             }
+
+            // Prioritizing files with priority extensions
+            filesToCopy = filesToCopy.OrderBy(file =>
+                priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);
 
             var totalFilesToCopy = filesToCopy.Count();
             var nbFilesLeftToDo = filesToCopy.Count();
