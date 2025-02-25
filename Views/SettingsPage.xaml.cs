@@ -30,6 +30,24 @@ namespace EasySave.Views
         {
             InitializeComponent();
             DataContext = this;
+            Get_all_extension();
+            ComboBox_Language.Text = BackupManager.JsonConfig.Language.ToString();
+            ComboBox_LogFormat.Text = BackupManager.JsonConfig.LogFormat.ToString();
+            TextBox_LimitSize.Text = BackupManager.JsonConfig.LimitSizeFile.ToString();
+            foreach (string el in BackupManager.JsonConfig.PriorityExtensions)
+            {
+                AvailablePriorityExtensions.Remove(el);
+                SelectedPriorityExtensions.Add(el);
+            }
+            foreach (string el in BackupManager.JsonConfig.EncryptedExtensions)
+            {
+                AvailableEncryptedExtensions.Remove(el);
+                SelectedEncryptedExtensions.Add(el);
+            }
+            foreach (string el in BackupManager.JsonConfig.BusinessSoftwares)
+            {
+                BusinessSoftwares.Add(el);
+            }
             Refresh();
         }
 
@@ -47,25 +65,6 @@ namespace EasySave.Views
             Text_LimitSize.Text = ResourceManager.GetString("Text_LimitSize");
             Add_BusinessSoftwareButton.Content = ResourceManager.GetString("Add_BusinessSoftware");
             Remove_BusinessSoftwareButton.Content = ResourceManager.GetString("Remove_BusinessSoftware");
-            ComboBox_Language.Text = BackupManager.JsonConfig.Language.ToString();
-            ComboBox_LogFormat.Text = BackupManager.JsonConfig.LogFormat.ToString();
-            TextBox_LimitSize.Text = BackupManager.JsonConfig.LimitSizeFile.ToString();
-
-            Get_all_extension();
-            foreach (string el in BackupManager.JsonConfig.PriorityExtensions)
-            {
-                AvailablePriorityExtensions.Remove(el);
-                SelectedPriorityExtensions.Add(el);
-            }
-            foreach (string el in BackupManager.JsonConfig.EncryptedExtensions)
-            {
-                AvailableEncryptedExtensions.Remove(el);
-                SelectedEncryptedExtensions.Add(el);
-            }
-            foreach (string el in BackupManager.JsonConfig.BusinessSoftwares)
-            {
-                BusinessSoftwares.Add(el);
-            }
         }
 
         /// <summary>

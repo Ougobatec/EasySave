@@ -24,6 +24,7 @@ namespace EasySave.Views
             InitializeComponent();
             DataContext = this;
             Refresh();
+            DisplayBackupJobs();
         }
 
         /// <summary>
@@ -42,7 +43,6 @@ namespace EasySave.Views
             Button_Create.Content = ResourceManager.GetString("Button_Create");
             Button_Execute.Content = ResourceManager.GetString("Button_Execute");
             Button_Delete.Content = ResourceManager.GetString("Button_Delete");
-            DisplayBackupJobs();
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace EasySave.Views
                             MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                    Refresh();
+                    DisplayBackupJobs();
                     BackupJobsListView.Items.Refresh();
                 }
             }
