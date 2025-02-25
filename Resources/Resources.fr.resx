@@ -117,118 +117,163 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Menu_AddBackupJob" xml:space="preserve">
-    <value>Ajouter un travail de sauvegarde</value>
+  <data name="Button_Home" xml:space="preserve">
+    <value>Accueil</value>
   </data>
-  <data name="Menu_ChangeSettings" xml:space="preserve">
-    <value>Modifier les paramètres</value>
+  <data name="Button_Logs" xml:space="preserve">
+    <value>Logs</value>
   </data>
-  <data name="Prompt_ChooseOption" xml:space="preserve">
-    <value>Choisissez une option : </value>
-  </data>
-  <data name="Menu_ExecuteBackups" xml:space="preserve">
-    <value>Exécuter un sauvegarde</value>
-  </data>
-  <data name="Menu_Quit" xml:space="preserve">
+  <data name="Button_Quit" xml:space="preserve">
     <value>Quitter</value>
   </data>
-  <data name="Title_Menu" xml:space="preserve">
-    <value>----- MENU -----</value>
+  <data name="Button_Settings" xml:space="preserve">
+    <value>Paramètres</value>
   </data>
-  <data name="Menu_UpdateBackupJob" xml:space="preserve">
-    <value>Modifier un travail de sauvegarde</value>
+  <data name="Text_Language" xml:space="preserve">
+    <value>Langue</value>
   </data>
-  <data name="Prompt_BackupType" xml:space="preserve">
-    <value>Type (Full/Differential) : </value>
+  <data name="Text_LogFormat" xml:space="preserve">
+    <value>Format de logs</value>
   </data>
-  <data name="Prompt_JobName" xml:space="preserve">
-    <value>Nom de sauvegarde : </value>
+  <data name="Title_Settings" xml:space="preserve">
+    <value>Paramètres</value>
   </data>
-  <data name="Prompt_SourceDirectory" xml:space="preserve">
-    <value>Répertoire source : </value>
+  <data name="Title_Home" xml:space="preserve">
+    <value>Sélectionnez les sauvegardes à modifier ou à exécuter</value>
   </data>
-  <data name="Prompt_TargetDirectory" xml:space="preserve">
-    <value>Répertoire cible : </value>
+  <data name="Text_SourceDirectory" xml:space="preserve">
+    <value>Répertoire source</value>
   </data>
-  <data name="Error_Empty" xml:space="preserve">
-    <value>Ce champ ne peut pas être vide !</value>
+  <data name="Text_TargetDirectory" xml:space="preserve">
+    <value>Répertoire cible</value>
   </data>
-  <data name="Error_InvalidOption" xml:space="preserve">
-    <value>Option invalide !</value>
+  <data name="Text_Type" xml:space="preserve">
+    <value>Type</value>
   </data>
-  <data name="Message_BackupJobAdded" xml:space="preserve">
-    <value>Travail de sauvegarde '{0}' ajouté.</value>
+  <data name="Text_Modify" xml:space="preserve">
+    <value>Modifier</value>
   </data>
-  <data name="Title_ChooseBackupJobsToExecute" xml:space="preserve">
-    <value>----- Choisissez les sauvegardes à exécuter (ex : 1,2,3 or 1-3 or all) -----</value>
+  <data name="Text_State" xml:space="preserve">
+    <value>Etat</value>
   </data>
-  <data name="Title_ChooseBackupJobToUpdate" xml:space="preserve">
-    <value>----- Choisissez la sauvegarde à modifier -----</value>
+  <data name="Button_Create" xml:space="preserve">
+    <value>Créer une sauvegarde</value>
   </data>
-  <data name="Message_BackupJobUpdated" xml:space="preserve">
-    <value>Travail de sauvegarde '{0}' modifié.</value>
+  <data name="Button_Execute" xml:space="preserve">
+    <value>Exécuter les sauvegardes</value>
   </data>
-  <data name="Message_BackupJobDetails" xml:space="preserve">
-    <value>{0}: Nom : {1}, Source : {2}, Cible : {3}, Type: {4}.</value>
+  <data name="Button_Delete" xml:space="preserve">
+    <value>Supprimer les sauvegardes</value>
   </data>
-  <data name="Title_ChooseBackupJobToAdd" xml:space="preserve">
-    <value>----- Ajouter un travail de sauvegarde -----</value>
+  <data name="Message_Selection" xml:space="preserve">
+    <value>Veuillez sélectionner au moins une sauvegarde.</value>
   </data>
-  <data name="Error_InvalidIndex" xml:space="preserve">
-    <value>Index invalide : {0}</value>
+  <data name="MessageTitle_Success" xml:space="preserve">
+    <value>Succès</value>
   </data>
-  <data name="Error_InvalidBackupType" xml:space="preserve">
-    <value>Type invalide !</value>
+  <data name="Message_BusinessSoftware" xml:space="preserve">
+    <value>Un logiciel métier est en cours d'exécution. Veuillez le fermer avant de lancer une sauvegarde.</value>
   </data>
-  <data name="Title_ChooseSettingToChange" xml:space="preserve">
-    <value>----- Modifier les paramètres -----</value>
+  <data name="MessageTitle_Attention" xml:space="preserve">
+    <value>Attention</value>
   </data>
-  <data name="Menu_ChangeLanguage" xml:space="preserve">
-    <value>Changer la langue</value>
+  <data name="MessageTitle_Error" xml:space="preserve">
+    <value>Erreur</value>
   </data>
-  <data name="Menu_ChangeLogFormat" xml:space="preserve">
-    <value>Changer le format de log</value>
+  <data name="MessageTitle_Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
   </data>
-  <data name="Menu_SaveAndReturn" xml:space="preserve">
-    <value>Sauvgarder et retourner au menu</value>
+  <data name="Message_Execute" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir executer les sauvegardes sélectionnées ?</value>
   </data>
-  <data name="Prompt_ChooseLanguage" xml:space="preserve">
-    <value>Choisir la langue (en/fr) : </value>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?</value>
   </data>
-  <data name="Message_LanguageSet" xml:space="preserve">
-    <value>Langue définie sur '{0}'.</value>
+  <data name="Title_Logs" xml:space="preserve">
+    <value>Logs</value>
   </data>
-  <data name="Prompt_ChooseLogFormat" xml:space="preserve">
-    <value>Choisissez le format de log (json/xml) : </value>
+  <data name="Text_BackupName" xml:space="preserve">
+    <value>Nom de sauvegarde</value>
   </data>
-  <data name="Message_SettingsSaved" xml:space="preserve">
-    <value>Paramètres enregistrés.</value>
+  <data name="Text_Size" xml:space="preserve">
+    <value>Taille</value>
   </data>
-  <data name="Message_PressEnterToContinue" xml:space="preserve">
-    <value>----- Appuyez sur ENTRÉE pour continuer -----</value>
+  <data name="Text_TransferTime" xml:space="preserve">
+    <value>Temps de transfert</value>
   </data>
-  <data name="Error_MaxBackupJobs" xml:space="preserve">
-    <value>Impossible d'ajouter plus de 5 tâches de sauvegarde !</value>
+  <data name="Text_EncryptionTime" xml:space="preserve">
+    <value>Temps de cryptage</value>
   </data>
-  <data name="Error_DuplicateBackupJob" xml:space="preserve">
-    <value>Un travail de sauvegarde du même nom existe déjà !</value>
+  <data name="Title_Edit" xml:space="preserve">
+    <value>Créer un travail de sauvegarde</value>
   </data>
-  <data name="Error_SourceDirectoryNotFound" xml:space="preserve">
-    <value>Répertoire source introuvable pour '{0}' : {1}</value>
+  <data name="Button_Submit" xml:space="preserve">
+    <value>Enregistrer</value>
   </data>
-  <data name="Message_BackupJobExecuted" xml:space="preserve">
-    <value>Travail de sauvegarde '{0}' exécuté.</value>
+  <data name="Title_SavesList" xml:space="preserve">
+    <value>Liste de sauvegardes</value>
   </data>
-  <data name="Message_LogFormatSet" xml:space="preserve">
-    <value>Format de log défini sur '{0}'.</value>
+  <data name="Text_Date" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="Menu_DeleteBackupJob" xml:space="preserve">
-    <value>Supprimer un travail de sauvegarde</value>
+  <data name="Message_Fill" xml:space="preserve">
+    <value>Veuillez remplir tous les champs.</value>
   </data>
-  <data name="Title_ChooseBackupJobToDelete" xml:space="preserve">
-    <value>----- Supprimer un travail de sauvegarde -----</value>
+  <data name="Message_NameExists" xml:space="preserve">
+    <value>Une sauvegarde porte déjà ce nom.</value>
   </data>
-  <data name="Message_BackupJobDeleted" xml:space="preserve">
-    <value>Travail de sauvegarde '{0}' supprimé.</value>
+  <data name="Message_DirectoryNotFound" xml:space="preserve">
+    <value>Répertoire non trouvé pour la sauvegarde '{0}'.</value>
+  </data>
+  <data name="Message_ExecuteSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été effectuée avec succès.</value>
+  </data>
+  <data name="Message_AddSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été ajoutée avec succès.</value>
+  </data>
+  <data name="Message_DeleteSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été supprimée avec succès.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur : '{0}'</value>
+  </data>
+  <data name="Message_UpdateSuccess" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été modifiée avec succès.</value>
+  </data>
+  <data name="Title_PriorityExtension" xml:space="preserve">
+    <value>Extensions prioritaires</value>
+  </data>
+  <data name="Title_EncryptedExtension" xml:space="preserve">
+    <value>Extensions encryptées</value>
+  </data>
+  <data name="Text_LimitSize" xml:space="preserve">
+    <value>Taille limite de fichier (Mo)</value>
+  </data>
+  <data name="Message_JobNotFound" xml:space="preserve">
+    <value>La sauvegarde '{0}' n'a pas été trouvée.</value>
+  </data>
+  <data name="Message_AlreadyActive" xml:space="preserve">
+    <value>La sauvegarde '{0}' est déjà active.</value>
+  </data>
+  <data name="Message_NotEnoughSpace" xml:space="preserve">
+    <value>Vous n'avez pas assez d'espace sur le disque</value>
+  </data>
+  <data name="Add_BusinessSoftware" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="Remove_BusinessSoftware" xml:space="preserve">
+    <value>Enlever</value>
+  </data>
+  <data name="Message_SelectionBusinessSoftware" xml:space="preserve">
+    <value>Veuillez sélectionner un logiciel à supprimer.</value>
+  </data>
+  <data name="Message_AlreadyInListBusinessSoftware" xml:space="preserve">
+    <value>Le logiciel métier est déjà dnas la liste.</value>
+  </data>
+  <data name="Title_BrowseSource" xml:space="preserve">
+    <value>Sélectionnez le répertoire source</value>
+  </data>
+  <data name="Title_BrowseTarget" xml:space="preserve">
+    <value>Sélectionnez le répertoire cible</value>
   </data>
 </root>
