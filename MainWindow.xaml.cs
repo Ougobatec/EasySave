@@ -17,7 +17,7 @@ namespace EasySave
         private static ResourceManager ResourceManager => BackupManager.resourceManager;
         private static MainWindow? MainWindow_Instance;
 
-        private EasySaveServer EasySaveServer = new EasySaveServer();
+        private ServerManager EasySaveServer = new ServerManager();
         private Socket ServerSocket;
         private Socket ClientSocket;
         public ModelConnection Connection { get; set; }

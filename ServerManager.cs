@@ -8,7 +8,7 @@ using EasySave.Models;
 
 namespace EasySave
 {
-    public class EasySaveServer
+    public class ServerManager
     {
         public ModelConnection ModelConnection = new ModelConnection();
         private CancellationTokenSource _cancellationTokenSource;
