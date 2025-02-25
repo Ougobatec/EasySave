@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mainwindow_0',['MainWindow',['../class_easy_save_1_1_main_window.html#a9f812c68b3a620220c1f7176d0c114b5',1,'EasySave::MainWindow']]]
+  ['isbusinesssoftwarerunning_0',['IsBusinessSoftwareRunning',['../class_business_software_checker.html#a27a5a85bd6b93f3645ac9e52399f678f',1,'BusinessSoftwareChecker']]]
 ];
