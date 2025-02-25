@@ -11,6 +11,8 @@ namespace EasySave
     public class ServerManager
     {
         public ModelConnection ModelConnection = new ModelConnection();
+        
+        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private CancellationTokenSource _cancellationTokenSource;
 
         public event EventHandler<Socket> ConnectionAccepted;
@@ -69,7 +71,7 @@ namespace EasySave
                     string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
                     Console.WriteLine("Client: " + message);
 
-                    string response = message.ToUpper();
+                    string response = HandleClientCommand(message);
                     byte[] responseBytes = Encoding.UTF8.GetBytes(response);
                     client.Send(responseBytes);
                 }
@@ -80,6 +82,57 @@ namespace EasySave
                 Console.WriteLine("Connexion perdue avec le client.");
             }
         }
+
+        private string HandleClientCommand(string command)
+        {
+            var commandParts = command.Split(' ');
+            var mainCommand = commandParts[0].ToUpper();
+            var jobName = commandParts.Length > 1 ? commandParts[1] : string.Empty;
+
+            switch (mainCommand)
+            {
+                case "START_BACKUP":
+                    return StartBackup(jobName);
+                case "STOP_BACKUP":
+                    return StopBackup();
+                case "STATUS":
+                    return BackupManager.JsonState.Any(s => s.State == "ACTIVE") ? "Backup is running." : "Backup is not running.";
+                default:
+                    return "Unknown command.";
+            }
+        }
+
+        private string StartBackup(string jobName)
+        {
+            ModelJob? modelJob = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
+            if (modelJob == null)
+            {
+                return $"No backup job found with name {jobName}.";
+            }
+
+            if (modelJob.State.State == "ACTIVE")
+            {
+                return "A backup is already running.";
+            }
+
+            Task.Run(async () => await BackupManager.ExecuteBackupJobAsync(modelJob));
+            return $"Backup job '{jobName}' started.";
+        }
+
+        private string StopBackup()
+        {
+            var activeJob = BackupManager.JsonState.FirstOrDefault(s => s.State == "ACTIVE");
+            if (activeJob == null)
+            {
+                return "No active backup to stop.";
+            }
+
+            // Logic to stop the backup process
+            activeJob.State = "STOPPED";
+            return "Backup stopped.";
+        }
+
+
 
         public void StopSocketServer(Socket socket)
         {
