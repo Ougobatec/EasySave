@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['isbusinesssoftwarerunning_0',['IsBusinessSoftwareRunning',['../class_business_software_checker.html#a27a5a85bd6b93f3645ac9e52399f678f',1,'BusinessSoftwareChecker']]]
+  ['isbusinesssoftwarerunning_0',['IsBusinessSoftwareRunning',['../class_easy_save_1_1_business_software_checker.html#a4a1ab76f5ae3733126a79e5d16195ba3',1,'EasySave::BusinessSoftwareChecker']]]
 ];
