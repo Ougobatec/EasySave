@@ -26,7 +26,6 @@ namespace EasySave.Models
         /// <summary>
         /// The state of the backup
         /// </summary>
-        
         private string _state = "IDLE";
         public string State
         {
@@ -60,7 +59,6 @@ namespace EasySave.Models
         /// The progression of the backup
         /// </summary>
         private int _progression;
-
         public int Progression
         {
             get { return _progression; }

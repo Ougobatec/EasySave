@@ -34,6 +34,7 @@
         /// The list of all encrpyted extensions
         /// </summary>
         public List<string> EncryptedExtensions { get; set; } = [];
+
         /// <summary>
         /// The list of all business softwares
         /// </summary>

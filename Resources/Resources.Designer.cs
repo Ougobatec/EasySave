@@ -284,18 +284,7 @@ namespace EasySave.Resources {
                 return ResourceManager.GetString("Message_SelectionBusinessSoftware", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à The business software is already in the list..
-        /// </summary>
-        //internal static string Message_AlreadyInListBusinessSoftware
-        //{
-        //    get
-        //    {
-        //        return ResourceManager.GetString("Message_AlreadyInListBusinessSoftware", resourceCulture);
-        //    }
-        //}
-
+        
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; updated successfully..
         /// </summary>
@@ -464,6 +453,24 @@ namespace EasySave.Resources {
         internal static string Text_Type {
             get {
                 return ResourceManager.GetString("Text_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select the source directory.
+        /// </summary>
+        internal static string Title_BrowseSource {
+            get {
+                return ResourceManager.GetString("Title_BrowseSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select the target directory.
+        /// </summary>
+        internal static string Title_BrowseTarget {
+            get {
+                return ResourceManager.GetString("Title_BrowseTarget", resourceCulture);
             }
         }
         
