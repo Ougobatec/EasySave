@@ -8,74 +8,70 @@ using EasySave.Models;
 
 namespace EasySave
 {
-    public class EasySaveServer 
+    public class EasySaveServer
     {
         public ModelConnection ModelConnection = new ModelConnection();
-       
-        /// <summary>
-        /// Start the socket server
-        /// </summary>
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public event EventHandler<Socket> ConnectionAccepted;
+
         public Socket StartSocketServer(int port)
         {
             try
             {
-                // Création du socket serveur
                 Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                // Définition de l'adresse IP et du port
                 IPEndPoint endPoint = new IPEndPoint(ModelConnection.ConnectionIp, ModelConnection.ConnectionPort);
-
-                // Association du socket à l'adresse et au port
                 serverSocket.Bind(endPoint);
-
-                // Mise à l'écoute du socket
                 serverSocket.Listen(5);
-                
                 ModelConnection.ServerStatus = "Server ACTIVE";
+                _cancellationTokenSource = new CancellationTokenSource();
                 return serverSocket;
             }
             catch (SocketException)
             {
                 throw new SocketException();
             }
-
         }
 
-        //public Socket AcceptConnection(Socket serverSocket)
-        //{
-        //    Socket SocketClient = serverSocket.Accept();
-        //    IPEndPoint clientEndPoint = (IPEndPoint)SocketClient.RemoteEndPoint;
-        //    ModelConnection.ConnectionStatus = "Connected";
-        //    return SocketClient;
-        //}
-
-        public async Task<Socket> AcceptConnectionAsync(Socket serverSocket)
+        public async Task AcceptConnectionAsync(Socket serverSocket)
         {
-            return await Task.Run(() => serverSocket.Accept());
+            while (!_cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    Socket clientSocket = await Task.Run(() => serverSocket.Accept(), _cancellationTokenSource.Token);
+                    ConnectionAccepted?.Invoke(this, clientSocket);
+                }
+                catch (OperationCanceledException)
+                {
+                    // L'acceptation a été annulée
+                    break;
+                }
+                catch (SocketException ex) when (ex.SocketErrorCode == SocketError.Interrupted)
+                {
+                    // Handle the specific case where the accept call was interrupted
+                    break;
+                }
+            }
         }
+
 
         public async Task ListenToClient(Socket client)
         {
             byte[] buffer = new byte[1024];
             try
             {
-                while (client.Connected) // Vérifie que le client est bien connecté
+                while (client.Connected)
                 {
-                    
                     int receivedBytes = client.Receive(buffer);
                     if (receivedBytes == 0) break;
 
                     string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
-
                     Console.WriteLine("Client: " + message);
 
-
                     string response = message.ToUpper();
-
                     byte[] responseBytes = Encoding.UTF8.GetBytes(response);
                     client.Send(responseBytes);
-
-
                 }
                 ModelConnection.ConnectionStatus = "Not Connected";
             }
@@ -83,19 +79,20 @@ namespace EasySave
             {
                 Console.WriteLine("Connexion perdue avec le client.");
             }
-
         }
 
         public void StopSocketServer(Socket socket)
         {
             if (socket != null)
             {
-                socket.Shutdown(SocketShutdown.Both);
+                _cancellationTokenSource?.Cancel();
+                if (socket.Connected)
+                {
+                    socket.Shutdown(SocketShutdown.Both);
+                }
                 socket.Close();
-                
+                ModelConnection.ServerStatus = "Server INACTIVE";
             }
         }
-
-        
     }
 }
