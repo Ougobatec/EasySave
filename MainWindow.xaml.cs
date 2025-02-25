@@ -1,5 +1,9 @@
-﻿using System.Resources;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net.Sockets;
+using System.Resources;
 using System.Windows;
+using EasySave.Models;
 using EasySave.Views;
 
 namespace EasySave
@@ -9,32 +13,31 @@ namespace EasySave
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
-        private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
-        private static MainWindow? MainWindow_Instance;                                     // MainWindow instance
+        private static BackupManager BackupManager => BackupManager.GetInstance();
+        private static ResourceManager ResourceManager => BackupManager.resourceManager;
+        private static MainWindow? MainWindow_Instance;
 
-        /// <summary>
-        /// MainWindow constructor
-        /// </summary>
+        private ServerManager EasySaveServer = new ServerManager();
+        private Socket ServerSocket;
+        private Socket ClientSocket;
+        public ModelConnection Connection { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             MainWindow_Instance = this;
             MainFrame.NavigationService.Navigate(new HomePage());
+            DataContext = EasySaveServer.ModelConnection;
+
+            EasySaveServer.ConnectionAccepted += OnConnectionAccepted;
         }
 
-        /// <summary>
-        /// Get the MainWindow instance or create it if it doesn't exist
-        /// </summary>
         public static MainWindow GetInstance()
         {
             MainWindow_Instance ??= new MainWindow();
             return MainWindow_Instance;
         }
 
-        /// <summary>
-        /// Refresh the MainWindow content
-        /// </summary>
         public void Refresh()
         {
             Button_Quit.Content = ResourceManager.GetString("Button_Quit");
@@ -43,37 +46,55 @@ namespace EasySave
             Button_Logs.Content = ResourceManager.GetString("Button_Logs");
         }
 
-        /// <summary>
-        /// Button Home click event
-        /// </summary>
         private void Button_Home_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new HomePage());
         }
 
-        /// <summary>
-        /// Button Settings click event
-        /// </summary>
         private void Button_Settings_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new SettingsPage());
         }
 
-        /// <summary>
-        /// Button Logs click event
-        /// </summary>
         private void Button_Logs_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new LogsPage());
         }
 
-        /// <summary>
-        /// Button Quit click event
-        /// </summary>
         private void Button_Quit_Click(object sender, RoutedEventArgs e)
         {
+            EasySaveServer.StopSocketServer(ClientSocket);
             Application.Current.Shutdown();
             Environment.Exit(0);
+        }
+
+        private async void ToggleButton_Server_Checked(object sender, RoutedEventArgs e)
+        {
+            ServerSocket = EasySaveServer.StartSocketServer(12345);
+            await EasySaveServer.AcceptConnectionAsync(ServerSocket);
+        }
+
+        private void ToggleButton_Server_Unchecked(object sender, RoutedEventArgs e)
+        {
+            EasySaveServer.StopSocketServer(ServerSocket);
+        }
+
+        private void OnConnectionAccepted(object sender, Socket clientSocket)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                MessageBoxResult result = MessageBox.Show("Accepter la connexion entrante ?", "Connexion entrante", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    EasySaveServer.ModelConnection.ConnectionStatus = "Connected";
+                    Thread listenThread = new Thread(() => EasySaveServer.ListenToClient(clientSocket));
+                    listenThread.Start();
+                }
+                else
+                {
+                    EasySaveServer.StopSocketServer(clientSocket);
+                }
+            });
         }
     }
 }

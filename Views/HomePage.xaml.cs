@@ -150,7 +150,6 @@ namespace EasySave.Views
                     MessageBox.Show(ResourceManager.GetString("Message_Selection") ?? "Please select a job.", ResourceManager.GetString("MessageTitle_Selection") ?? "Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
                 var jobsToDelete = new List<ModelJob>(selectedItems);
                 var result = MessageBox.Show(ResourceManager.GetString("Message_Delete") ?? "Do you want to delete the selected jobs?", ResourceManager.GetString("MessageTitle_Confirmation") ?? "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
@@ -185,5 +184,6 @@ namespace EasySave.Views
         {
             BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];
         }
+
     }
 }
