@@ -1,0 +1,77 @@
+\doxysection{Easy\+Save.\+Json\+Manager Class Reference}
+\hypertarget{class_easy_save_1_1_json_manager}{}\label{class_easy_save_1_1_json_manager}\index{EasySave.JsonManager@{EasySave.JsonManager}}
+
+
+Json manager class to load and save json files.  
+
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static T \mbox{\hyperlink{class_easy_save_1_1_json_manager_ad5c63f54af2440a3de9aa6e4e4014c34}{Load\+Json$<$ T $>$}} (string file\+Path, T default\+Value)
+\begin{DoxyCompactList}\small\item\em Load data from desired json file into desired object 
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & Json file path\\
+\hline
+{\em default\+Value} & Default value if file does not exist\\
+\hline
+\end{DoxyParams}
+\end{DoxyCompactList}\item 
+static async Task \mbox{\hyperlink{class_easy_save_1_1_json_manager_a9d58fd2b889931adce86005f33f92849}{Save\+Json\+Async$<$ T $>$}} (T data, string file\+Path)
+\begin{DoxyCompactList}\small\item\em Save data into desired json file from desired object 
+\begin{DoxyParams}{Parameters}
+{\em data} & Data to save\\
+\hline
+{\em file\+Path} & Json file path\\
+\hline
+\end{DoxyParams}
+\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Json manager class to load and save json files. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_easy_save_1_1_json_manager_ad5c63f54af2440a3de9aa6e4e4014c34}\index{EasySave.JsonManager@{EasySave.JsonManager}!LoadJson$<$ T $>$@{LoadJson$<$ T $>$}}
+\index{LoadJson$<$ T $>$@{LoadJson$<$ T $>$}!EasySave.JsonManager@{EasySave.JsonManager}}
+\doxysubsubsection{\texorpdfstring{LoadJson$<$ T $>$()}{LoadJson< T >()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_json_manager_ad5c63f54af2440a3de9aa6e4e4014c34} 
+static T Easy\+Save.\+Json\+Manager.\+Load\+Json$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{file\+Path}{, }\item[{T}]{default\+Value}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Load data from desired json file into desired object 
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & Json file path\\
+\hline
+{\em default\+Value} & Default value if file does not exist\\
+\hline
+\end{DoxyParams}
+
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em T} : {\em new()}]\end{description}
+\end{Desc}
+\Hypertarget{class_easy_save_1_1_json_manager_a9d58fd2b889931adce86005f33f92849}\index{EasySave.JsonManager@{EasySave.JsonManager}!SaveJsonAsync$<$ T $>$@{SaveJsonAsync$<$ T $>$}}
+\index{SaveJsonAsync$<$ T $>$@{SaveJsonAsync$<$ T $>$}!EasySave.JsonManager@{EasySave.JsonManager}}
+\doxysubsubsection{\texorpdfstring{SaveJsonAsync$<$ T $>$()}{SaveJsonAsync< T >()}}
+{\footnotesize\ttfamily \label{class_easy_save_1_1_json_manager_a9d58fd2b889931adce86005f33f92849} 
+static async Task Easy\+Save.\+Json\+Manager.\+Save\+Json\+Async$<$ T $>$ (\begin{DoxyParamCaption}\item[{T}]{data}{, }\item[{string}]{file\+Path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Save data into desired json file from desired object 
+\begin{DoxyParams}{Parameters}
+{\em data} & Data to save\\
+\hline
+{\em file\+Path} & Json file path\\
+\hline
+\end{DoxyParams}
+
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_json_manager_8cs}{Json\+Manager.\+cs}}\end{DoxyCompactItemize}

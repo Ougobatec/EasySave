@@ -1,0 +1,61 @@
+\doxysection{Easy\+Save.\+Models Namespace Reference}
+\hypertarget{namespace_easy_save_1_1_models}{}\label{namespace_easy_save_1_1_models}\index{EasySave.Models@{EasySave.Models}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_easy_save_1_1_models_1_1_model_config}{Model\+Config}}
+\begin{DoxyCompactList}\small\item\em Model to describe the general setting of the application. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{namespace_easy_save_1_1_models_a88ec99a65eaec930bc7190b3c647db83}{Model\+Job}} (string name, string source\+Directory, string target\+Directory, \mbox{\hyperlink{namespace_easy_save_1_1_enumerations_a3fb99ade793ea2b133d475b860d1181b}{Backup\+Types}} type)
+\begin{DoxyCompactList}\small\item\em Model to describe a backup job. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{namespace_easy_save_1_1_models_a5ac6ed470b84cb8fe0218df536bea53b}{Model\+Save}} (string name, string type, long size, Date\+Time date)
+\begin{DoxyCompactList}\small\item\em Model for a save folder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_easy_save_1_1_models_a88ec99a65eaec930bc7190b3c647db83}\index{EasySave.Models@{EasySave.Models}!ModelJob@{ModelJob}}
+\index{ModelJob@{ModelJob}!EasySave.Models@{EasySave.Models}}
+\doxysubsubsection{\texorpdfstring{ModelJob()}{ModelJob()}}
+{\footnotesize\ttfamily \label{namespace_easy_save_1_1_models_a88ec99a65eaec930bc7190b3c647db83} 
+class Easy\+Save.\+Models.\+Model\+Job (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{string}]{source\+Directory}{, }\item[{string}]{target\+Directory}{, }\item[{\mbox{\hyperlink{namespace_easy_save_1_1_enumerations_a3fb99ade793ea2b133d475b860d1181b}{Backup\+Types}}}]{type}{}\end{DoxyParamCaption})}
+
+
+
+Model to describe a backup job. 
+
+The name of the backup
+
+The source folder for the backup
+
+The target folder for the backup
+
+The type of the backup
+
+The key to encrypt the backup
+
+The state of the backup
+
+The generation of a key 
+\begin{DoxyParams}{Parameters}
+{\em bits} & the number of bits of the key\\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespace_easy_save_1_1_models_a5ac6ed470b84cb8fe0218df536bea53b}\index{EasySave.Models@{EasySave.Models}!ModelSave@{ModelSave}}
+\index{ModelSave@{ModelSave}!EasySave.Models@{EasySave.Models}}
+\doxysubsubsection{\texorpdfstring{ModelSave()}{ModelSave()}}
+{\footnotesize\ttfamily \label{namespace_easy_save_1_1_models_a5ac6ed470b84cb8fe0218df536bea53b} 
+class Easy\+Save.\+Models.\+Model\+Save (\begin{DoxyParamCaption}\item[{string}]{name}{, }\item[{string}]{type}{, }\item[{long}]{size}{, }\item[{Date\+Time}]{date}{}\end{DoxyParamCaption})}
+
+
+
+Model for a save folder. 
+
+The Name of the save (name of the folder)
+
+The Type of the save (differential or full)
+
+The size of the save (all files)
+
+The time at the save creation
