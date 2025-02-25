@@ -7,18 +7,17 @@ using EasySave.Enumerations;
 using EasySave.Models;
 using Microsoft.Win32;
 
-
 namespace EasySave.Views
 {
     /// <summary>
-    /// Logique d'interaction pour EditPage.xaml
+    /// Interaction logic for EditPage.xaml
     /// </summary>
     public partial class EditPage : Page
     {
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
-        public ObservableCollection<ModelSave> SavesEntries { get; set; }                   // List to store all SaveEntries
-        private readonly ModelJob? Job = null;                                              // Used to keep the data on the current job to use it between methods
+        public ObservableCollection<ModelSave> SavesEntries { get; set; } = [];             // List to get all saves
+        private readonly ModelJob? Job = null;                                              // Job to edit
 
         /// <summary>
         /// EditPage constructor to initialize the page and display the job if there's one
@@ -30,11 +29,6 @@ namespace EasySave.Views
             DataContext = this;
             Job = job;
             Refresh();
-
-            if (job != null)
-            {
-                LoadJob(job);
-            }
         }
 
         /// <summary>
@@ -54,7 +48,13 @@ namespace EasySave.Views
             Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
             Header_Type.Header = ResourceManager.GetString("Text_Type");
             Header_Size.Header = ResourceManager.GetString("Text_Size");
+
+            if (Job != null)
+            {
+                LoadJob(Job);
+            }
         }
+
         /// <summary>
         /// SavesDataGrid size changed event
         /// </summary>
@@ -69,20 +69,7 @@ namespace EasySave.Views
                 dataGrid.Columns[3].Width = totalWidth * 0.3;   // 30% for "Size"
             }
         }
-        /// <summary>
-        /// Method to load the job in the form
-        /// </summary>
-        private void LoadJob(ModelJob job)
-        {
-            Title_Edit.Text = ResourceManager.GetString("Title_Edit") + " - " + job.Name;
-            Textbox_BackupName.Text = job.Name;
-            Textbox_SourceDirectory.Text = job.SourceDirectory;
-            Textbox_TargetDirectory.Text = job.TargetDirectory;
-            ComboBox_Type.SelectedIndex = (int)job.Type;
-            Title_SavesList.Visibility = Visibility.Visible;
-            SavesList.Visibility = Visibility.Visible;
-            DisplaySaves();
-        }
+
         /// <summary>
         /// Button Submit click event
         /// </summary>
@@ -93,9 +80,9 @@ namespace EasySave.Views
                 string name = Textbox_BackupName.Text;
                 string source = Textbox_SourceDirectory.Text;
                 string target = Textbox_TargetDirectory.Text;
-                string type = ((ComboBoxItem)ComboBox_Type.SelectedItem)?.Content.ToString();
+                string? type = ((ComboBoxItem)ComboBox_Type.SelectedItem)?.Content?.ToString();
 
-                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(target) || string.IsNullOrWhiteSpace(type))
+                if (string.IsNullOrWhiteSpace(type))
                 {
                     MessageBox.Show(ResourceManager.GetString("Message_Fill"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
@@ -107,7 +94,7 @@ namespace EasySave.Views
                     try
                     {
                         await BackupManager.AddBackupJobAsync(job);
-                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess") ?? "Success: {0}", job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
 
                         // Réinitialiser les champs après ajout
                         Textbox_BackupName.Text = "";
@@ -123,7 +110,7 @@ namespace EasySave.Views
                         }
                         else
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "Error: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
@@ -132,7 +119,7 @@ namespace EasySave.Views
                     try
                     {
                         await BackupManager.UpdateBackupJobAsync(job, Job);
-                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess") ?? "Update Success: {0}", job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch (Exception ex)
                     {
@@ -142,7 +129,7 @@ namespace EasySave.Views
                         }
                         else
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "Error: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
@@ -152,31 +139,31 @@ namespace EasySave.Views
                 MessageBox.Show($"Erreur : {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         /// <summary>
         /// Button Browse click event
         /// </summary>
         private void BrowseDirectory_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null)
+            if (sender is Button button)
             {
-                if (button.Name == "BrowseSource")
+                string title = button.Name switch
                 {
-                    var Title = "Sélectionner le dossier de source";
-                }
-                else if (button.Name == "BrowseTarget")
-                {
-                    var Title = "Sélectionner le dossier de destination";
-                }
+                    "BrowseSource" => ResourceManager.GetString("Title_BrowseSource") ?? "Select the source directory",
+                    "BrowseTarget" => ResourceManager.GetString("Title_BrowseTarget") ?? "Select the target directory",
+                    _ => "Sélectionner le dossier"
+                };
+
                 var dialog = new OpenFileDialog()
                 {
                     CheckFileExists = false,
                     CheckPathExists = true,
                     FileName = "Dossier sélectionné",
                     Filter = "Dossiers|*.none",
-                    Title = Title
+                    Title = title
                 };
                 dialog.ShowDialog();
+
                 if (button.Name == "BrowseSource")
                 {
                     Textbox_SourceDirectory.Text = System.IO.Path.GetDirectoryName(dialog.FileName);
@@ -187,48 +174,70 @@ namespace EasySave.Views
                 }
             }
         }
+
         /// <summary>
-        /// Display all saves in the SavesDataGrid  
+        /// Load the job in the EditPage
         /// </summary>
-        private async void DisplaySaves()
+        private async void LoadJob(ModelJob job)
         {
-            // Stock all saves in a list
-            SavesEntries = new ObservableCollection<ModelSave>();
+            Title_Edit.Text = ResourceManager.GetString("Title_Edit") + " - " + job.Name;
+            Textbox_BackupName.Text = job.Name;
+            Textbox_SourceDirectory.Text = job.SourceDirectory;
+            Textbox_TargetDirectory.Text = job.TargetDirectory;
+            ComboBox_Type.SelectedIndex = (int)job.Type;
+            Title_SavesList.Visibility = Visibility.Visible;
+            SavesList.Visibility = Visibility.Visible;
+            await DisplaySaves();
+        }
 
-            ObservableCollection<string> SavesName = new ObservableCollection<string>();
-
-            if (!Directory.Exists(Job.TargetDirectory))
+        /// <summary>
+        /// Display all saves in the EditPage
+        /// </summary>
+        private Task DisplaySaves()
+        {
+            return Task.Run(() =>
             {
-                Directory.CreateDirectory(Job.TargetDirectory);                                              //create directory if it doesn't exist
-            }
+                // Stock all saves in a list
+                SavesEntries = [];
 
-            // Go through each folders in the backUpJob target directory
-            foreach (string dir in Directory.GetDirectories(Job.TargetDirectory, "*", SearchOption.TopDirectoryOnly))
-            {
-                string folderName = Path.GetFileName(dir); // Extraire le nom du dossier
-                long size = 0;
-                if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
+                ObservableCollection<string> SavesName = [];
+
+                if (Job != null && !Directory.Exists(Job.TargetDirectory))
                 {
-                    // Get the size of the save
-                    size = BackupManager.GetDirectorySize(dir);
-
-                    // Get the type of the save
-                    string type = "X";
-                    if (folderName.Contains("Diff"))
-                    {
-                        type = "Differential";
-                    }
-                    else if (folderName.Contains("Full"))
-                    {
-                        type = "Full";
-                    }
-
-                    // Get the date of creation of the file
-                    DirectoryInfo dirInfo = new DirectoryInfo(dir);
-
-                    SavesEntries.Add(new ModelSave(folderName, type, size, dirInfo.CreationTime));
+                    Directory.CreateDirectory(Job.TargetDirectory);                                              //create directory if it doesn't exist
                 }
-            }
+
+                // Go through each folders in the backUpJob target directory
+                if (Job != null)
+                {
+                    foreach (string dir in Directory.GetDirectories(Job.TargetDirectory, "*", SearchOption.TopDirectoryOnly))
+                    {
+                        string folderName = Path.GetFileName(dir); // Extraire le nom du dossier
+                        long size = 0;
+                        if (folderName.Contains(Job.Name, StringComparison.OrdinalIgnoreCase)) // Comparaison insensible à la casse
+                        {
+                            // Get the size of the save
+                            size = Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+
+                            // Get the type of the save
+                            string type = "X";
+                            if (folderName.Contains("Diff"))
+                            {
+                                type = "Differential";
+                            }
+                            else if (folderName.Contains("Full"))
+                            {
+                                type = "Full";
+                            }
+
+                            // Get the date of creation of the file
+                            DirectoryInfo dirInfo = new(dir);
+
+                            SavesEntries.Add(new ModelSave(folderName, type, size, dirInfo.CreationTime));
+                        }
+                    }
+                }
+            });
         }
     }
 }

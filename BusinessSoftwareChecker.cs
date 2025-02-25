@@ -1,17 +1,30 @@
-﻿using System.Diagnostics;
-
-/// <summary>
-/// Business software checker class to check if a business software is running
-/// </summary>
-public class BusinessSoftwareChecker
+﻿namespace EasySave
 {
-    private static readonly string[] businessSoftware = { "CalculatorApp", "calc", "mspaint" };     // Business software process names
+    using System.Diagnostics;
 
     /// <summary>
-    /// Check if a business software is running and return true if it is
+    /// Business software checker class to check if a business software is running
     /// </summary>
-    public static bool IsBusinessSoftwareRunning()
+    public class BusinessSoftwareChecker
     {
-        return Process.GetProcesses().Any(p => businessSoftware.Contains(p.ProcessName));           // Check if a business software process is running
+        private static BackupManager BackupManager => BackupManager.GetInstance();                                                  // BackupManager instance
+        private static List<string>? _businessSoftwares;                                                                            // Business softwares list
+        private static List<string> BusinessSoftwares => _businessSoftwares ??= [.. BackupManager.JsonConfig.BusinessSoftwares];    // Business softwares list
+
+        /// <summary>
+        /// Business software checker constructor to add business softwares from JSON
+        /// </summary>
+        public BusinessSoftwareChecker()
+        {
+            BusinessSoftwares.AddRange(BackupManager.JsonConfig.BusinessSoftwares);                 // Add business softwares from JSON
+        }
+
+        /// <summary>
+        /// Check if a business software is running and return true if it is
+        /// </summary>
+        public static bool IsBusinessSoftwareRunning()
+        {
+            return Process.GetProcesses().Any(p => BusinessSoftwares.Contains(p.ProcessName));      // Check if a business software process is running
+        }
     }
 }

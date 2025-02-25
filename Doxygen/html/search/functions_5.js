@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['isbusinesssoftwarerunning_0',['IsBusinessSoftwareRunning',['../class_business_software_checker.html#a27a5a85bd6b93f3645ac9e52399f678f',1,'BusinessSoftwareChecker']]]
+  ['getinstance_0',['GetInstance',['../class_easy_save_1_1_backup_manager.html#a50c7aa91eb3ed08b15f847e65d4f37fa',1,'EasySave.BackupManager.GetInstance()'],['../class_easy_save_1_1_main_window.html#ac1208b9dbdbbb0f42b79afa852bb819e',1,'EasySave.MainWindow.GetInstance()']]]
 ];

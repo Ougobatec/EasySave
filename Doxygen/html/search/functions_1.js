@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['changesettingsasync_0',['ChangeSettingsAsync',['../class_easy_save_1_1_backup_manager.html#a6982bc61ecfe04657485db36b31023f5',1,'EasySave::BackupManager']]]
+  ['businesssoftwarechecker_0',['BusinessSoftwareChecker',['../class_easy_save_1_1_business_software_checker.html#a635a1266eff7bd0b508779c5b6896a43',1,'EasySave::BusinessSoftwareChecker']]]
 ];

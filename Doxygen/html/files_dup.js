@@ -4,6 +4,6 @@ var files_dup =
     [ "AssemblyInfo.cs", "_assembly_info_8cs.html", null ],
     [ "BackupManager.cs", "_backup_manager_8cs.html", "_backup_manager_8cs" ],
     [ "BusinessSoftwareChecker.cs", "_business_software_checker_8cs.html", "_business_software_checker_8cs" ],
-    [ "JsonSaver.cs", "_json_saver_8cs.html", "_json_saver_8cs" ],
+    [ "JsonManager.cs", "_json_manager_8cs.html", "_json_manager_8cs" ],
     [ "MainWindow.xaml.cs", "_main_window_8xaml_8cs.html", "_main_window_8xaml_8cs" ]
 ];

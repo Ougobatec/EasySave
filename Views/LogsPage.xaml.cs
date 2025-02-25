@@ -14,7 +14,7 @@ namespace EasySave.Views
     {
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
-        public ObservableCollection<ModelLog> LogEntries { get; set; }                      // List to get all logs
+        public ObservableCollection<ModelLog> LogEntries { get; set; } = [];                // List to get all logs
 
         /// <summary>
         /// LogsPage constructor to initialize the page and display logs
@@ -66,7 +66,7 @@ namespace EasySave.Views
         /// </summary>
         private void DisplayLogs()
         {
-            LogEntries = new ObservableCollection<ModelLog>(Logger<ModelLog>.GetInstance().GetLogs());
+            LogEntries = [.. Logger<ModelLog>.GetInstance().GetLogs()];
         }
     }
 }

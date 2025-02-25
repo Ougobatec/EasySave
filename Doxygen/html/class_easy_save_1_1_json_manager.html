@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EasySave: EasySave.MainWindow Class Reference</title>
+<title>EasySave: EasySave.JsonManager Class Reference</title>
 <link rel="icon" href="logo.ico" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -78,7 +78,7 @@ $(function() { codefold.init(0); });
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('class_easy_save_1_1_main_window.html',''); initResizable(true); });
+$(function(){initNavTree('class_easy_save_1_1_json_manager.html',''); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -105,62 +105,43 @@ $(function(){initNavTree('class_easy_save_1_1_main_window.html',''); initResizab
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="class_easy_save_1_1_main_window-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">EasySave.MainWindow Class Reference</div></div>
+<a href="class_easy_save_1_1_json_manager-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">EasySave.JsonManager Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Interaction logic for MainWindow.xaml.  
+<p>Json manager class to load and save json files.  
  <a href="#details">More...</a></p>
-<div class="dynheader">
-Inheritance diagram for EasySave.MainWindow:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="class_easy_save_1_1_main_window.png" alt=""/>
- </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a9f812c68b3a620220c1f7176d0c114b5" id="r_a9f812c68b3a620220c1f7176d0c114b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9f812c68b3a620220c1f7176d0c114b5">MainWindow</a> ()</td></tr>
-<tr class="memdesc:a9f812c68b3a620220c1f7176d0c114b5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_easy_save_1_1_main_window.html" title="Interaction logic for MainWindow.xaml.">MainWindow</a> constructor.  <br /></td></tr>
-<tr class="separator:a9f812c68b3a620220c1f7176d0c114b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc3e99ff519679077daf87666953ddf6" id="r_abc3e99ff519679077daf87666953ddf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc3e99ff519679077daf87666953ddf6">Refresh</a> ()</td></tr>
-<tr class="memdesc:abc3e99ff519679077daf87666953ddf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refresh the <a class="el" href="class_easy_save_1_1_main_window.html" title="Interaction logic for MainWindow.xaml.">MainWindow</a> content.  <br /></td></tr>
-<tr class="separator:abc3e99ff519679077daf87666953ddf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac1208b9dbdbbb0f42b79afa852bb819e" id="r_ac1208b9dbdbbb0f42b79afa852bb819e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_easy_save_1_1_main_window.html">MainWindow</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1208b9dbdbbb0f42b79afa852bb819e">GetInstance</a> ()</td></tr>
-<tr class="memdesc:ac1208b9dbdbbb0f42b79afa852bb819e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="class_easy_save_1_1_main_window.html" title="Interaction logic for MainWindow.xaml.">MainWindow</a> instance or create it if it doesn't exist.  <br /></td></tr>
-<tr class="separator:ac1208b9dbdbbb0f42b79afa852bb819e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c63f54af2440a3de9aa6e4e4014c34" id="r_ad5c63f54af2440a3de9aa6e4e4014c34"><td class="memItemLeft" align="right" valign="top">static T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5c63f54af2440a3de9aa6e4e4014c34">LoadJson&lt; T &gt;</a> (string filePath, T defaultValue)</td></tr>
+<tr class="memdesc:ad5c63f54af2440a3de9aa6e4e4014c34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data from desired json file into desired object </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>Json file path</td></tr>
+    <tr><td class="paramname">defaultValue</td><td>Default value if file does not exist</td></tr>
+  </table>
+  </dd>
+</dl>
+ <br /></td></tr>
+<tr class="separator:ad5c63f54af2440a3de9aa6e4e4014c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d58fd2b889931adce86005f33f92849" id="r_a9d58fd2b889931adce86005f33f92849"><td class="memItemLeft" align="right" valign="top">static async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d58fd2b889931adce86005f33f92849">SaveJsonAsync&lt; T &gt;</a> (T data, string filePath)</td></tr>
+<tr class="memdesc:a9d58fd2b889931adce86005f33f92849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data into desired json file from desired object </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Data to save</td></tr>
+    <tr><td class="paramname">filePath</td><td>Json file path</td></tr>
+  </table>
+  </dd>
+</dl>
+ <br /></td></tr>
+<tr class="separator:a9d58fd2b889931adce86005f33f92849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Interaction logic for MainWindow.xaml. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9f812c68b3a620220c1f7176d0c114b5" name="a9f812c68b3a620220c1f7176d0c114b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f812c68b3a620220c1f7176d0c114b5">&#9670;&#160;</a></span>MainWindow()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">EasySave.MainWindow.MainWindow </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><a class="el" href="class_easy_save_1_1_main_window.html" title="Interaction logic for MainWindow.xaml.">MainWindow</a> constructor. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac1208b9dbdbbb0f42b79afa852bb819e" name="ac1208b9dbdbbb0f42b79afa852bb819e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1208b9dbdbbb0f42b79afa852bb819e">&#9670;&#160;</a></span>GetInstance()</h2>
+<div class="textblock"><p>Json manager class to load and save json files. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad5c63f54af2440a3de9aa6e4e4014c34" name="ad5c63f54af2440a3de9aa6e4e4014c34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5c63f54af2440a3de9aa6e4e4014c34">&#9670;&#160;</a></span>LoadJson&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -169,10 +150,14 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="class_easy_save_1_1_main_window.html">MainWindow</a> EasySave.MainWindow.GetInstance </td>
+          <td class="memname">static T EasySave.JsonManager.LoadJson&lt; T &gt; </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>filePath</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>defaultValue</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -182,38 +167,72 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the <a class="el" href="class_easy_save_1_1_main_window.html" title="Interaction logic for MainWindow.xaml.">MainWindow</a> instance or create it if it doesn't exist. </p>
+<p>Load data from desired json file into desired object </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filePath</td><td>Json file path</td></tr>
+    <tr><td class="paramname">defaultValue</td><td>Default value if file does not exist</td></tr>
+  </table>
+  </dd>
+</dl>
+</p>
+<div class="typeconstraint">
+<dl><dt><b>Type Constraints</b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>T</em></td><td>&#160;:</td><td valign="top"><em>new()</em></td><td>&#160;</td></tr>
+</table>
+</dd>
+</dl>
+</div>
 
 </div>
 </div>
-<a id="abc3e99ff519679077daf87666953ddf6" name="abc3e99ff519679077daf87666953ddf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc3e99ff519679077daf87666953ddf6">&#9670;&#160;</a></span>Refresh()</h2>
+<a id="a9d58fd2b889931adce86005f33f92849" name="a9d58fd2b889931adce86005f33f92849"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d58fd2b889931adce86005f33f92849">&#9670;&#160;</a></span>SaveJsonAsync&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void EasySave.MainWindow.Refresh </td>
+          <td class="memname">static async Task EasySave.JsonManager.SaveJsonAsync&lt; T &gt; </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>filePath</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Refresh the <a class="el" href="class_easy_save_1_1_main_window.html" title="Interaction logic for MainWindow.xaml.">MainWindow</a> content. </p>
+<p>Save data into desired json file from desired object </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Data to save</td></tr>
+    <tr><td class="paramname">filePath</td><td>Json file path</td></tr>
+  </table>
+  </dd>
+</dl>
+</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="_main_window_8xaml_8cs.html">MainWindow.xaml.cs</a></li>
+<li><a class="el" href="_json_manager_8cs.html">JsonManager.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespace_easy_save.html">EasySave</a></li><li class="navelem"><a class="el" href="class_easy_save_1_1_main_window.html">MainWindow</a></li>
+    <li class="navelem"><a class="el" href="namespace_easy_save.html">EasySave</a></li><li class="navelem"><a class="el" href="class_easy_save_1_1_json_manager.html">JsonManager</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
