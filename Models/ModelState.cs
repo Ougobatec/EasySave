@@ -26,7 +26,6 @@ namespace EasySave.Models
         /// <summary>
         /// The state of the backup
         /// </summary>
-        
         private string _state = "IDLE";
         public string State
         {
@@ -73,8 +72,15 @@ namespace EasySave.Models
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// The speed of the backup
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Notify the change of a property
+        /// <param name="propertyName">the name of the property</param>
+        /// </summary>
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

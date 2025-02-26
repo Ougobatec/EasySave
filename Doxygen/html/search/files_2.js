@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jsonsaver_2ecs_0',['JsonSaver.cs',['../_json_saver_8cs.html',1,'']]]
+  ['jsonmanager_2ecs_0',['JsonManager.cs',['../_json_manager_8cs.html',1,'']]]
 ];

@@ -18,7 +18,7 @@
         /// <summary>
         /// The maximum size of a file that can be transferred without being managed
         /// </summary>
-        public int LimitSizeFile { get; set; } = 1000000;
+        public int LimitSizeFile { get; set; } = 50;
 
         /// <summary>
         /// The list of all backup jobs
@@ -34,5 +34,10 @@
         /// The list of all encrpyted extensions
         /// </summary>
         public List<string> EncryptedExtensions { get; set; } = [];
+
+        /// <summary>
+        /// The list of all business softwares
+        /// </summary>
+        public List<string> BusinessSoftwares { get; set; } = [];
     }
 }

@@ -240,9 +240,6 @@
   <data name="Message_UpdateSuccess" xml:space="preserve">
     <value>Backup '{0}' updated successfully.</value>
   </data>
-  <data name="Message_NotEnoughSpace " xml:space="preserve">
-    <value>You don't have enough space on the disk</value>
-  </data>
   <data name="Title_PriorityExtension" xml:space="preserve">
     <value>Priority extensions</value>
   </data>
@@ -257,5 +254,26 @@
   </data>
   <data name="Message_AlreadyActive" xml:space="preserve">
     <value>Backup '{0}' is already active.</value>
+  </data>
+  <data name="Message_NotEnoughSpace" xml:space="preserve">
+    <value>You don't have enough space on the disk</value>
+  </data>
+  <data name="Add_BusinessSoftware" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Remove_BusinessSoftware" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Message_SelectionBusinessSoftware" xml:space="preserve">
+    <value>Please select a business software from the list.</value>
+  </data>
+  <data name="Message_AlreadyInListBusinessSoftware" xml:space="preserve">
+    <value>The business software is already in the list.</value>
+  </data>
+  <data name="Title_BrowseSource" xml:space="preserve">
+    <value>Select the source directory</value>
+  </data>
+  <data name="Title_BrowseTarget" xml:space="preserve">
+    <value>Select the target directory</value>
   </data>
 </root>

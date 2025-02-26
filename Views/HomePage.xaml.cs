@@ -3,7 +3,6 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using EasySave.Enumerations;
 using EasySave.Models;
 
 namespace EasySave.Views
@@ -15,8 +14,7 @@ namespace EasySave.Views
     {
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private static ResourceManager ResourceManager => BackupManager.resourceManager;    // Resource manager instance
-        public ObservableCollection<ModelJob> BackupJobs { get; set; }                      // List to get all backup jobs
-        
+        public ObservableCollection<ModelJob> BackupJobs { get; set; } = [];                // List to get all backup jobs
 
         /// <summary>
         /// HomePage constructor to initialize the page and display backup jobs
@@ -24,8 +22,9 @@ namespace EasySave.Views
         public HomePage()
         {
             InitializeComponent();
-            DataContext = this;         
+            DataContext = this;
             Refresh();
+            DisplayBackupJobs();
         }
 
         /// <summary>
@@ -44,8 +43,6 @@ namespace EasySave.Views
             Button_Create.Content = ResourceManager.GetString("Button_Create");
             Button_Execute.Content = ResourceManager.GetString("Button_Execute");
             Button_Delete.Content = ResourceManager.GetString("Button_Delete");
-            DisplayBackupJobs();
-            
         }
 
         /// <summary>
@@ -92,7 +89,7 @@ namespace EasySave.Views
             {
                 if (BusinessSoftwareChecker.IsBusinessSoftwareRunning())
                 {
-                    MessageBox.Show(ResourceManager.GetString("Message_BusinessSoftware"), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(ResourceManager.GetString("Message_BusinessSoftware") ?? "Business software is running.", ResourceManager.GetString("MessageTitle_Attention") ?? "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 else
                 {
@@ -100,42 +97,42 @@ namespace EasySave.Views
 
                     if (selectedItems.Count == 0)
                     {
-                        MessageBox.Show(ResourceManager.GetString("Message_Selection"), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show(ResourceManager.GetString("Message_Selection") ?? "Please select a job.", ResourceManager.GetString("MessageTitle_Attention") ?? "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
 
                     var jobsToExecute = new List<ModelJob>(selectedItems);
-                    var result = MessageBox.Show(ResourceManager.GetString("Message_Execute"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    var result = MessageBox.Show(ResourceManager.GetString("Message_Execute") ?? "Do you want to execute the selected jobs?", ResourceManager.GetString("MessageTitle_Confirmation") ?? "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
-                        foreach (var job in jobsToExecute)
+                        var backupTasks = jobsToExecute.Select(async job =>
                         {
                             try
                             {
-                                
                                 await BackupManager.ExecuteBackupJobAsync(job);
-                                
-                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess") ?? "Job {0} executed successfully.", job.Name), ResourceManager.GetString("MessageTitle_Success") ?? "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                             catch (Exception ex)
                             {
                                 if (ex.Message.Contains("Message_DirectoryNotFound"))
                                 {
-                                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_DirectoryNotFound"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_DirectoryNotFound") ?? "Directory not found for job {0}.", job.Name), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
                                 else
                                 {
-                                    MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
                             }
-                        }
+                        });
+
+                        await Task.WhenAll(backupTasks);
                         BackupJobsListView.Items.Refresh();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -150,12 +147,11 @@ namespace EasySave.Views
 
                 if (selectedItems.Count == 0)
                 {
-                    MessageBox.Show(ResourceManager.GetString("Message_Selection"), ResourceManager.GetString("MessageTitle_Selection"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(ResourceManager.GetString("Message_Selection") ?? "Please select a job.", ResourceManager.GetString("MessageTitle_Selection") ?? "Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-
                 var jobsToDelete = new List<ModelJob>(selectedItems);
-                var result = MessageBox.Show(ResourceManager.GetString("Message_Delete"), ResourceManager.GetString("MessageTitle_Confirmation"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var result = MessageBox.Show(ResourceManager.GetString("Message_Delete") ?? "Do you want to delete the selected jobs?", ResourceManager.GetString("MessageTitle_Confirmation") ?? "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     foreach (var job in jobsToDelete)
@@ -164,20 +160,20 @@ namespace EasySave.Views
                         {
                             BackupJobs.Remove(job);
                             await BackupManager.DeleteBackupJobAsync(job);
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_DeleteSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_DeleteSuccess") ?? "Job {0} deleted successfully.", job.Name), ResourceManager.GetString("MessageTitle_Success") ?? "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                    Refresh();
+                    DisplayBackupJobs();
                     BackupJobsListView.Items.Refresh();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -186,7 +182,8 @@ namespace EasySave.Views
         /// </summary>
         private void DisplayBackupJobs()
         {
-            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];        
-        }        
+            BackupJobs = [.. BackupManager.JsonConfig.BackupJobs];
+        }
+
     }
 }
