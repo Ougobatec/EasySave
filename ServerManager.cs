@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,27 +12,36 @@ namespace EasySave
     public class ServerManager
     {
         public ModelConnection ModelConnection = new ModelConnection();
-        
+
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
         private CancellationTokenSource _cancellationTokenSource;
 
         public event EventHandler<Socket> ConnectionAccepted;
+        public event EventHandler<string> ConnectionStatusChanged;
+        private Socket ServerSocket;
+        private static readonly string ConfigFilePath = "Config\\config.json";                                          // Config file path
 
-        public Socket StartSocketServer(int port)
+        private string _command;
+
+        // Liste des clients connectés
+        private readonly List<Socket> _connectedClients = new List<Socket>();
+
+        public Socket StartSocketServer()
         {
             try
             {
-                Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPEndPoint endPoint = new IPEndPoint(ModelConnection.ConnectionIp, ModelConnection.ConnectionPort);
-                serverSocket.Bind(endPoint);
-                serverSocket.Listen(5);
+                ServerSocket.Bind(endPoint);
+                ServerSocket.Listen(5);
                 ModelConnection.ServerStatus = "Server ACTIVE";
                 _cancellationTokenSource = new CancellationTokenSource();
-                return serverSocket;
+                return ServerSocket;
             }
             catch (SocketException)
             {
-                throw new SocketException();
+                ModelConnection.ServerStatus = "Server ERROR";
+                throw;
             }
         }
 
@@ -42,7 +52,9 @@ namespace EasySave
                 try
                 {
                     Socket clientSocket = await Task.Run(() => serverSocket.Accept(), _cancellationTokenSource.Token);
+                    _connectedClients.Add(clientSocket); // Ajouter le client à la liste
                     ConnectionAccepted?.Invoke(this, clientSocket);
+                    ConnectionStatusChanged?.Invoke(this, "Connected");
                 }
                 catch (OperationCanceledException)
                 {
@@ -57,7 +69,6 @@ namespace EasySave
             }
         }
 
-
         public async Task ListenToClient(Socket client)
         {
             byte[] buffer = new byte[1024];
@@ -71,19 +82,20 @@ namespace EasySave
                     string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
                     Console.WriteLine("Client: " + message);
 
-                    string response = HandleClientCommand(message);
+                    string response = await HandleClientCommandAsync(message);
                     byte[] responseBytes = Encoding.UTF8.GetBytes(response);
                     client.Send(responseBytes);
                 }
-                ModelConnection.ConnectionStatus = "Not Connected";
+                StopSocketServer(client);
             }
             catch (SocketException)
             {
                 Console.WriteLine("Connexion perdue avec le client.");
+                ConnectionStatusChanged?.Invoke(this, "Disconnected");
             }
         }
 
-        private string HandleClientCommand(string command)
+        private async Task<string> HandleClientCommandAsync(string command)
         {
             var commandParts = command.Split(' ');
             var mainCommand = commandParts[0].ToUpper();
@@ -91,15 +103,38 @@ namespace EasySave
 
             switch (mainCommand)
             {
-                case "START_BACKUP":
+                case "EXECUTE_BACKUP":
                     return StartBackup(jobName);
                 case "STOP_BACKUP":
                     return StopBackup();
+                case "GET_CONFIG":
+                    return await SendConfigFileAsync();
                 case "STATUS":
                     return BackupManager.JsonState.Any(s => s.State == "ACTIVE") ? "Backup is running." : "Backup is not running.";
                 default:
                     return "Unknown command.";
             }
+        }
+
+        private async Task<string> SendConfigFileAsync()
+        {
+            try
+            {
+                string configContent = await File.ReadAllTextAsync(ConfigFilePath);
+                SendMessageToAllClients(configContent);
+                return "Config file sent.";
+            }
+            catch (Exception ex)
+            {
+                return $"Error sending config file: {ex.Message}";
+            }
+        }
+       
+
+        public async Task SendCommandAsync(Socket socket, string command)
+        {
+            _command = command;
+            socket.Send(Encoding.UTF8.GetBytes(command));
         }
 
         private string StartBackup(string jobName)
@@ -132,8 +167,6 @@ namespace EasySave
             return "Backup stopped.";
         }
 
-
-
         public void StopSocketServer(Socket socket)
         {
             if (socket != null)
@@ -144,8 +177,24 @@ namespace EasySave
                     socket.Shutdown(SocketShutdown.Both);
                 }
                 socket.Close();
-                ModelConnection.ServerStatus = "Server INACTIVE";
+                _connectedClients.Remove(socket); // Retirer le client de la liste
+            }
+            ModelConnection.ServerStatus = "Server INACTIVE";
+            ConnectionStatusChanged?.Invoke(this, "Disconnected");
+        }
+
+        // Méthode pour envoyer des messages à tous les clients connectés
+        public void SendMessageToAllClients(string message)
+        {
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            foreach (var client in _connectedClients)
+            {
+                if (client.Connected)
+                {
+                    client.Send(messageBytes);
+                }
             }
         }
+        
     }
 }

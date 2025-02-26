@@ -29,7 +29,7 @@ namespace EasySave.Models
             }
         }
 
-        private string _connectionStatus = "Not Connected";
+        private string _connectionStatus = "Disconnected";
         public string ConnectionStatus
         {
             get { return _connectionStatus ; }
