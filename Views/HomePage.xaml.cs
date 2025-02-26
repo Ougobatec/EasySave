@@ -59,6 +59,7 @@ namespace EasySave.Views
                 gridView.Columns[3].Width = totalWidth * 0.1;  // 10% for "Type"
                 gridView.Columns[4].Width = totalWidth * 0.1;  // 10% for "Modify"
                 gridView.Columns[5].Width = totalWidth * 0.1;  // 10% for "State"
+                gridView.Columns[6].Width = totalWidth * 0.1;  // 10% for "Actions"
             }
         }
 
@@ -174,6 +175,42 @@ namespace EasySave.Views
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Button Play click event
+        /// </summary>
+        private async void Button_Play_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ModelJob job)
+            {
+                try
+                {
+                    await BackupManager.ResumeBackupJobAsync(job);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Button Pause click event
+        /// </summary>
+        private async void Button_Pause_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ModelJob job)
+            {
+                try
+                {
+                    await BackupManager.StopBackupJobAsync(job);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

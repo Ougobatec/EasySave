@@ -9,6 +9,7 @@ using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
+using Microsoft.VisualBasic;
 
 namespace EasySave
 {
@@ -163,7 +164,6 @@ namespace EasySave
             }
 
             var backupTask = CopyDirectoryAsync(modelJob);                                                                                                  // Start the backup process
-
             runningBackups[job.Name] = backupTask;                                                                                                          // Add the backup task to the running backups
 
             try
@@ -268,6 +268,23 @@ namespace EasySave
             await saveConfigTask;                                                                   // Await the saveConfigTask to ensure the method is truly async
         }
 
+        public async Task StopBackupJobAsync(ModelJob job)
+        {
+            if (runningBackups.TryGetValue(job.Name, out var backupTask))
+            {
+                await UpdateStateAsync(job, job.SourceDirectory, job.TargetDirectory, "PAUSED", true, job.State.TotalFilesToCopy, job.State.TotalFilesSize, job.State.RemainingFiles);
+                await backupTask;
+            }
+        }
+
+        public async Task ResumeBackupJobAsync(ModelJob job)
+        {
+            if (job.State.IsPaused)
+            {
+                await UpdateStateAsync(job, job.SourceDirectory, job.TargetDirectory, job.State.State, false, job.State.TotalFilesToCopy, job.State.TotalFilesSize, job.State.RemainingFiles);
+                await ExecuteBackupJobAsync(job);
+            }
+        }
 
         /// <summary>
         /// Copy a directory and its files to a target directory
@@ -275,110 +292,128 @@ namespace EasySave
         /// </summary>
         private async Task CopyDirectoryAsync(ModelJob job)
         {
-            string sourceDir = job.SourceDirectory;
-            string destDir = job.TargetDirectory;
-            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string saveDestDir = Path.Combine(destDir, $"{timestamp}_{job.Name}_{job.Type}");
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);
 
-            Directory.CreateDirectory(saveDestDir);                                                                                                                 // Create the target directory
+            string sourceDir = modelJob.SourceDirectory;
+            string destDir = modelJob.TargetDirectory;
+            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string saveDestDir = Path.Combine(destDir, $"{timestamp}_{modelJob.Name}_{modelJob.Type}");
+
+            Directory.CreateDirectory(saveDestDir);
 
             var backupStartTime = DateTime.Now;
-            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);                                        // Get the extensions to encrypt
-            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase);                                          // Get the extensions to prioritize
-            long limitSizeFile = JsonConfig.LimitSizeFile * 1024 * 1024;                                                                                            // Get the limit size of a file
+            var extensionsToEncrypt = new HashSet<string>(JsonConfig.EncryptedExtensions, StringComparer.OrdinalIgnoreCase);
+            var priorityExtensions = new HashSet<string>(JsonConfig.PriorityExtensions, StringComparer.OrdinalIgnoreCase);
+            long limitSizeFile = JsonConfig.LimitSizeFile * 1024 * 1024;
             TimeSpan totalEncryptionTime = TimeSpan.Zero;
 
-            IEnumerable<string> filesToCopy;                                                                                                                        // List of files to copy
-            if (job.Type == BackupTypes.Full)
+            var remainingFiles = modelJob.State.RemainingFiles;
+            var totalFilesToCopy = modelJob.State.TotalFilesToCopy;
+            var totalFilesSize = modelJob.State.TotalFilesSize;
+
+            if (remainingFiles.Count == 0)
             {
-                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);                                                                    // Get all files in the source directory for a full backup
-            }
-            else
-            {
-                var previousBackups = Directory.GetDirectories(destDir).OrderByDescending(d => d).ToList();                                                         // Get the previous backups
-                filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)                                                                     // Get all files in the source directory for an incremental backup
-                    .Where(file =>
-                    {
-                        string relativePath = file[(sourceDir.Length + 1)..];
-                        return previousBackups.All(backupDir =>                                                                                                     // Check if the file is not in the previous backups or if it has been modified
+                IEnumerable<string> filesToCopy;
+                if (modelJob.Type == BackupTypes.Full)
+                {
+                    filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories);
+                }
+                else
+                {
+                    var previousBackups = Directory.GetDirectories(destDir).OrderByDescending(d => d).ToList();
+                    filesToCopy = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)
+                        .Where(file =>
                         {
-                            string backupFilePath = Path.Combine(backupDir, relativePath);
-                            return !File.Exists(backupFilePath) || new FileInfo(file).LastWriteTime > File.GetLastWriteTime(backupFilePath);                        // Check if the file is not in the backup or if it has been modified
+                            string relativePath = file[(sourceDir.Length + 1)..];
+                            return previousBackups.All(backupDir =>
+                            {
+                                string backupFilePath = Path.Combine(backupDir, relativePath);
+                                return !File.Exists(backupFilePath) || new FileInfo(file).LastWriteTime > File.GetLastWriteTime(backupFilePath);
+                            });
                         });
-                    });
+                }
+
+                filesToCopy = filesToCopy.OrderBy(file => priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);
+
+                remainingFiles = filesToCopy.ToList();
+                totalFilesToCopy = filesToCopy.Count();
+                totalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length);
             }
 
-            filesToCopy = filesToCopy.OrderBy(file => priorityExtensions.Contains(Path.GetExtension(file)) ? 0 : 1);                                                // Order the files to copy by priority extensions
+            await UpdateStateAsync(modelJob, sourceDir, saveDestDir, "ACTIVE", modelJob.State.IsPaused, totalFilesToCopy, totalFilesSize, remainingFiles.ToList());
 
-            var totalFilesToCopy = filesToCopy.Count();
-            var nbFilesLeftToDo = totalFilesToCopy;
-            var totalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length);
+            List<Task<TimeSpan>> copyTasks = new();
+            SemaphoreSlim smallFileSemaphore = new(3);
+            SemaphoreSlim largeFileSemaphore = new(1);
 
-            await UpdateStateAsync(job, sourceDir, saveDestDir, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                                       // Update the job state
-
-            List<Task<TimeSpan>> copyTasks = [];                                                                                                                    // List of copy tasks
-            SemaphoreSlim semaphore = new(3);                                                                                                                       // Max 3 files to copy at a time
-            SemaphoreSlim largeFileSemaphore = new(1);                                                                                                              // Max 1 large file to copy at a time
-
-            foreach (string file in filesToCopy)                                                                                                                    // Copy each file
+            while (modelJob.State.RemainingFiles.Count > 0)
             {
+                if (modelJob.State.IsPaused)
+                {
+                    break;
+                }
+
+                string file = modelJob.State.RemainingFiles[0];
                 var fileInfo = new FileInfo(file);
                 string relativePath = file[(sourceDir.Length + 1)..];
                 string destPath = Path.Combine(saveDestDir, relativePath);
-                Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);                                                                                        // Create the target directory
+                Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);
 
-                await UpdateStateAsync(job, file, destPath, "ACTIVE", totalFilesToCopy, totalFilesSize, nbFilesLeftToDo);                                           // Update the job state
+                await UpdateStateAsync(modelJob, file, destPath, modelJob.State.State, modelJob.State.IsPaused, totalFilesToCopy, totalFilesSize, modelJob.State.RemainingFiles);
 
                 if (fileInfo.Length > limitSizeFile)
                 {
-                    await largeFileSemaphore.WaitAsync();                                                                                                           // Wait for the semaphore
-                    await Task.WhenAll(copyTasks);                                                                                                                  // Wait for the copy tasks
-                    copyTasks.Clear();                                                                                                                              // Clear the copy tasks
+                    await largeFileSemaphore.WaitAsync();
+                    await Task.WhenAll(copyTasks);
+                    copyTasks.Clear();
 
                     try
                     {
-                        totalEncryptionTime += await CopyFileAsync(file, destPath, job, fileInfo, extensionsToEncrypt);                                             // Copy the large file
+                        totalEncryptionTime += await CopyFileAsync(file, destPath, modelJob, fileInfo, extensionsToEncrypt);
                     }
                     finally
                     {
-                        largeFileSemaphore.Release();                                                                                                               // Release the semaphore
+                        largeFileSemaphore.Release();
                     }
                 }
                 else
                 {
-                    copyTasks.Add(Task.Run(async () =>                                                                                                              // Add the copy task
+                    copyTasks.Add(Task.Run(async () =>
                     {
-                        await semaphore.WaitAsync();                                                                                                                // Wait for the semaphore
+                        await smallFileSemaphore.WaitAsync();
                         try
                         {
-                            return await CopyFileAsync(file, destPath, job, fileInfo, extensionsToEncrypt);                                                         // Copy the file
+                            return await CopyFileAsync(file, destPath, modelJob, fileInfo, extensionsToEncrypt);
                         }
                         finally
                         {
-                            semaphore.Release();                                                                                                                    // Release the semaphore
+                            smallFileSemaphore.Release();
                         }
                     }));
                 }
-                nbFilesLeftToDo--;                                                                                                                                  // Decrease the number of files left to do
+                modelJob.State.RemainingFiles.RemoveAt(0);
             }
 
-            var results = await Task.WhenAll(copyTasks);                                                                                                            // Wait for the copy tasks
+            var results = await Task.WhenAll(copyTasks);
             totalEncryptionTime += new TimeSpan(results.Sum(r => r.Ticks));
 
             var backupEndTime = DateTime.Now;
             var totalBackupTime = backupEndTime - backupStartTime;
 
-            await semaphoreSlim.WaitAsync();                                                                                                                        // Wait for the semaphore
+            await semaphoreSlim.WaitAsync();
             try
             {
-                await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
+                await Logger<ModelLog>.GetInstance().Log(new ModelLog(modelJob.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
             }
             finally
             {
-                semaphoreSlim.Release();                                                                                                                            // Release the semaphore
+                semaphoreSlim.Release();
             }
 
-            await UpdateStateAsync(job, "", "", "END", 0, 0, 0);                                                                                                    // Update the job state
+            if (!modelJob.State.IsPaused)
+            {
+                await UpdateStateAsync(modelJob, "", "", "END", false, 0, 0, new List<string>());
+            }
         }
 
         /// <summary>
@@ -454,38 +489,41 @@ namespace EasySave
         /// <param name="totalFilesSize">The total files size</param>
         /// <param name="nbFilesLeftToDo">The number of files left to do</param>
         /// </summary>
-        private async Task UpdateStateAsync(ModelJob job, string source, string target, string state, int totalFilesToCopy, long totalFilesSize, int nbFilesLeftToDo)
+        private async Task UpdateStateAsync(ModelJob job, string source, string target, string state, bool isPaused, int totalFilesToCopy, long totalFilesSize, List<string> remainingFiles)
         {
-            job.State.SourceFilePath = source;                                                                                                      // Update the job state source file path
-            job.State.TargetFilePath = target;                                                                                                      // Update the job state target file path
-            job.State.State = state;                                                                                                                // Update the job state state value
-            job.State.TotalFilesToCopy = totalFilesToCopy;                                                                                          // Update the job state total files to copy
-            job.State.TotalFilesSize = totalFilesSize;                                                                                              // Update the job state total files size
-            job.State.NbFilesLeftToDo = nbFilesLeftToDo;                                                                                            // Update the job state number of files left to do
-            job.State.Progression = totalFilesToCopy == 0 ? 0 : (int)(((double)(totalFilesToCopy - nbFilesLeftToDo) / totalFilesToCopy) * 100);     // Update the job state progression
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);
 
-            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                             // Get the job state by name
+            modelJob.State.SourceFilePath = source;                                                                                                          // Update the job state source file path
+            modelJob.State.TargetFilePath = target;                                                                                                          // Update the job state target file path
+            modelJob.State.State = state;                                                                                                                    // Update the job state state value
+            modelJob.State.IsPaused = isPaused;                                                                                                              // Update the job state is paused
+            modelJob.State.TotalFilesToCopy = totalFilesToCopy;                                                                                              // Update the job state total files to copy
+            modelJob.State.TotalFilesSize = totalFilesSize;                                                                                                  // Update the job state total files size
+            modelJob.State.RemainingFiles = remainingFiles;                                                                                                  // Update the job state remaining files
+            modelJob.State.NbFilesLeftToDo = remainingFiles.Count();                                                                                         // Update the job state number of files left to do
+            modelJob.State.Progression = totalFilesToCopy == 0 ? 0 : (int)((double)(totalFilesToCopy - remainingFiles.Count()) / totalFilesToCopy * 100);    // Update the job state progression
+
+            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                                 // Get the job state by name
             if (modelState != null)
             {
-                JsonState.Remove(modelState);                                                                                                       // Remove the job state
+                JsonState.Remove(modelState);                                                                                                           // Remove the job state
             }
-            JsonState.Add(job.State);                                                                                                               // Add the job state
+            JsonState.Add(modelJob.State);                                                                                                                   // Add the job state
 
-            Task saveStateTask;                                                                                                                     // Save the state file task
-            Task saveConfigTask;                                                                                                                    // Save the config file task
+            Task saveStateTask;                                                                                                                         // Save the state file task
+            Task saveConfigTask;                                                                                                                        // Save the config file task
 
             lock (stateLock)
             {
-                saveStateTask = JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                                // Save the state file
+                saveStateTask = JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                                    // Save the state file
             }
             lock (configLock)
             {
-                saveConfigTask = JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                             // Save the config file
+                saveConfigTask = JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                                 // Save the config file
             }
 
-            await Task.WhenAll(saveStateTask, saveConfigTask);                                                                                      // Wait for the tasks to complete
+            await Task.WhenAll(saveStateTask, saveConfigTask);                                                                                          // Wait for the tasks to complete
         }
-
 
         /// <summary>
         /// Set the culture of the application
@@ -498,7 +536,5 @@ namespace EasySave
             CultureInfo.DefaultThreadCurrentUICulture = culture;    // Set the default thread current UI culture
             Thread.CurrentThread.CurrentUICulture = culture;        // Set the current UI culture
         }
-
-        
     }
 }

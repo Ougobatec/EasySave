@@ -41,6 +41,11 @@ namespace EasySave.Models
         }
 
         /// <summary>
+        /// Indicates if the backup is paused
+        /// </summary>
+        public bool IsPaused { get; set; } = false;
+
+        /// <summary>
         /// The number of files to transfer
         /// </summary>
         public int TotalFilesToCopy { get; set; }
@@ -49,6 +54,11 @@ namespace EasySave.Models
         /// The size of the files to transfer
         /// </summary>
         public long TotalFilesSize { get; set; }
+
+        /// <summary>
+        /// List of files remaining to copy
+        /// </summary>
+        public List<string> RemainingFiles { get; set; } = new List<string>();
 
         /// <summary>
         /// The number of files left to transfer
