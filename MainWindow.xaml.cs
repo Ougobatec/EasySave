@@ -20,7 +20,7 @@ namespace EasySave
         private ServerManager EasySaveServer = new ServerManager();
         private Socket ServerSocket;
         private Socket ClientSocket;
-        public ModelConnection Connection { get; set; }
+        public ModelConnection ModelConnection { get; set; }
 
         public MainWindow()
         {
@@ -30,6 +30,7 @@ namespace EasySave
             DataContext = EasySaveServer.ModelConnection;
 
             EasySaveServer.ConnectionAccepted += OnConnectionAccepted;
+            EasySaveServer.ConnectionStatusChanged += OnConnectionStatusChanged;
         }
 
         public static MainWindow GetInstance()
@@ -70,7 +71,7 @@ namespace EasySave
 
         private async void ToggleButton_Server_Checked(object sender, RoutedEventArgs e)
         {
-            ServerSocket = EasySaveServer.StartSocketServer(12345);
+            ServerSocket = EasySaveServer.StartSocketServer();
             await EasySaveServer.AcceptConnectionAsync(ServerSocket);
         }
 
@@ -94,6 +95,14 @@ namespace EasySave
                 {
                     EasySaveServer.StopSocketServer(clientSocket);
                 }
+            });
+        }
+
+        private void OnConnectionStatusChanged(object sender, string status)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                EasySaveServer.ModelConnection.ConnectionStatus = status;
             });
         }
     }
