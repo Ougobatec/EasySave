@@ -125,7 +125,7 @@ namespace EasySave
                 string jsonConfig = JsonSerializer.Serialize(configContent); // Convertir en chaîne JSON
 
                 SendMessageToAllClients(jsonConfig); // Envoyer la chaîne JSON à tous les clients
-                return "Config file sent.";
+                return "";
                 
             }
             catch (Exception ex)
