@@ -168,7 +168,7 @@ namespace EasySave.Views
                         }
                     }
                     DisplayBackupJobs();
-                    BackupJobsListView.Items.Refresh();
+                    //BackupJobsListView.Items.Refresh();
                 }
             }
             catch (Exception ex)
