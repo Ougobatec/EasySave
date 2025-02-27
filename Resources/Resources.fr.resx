@@ -171,7 +171,7 @@
   <data name="MessageTitle_Success" xml:space="preserve">
     <value>Succès</value>
   </data>
-  <data name="Message_BusinessSoftware" xml:space="preserve">
+  <data name="Message_BusinessSoftwareRunning" xml:space="preserve">
     <value>Un logiciel métier est en cours d'exécution. Veuillez le fermer avant de lancer une sauvegarde.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
@@ -252,9 +252,6 @@
   <data name="Message_JobNotFound" xml:space="preserve">
     <value>La sauvegarde '{0}' n'a pas été trouvée.</value>
   </data>
-  <data name="Message_AlreadyActive" xml:space="preserve">
-    <value>La sauvegarde '{0}' est déjà active.</value>
-  </data>
   <data name="Message_NotEnoughSpace" xml:space="preserve">
     <value>Vous n'avez pas assez d'espace sur le disque</value>
   </data>
@@ -275,5 +272,8 @@
   </data>
   <data name="Title_BrowseTarget" xml:space="preserve">
     <value>Sélectionnez le répertoire cible</value>
+  </data>
+  <data name="Message_Running" xml:space="preserve">
+    <value>La sauvegarde '{0}' est active.</value>
   </data>
 </root>

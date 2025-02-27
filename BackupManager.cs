@@ -1,15 +1,13 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Resources;
 using CryptoSoft;
 using EasySave.Enumerations;
 using EasySave.Models;
 using Logger;
-using Microsoft.VisualBasic;
 
 namespace EasySave
 {
@@ -39,8 +37,8 @@ namespace EasySave
         {
             JsonConfig = JsonManager.LoadJson(ConfigFilePath, new ModelConfig());           // Load config file
             JsonState = JsonManager.LoadJson(StateFilePath, new List<ModelState>());        // Load state file
-            SetCulture(JsonConfig.Language);                                                // Set culture
             Logger<ModelLog>.GetInstance().Settings(JsonConfig.LogFormat, LogDirectory);    // Set logger settings
+            SetCulture(JsonConfig.Language);                                                // Set culture
         }
 
         /// <summary>
@@ -95,6 +93,10 @@ namespace EasySave
             {
                 throw new Exception("Message_JobNotFound");                                                                                 // Throw an exception if the job is not found
             }
+            if (modelJob.State.State == "ACTIVE")
+            {
+                throw new Exception("Message_Running");                                                                                     // Throw an exception if the job is running
+            }
             if (JsonConfig.BackupJobs.Any(j => j.Name.Equals(newJob.Name, StringComparison.OrdinalIgnoreCase) && j.Name != job.Name))
             {
                 throw new Exception("Message_NameExists");                                                                                  // Throw an exception if the job name already exists
@@ -131,52 +133,6 @@ namespace EasySave
         }
 
         /// <summary>
-        /// Execute an existing backup job and update its state
-        /// <param name="job">The backup job to execute</param>
-        /// </summary>
-        public async Task ExecuteBackupJobAsync(ModelJob job)
-        {
-            if (runningBackups.ContainsKey(job.Name))
-            {
-                throw new Exception("Message_AlreadyRunning");                                                                                              // Throw an exception if the job is already running
-            }
-
-            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);                                                             // Get the backup job by name
-
-            if (modelJob == null)
-            {
-                throw new Exception("Message_JobNotFound");                                                                                                 // Throw an exception if the job is not found
-            }
-            if (modelJob.State.State == "ACTIVE")
-            {
-                throw new Exception("Message_AlreadyActive");                                                                                               // Throw an exception if the job is already active
-            }
-            if (!Directory.Exists(modelJob.SourceDirectory))
-            {
-                throw new Exception("Message_DirectoryNotFound");                                                                                           // Throw an exception if the source directory does not exist
-            }
-
-            long backupSize = Directory.EnumerateFiles(modelJob.SourceDirectory, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);  // Get the backup size
-            DriveInfo drive = new(Path.GetPathRoot(modelJob.TargetDirectory) ?? string.Empty);                                                              // Get disk info from the target directory
-            if (drive.AvailableFreeSpace < backupSize)
-            {
-                throw new Exception("Message_NotEnoughSpace");                                                                                              // Throw an exception if there is not enough space on the disk
-            }
-
-            var backupTask = CopyDirectoryAsync(modelJob);                                                                                                  // Start the backup process
-            runningBackups[job.Name] = backupTask;                                                                                                          // Add the backup task to the running backups
-
-            try
-            {
-                await backupTask;                                                                                                                           // Await the backup task
-            }
-            finally
-            {
-                runningBackups.TryRemove(job.Name, out _);                                                                                                  // Remove the backup task from the running backups
-            }
-        }
-
-        /// <summary>
         /// Delete an existing backup job from the config and state files
         /// <param name="job">The backup job to delete</param>
         /// </summary>
@@ -189,6 +145,11 @@ namespace EasySave
             {
                 throw new Exception("Message_JobNotFound");                                     // Throw an exception if the job is not found
             }
+            if (modelJob.State.State == "ACTIVE")
+            {
+                throw new Exception("Message_Running");                                         // Throw an exception if the job is running
+            }
+
             JsonConfig.BackupJobs.Remove(modelJob);                                             // Remove the backup job
 
             if (modelState != null)
@@ -209,6 +170,47 @@ namespace EasySave
             }
 
             await Task.WhenAll(saveConfigTask, saveStateTask);                                  // Wait for the tasks to complete
+        }
+
+        /// <summary>
+        /// Execute an existing backup job and update its state
+        /// <param name="job">The backup job to execute</param>
+        /// </summary>
+        public async Task ExecuteBackupJobAsync(ModelJob job)
+        {
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);                                                             // Get the backup job by name
+
+            if (modelJob == null)
+            {
+                throw new Exception("Message_JobNotFound");                                                                                                 // Throw an exception if the job is not found
+            }
+            if (modelJob.State.State == "ACTIVE")
+            {
+                throw new Exception("Message_Running");                                                                                                     // Throw an exception if the job is running
+            }
+            if (!Directory.Exists(modelJob.SourceDirectory))
+            {
+                throw new Exception("Message_DirectoryNotFound");                                                                                           // Throw an exception if the source directory does not exist
+            }
+
+            long backupSize = Directory.EnumerateFiles(modelJob.SourceDirectory, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);  // Get the backup size
+            DriveInfo drive = new(Path.GetPathRoot(modelJob.TargetDirectory) ?? string.Empty);                                                              // Get disk info from the target directory
+            if (drive.AvailableFreeSpace < backupSize)
+            {
+                throw new Exception("Message_NotEnoughSpace");                                                                                              // Throw an exception if there is not enough space on the disk
+            }
+
+            var backupTask = Task.Run(() => CopyDirectoryAsync(modelJob));                                                                                                  // Start the backup process
+            runningBackups[job.Name] = backupTask;                                                                                                          // Add the backup task to the running backups
+
+            try
+            {
+                await backupTask;                                                                                                                           // Await the backup task
+            }
+            finally
+            {
+                runningBackups.TryRemove(job.Name, out _);                                                                                                  // Remove the backup task from the running backups
+            }
         }
 
         /// <summary>
@@ -348,6 +350,11 @@ namespace EasySave
 
             while (modelJob.State.RemainingFiles.Count > 0)
             {
+                if (Process.GetProcesses().Any(p => BackupManager.GetInstance().JsonConfig.BusinessSoftwares.Contains(p.ProcessName)))
+                {
+                    await UpdateStateAsync(modelJob, modelJob.State.SourceFilePath, modelJob.State.TargetFilePath, "PAUSED", true, modelJob.State.TotalFilesToCopy, modelJob.State.TotalFilesSize, modelJob.State.RemainingFiles);
+                    throw new Exception("Message_BusinessSoftwareRunning");
+                }
                 if (modelJob.State.IsPaused)
                 {
                     break;
@@ -394,25 +401,28 @@ namespace EasySave
                 modelJob.State.RemainingFiles.RemoveAt(0);
             }
 
-            var results = await Task.WhenAll(copyTasks);
-            totalEncryptionTime += new TimeSpan(results.Sum(r => r.Ticks));
-
-            var backupEndTime = DateTime.Now;
-            var totalBackupTime = backupEndTime - backupStartTime;
-
-            await semaphoreSlim.WaitAsync();
-            try
-            {
-                await Logger<ModelLog>.GetInstance().Log(new ModelLog(modelJob.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
-            }
-            finally
-            {
-                semaphoreSlim.Release();
-            }
-
             if (!modelJob.State.IsPaused)
             {
+                var results = await Task.WhenAll(copyTasks);
+                totalEncryptionTime += new TimeSpan(results.Sum(r => r.Ticks));
+
+                var backupEndTime = DateTime.Now;
+                var totalBackupTime = backupEndTime - backupStartTime;
+
+                await semaphoreSlim.WaitAsync();
+                try
+                {
+                    await Logger<ModelLog>.GetInstance().Log(new ModelLog(modelJob.Name, sourceDir, saveDestDir, totalFilesSize, totalEncryptionTime, totalBackupTime));
+                }
+                finally
+                {
+                    semaphoreSlim.Release();
+                }
                 await UpdateStateAsync(modelJob, "", "", "END", false, 0, 0, new List<string>());
+            }
+            else
+            {
+                throw new Exception("Message_Paused");
             }
         }
 
@@ -430,6 +440,11 @@ namespace EasySave
 
             var fileLock = fileLocks.GetOrAdd(destination, _ => new SemaphoreSlim(1, 1));                                                                   // Get the file lock
             await fileLock.WaitAsync();                                                                                                                     // Wait for the file lock
+
+            while (IsFileLocked(source))
+            {
+                await Task.Delay(100); // Attendre 100 ms avant de réessayer
+            }
 
             try
             {
@@ -479,6 +494,20 @@ namespace EasySave
             return encryptionTime;
         }
 
+        private static bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using FileStream stream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+                stream.Close();
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Update the state of a backup job and save it to JsonState and JsonConfig
         /// <param name="job">The backup job to update</param>
@@ -491,38 +520,38 @@ namespace EasySave
         /// </summary>
         private async Task UpdateStateAsync(ModelJob job, string source, string target, string state, bool isPaused, int totalFilesToCopy, long totalFilesSize, List<string> remainingFiles)
         {
-            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);
+            ModelJob? modelJob = JsonConfig.BackupJobs.FirstOrDefault(j => j.Name == job.Name);                                                             // Get the backup job by name
+            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                                     // Get the job state by name
 
-            modelJob.State.SourceFilePath = source;                                                                                                          // Update the job state source file path
-            modelJob.State.TargetFilePath = target;                                                                                                          // Update the job state target file path
-            modelJob.State.State = state;                                                                                                                    // Update the job state state value
-            modelJob.State.IsPaused = isPaused;                                                                                                              // Update the job state is paused
-            modelJob.State.TotalFilesToCopy = totalFilesToCopy;                                                                                              // Update the job state total files to copy
-            modelJob.State.TotalFilesSize = totalFilesSize;                                                                                                  // Update the job state total files size
-            modelJob.State.RemainingFiles = remainingFiles;                                                                                                  // Update the job state remaining files
-            modelJob.State.NbFilesLeftToDo = remainingFiles.Count();                                                                                         // Update the job state number of files left to do
-            modelJob.State.Progression = totalFilesToCopy == 0 ? 0 : (int)((double)(totalFilesToCopy - remainingFiles.Count()) / totalFilesToCopy * 100);    // Update the job state progression
+            modelJob.State.SourceFilePath = source;                                                                                                         // Update the job state source file path
+            modelJob.State.TargetFilePath = target;                                                                                                         // Update the job state target file path
+            modelJob.State.State = state;                                                                                                                   // Update the job state state value
+            modelJob.State.IsPaused = isPaused;                                                                                                             // Update the job state is paused
+            modelJob.State.TotalFilesToCopy = totalFilesToCopy;                                                                                             // Update the job state total files to copy
+            modelJob.State.TotalFilesSize = totalFilesSize;                                                                                                 // Update the job state total files size
+            modelJob.State.RemainingFiles = remainingFiles;                                                                                                 // Update the job state remaining files
+            modelJob.State.NbFilesLeftToDo = remainingFiles.Count();                                                                                        // Update the job state number of files left to do
+            modelJob.State.Progression = totalFilesToCopy == 0 ? 0 : (int)((double)(totalFilesToCopy - remainingFiles.Count()) / totalFilesToCopy * 100);   // Update the job state progression
 
-            ModelState? modelState = JsonState.FirstOrDefault(s => s.Name == job.Name);                                                                 // Get the job state by name
             if (modelState != null)
             {
-                JsonState.Remove(modelState);                                                                                                           // Remove the job state
+                JsonState.Remove(modelState);                                                                                                               // Remove the job state
             }
-            JsonState.Add(modelJob.State);                                                                                                                   // Add the job state
+            JsonState.Add(modelJob.State);                                                                                                                  // Add the job state
 
-            Task saveStateTask;                                                                                                                         // Save the state file task
-            Task saveConfigTask;                                                                                                                        // Save the config file task
+            Task saveStateTask;                                                                                                                             // Save the state file task
+            Task saveConfigTask;                                                                                                                            // Save the config file task
 
             lock (stateLock)
             {
-                saveStateTask = JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                                    // Save the state file
+                saveStateTask = JsonManager.SaveJsonAsync(JsonState, StateFilePath);                                                                        // Save the state file
             }
             lock (configLock)
             {
-                saveConfigTask = JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                                 // Save the config file
+                saveConfigTask = JsonManager.SaveJsonAsync(JsonConfig, ConfigFilePath);                                                                     // Save the config file
             }
 
-            await Task.WhenAll(saveStateTask, saveConfigTask);                                                                                          // Wait for the tasks to complete
+            await Task.WhenAll(saveStateTask, saveConfigTask);                                                                                              // Wait for the tasks to complete
         }
 
         /// <summary>
