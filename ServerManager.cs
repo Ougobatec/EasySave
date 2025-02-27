@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using EasySave.Models;
@@ -120,9 +121,12 @@ namespace EasySave
         {
             try
             {
-                string configContent = await File.ReadAllTextAsync(ConfigFilePath);
-                SendMessageToAllClients(configContent);
+                ModelConfig configContent = JsonManager.LoadJson(ConfigFilePath, new ModelConfig()); // Charger le fichier de configuration
+                string jsonConfig = JsonSerializer.Serialize(configContent); // Convertir en chaîne JSON
+
+                SendMessageToAllClients(jsonConfig); // Envoyer la chaîne JSON à tous les clients
                 return "Config file sent.";
+                
             }
             catch (Exception ex)
             {
