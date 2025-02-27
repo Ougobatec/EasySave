@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EasySave.Enumerations;
 using EasySave.Models;
 
 namespace EasySave
@@ -110,7 +111,7 @@ namespace EasySave
                 case "GET_CONFIG":
                     return await SendConfigFileAsync();
                 case "STATUS":
-                    return BackupManager.JsonState.Any(s => s.State == "ACTIVE") ? "Backup is running." : "Backup is not running.";
+                    return BackupManager.JsonState.Any(s => s.State == BackupStates.ACTIVE) ? "Backup is running." : "Backup is not running.";
                 default:
                     return "Unknown command.";
             }
@@ -145,7 +146,7 @@ namespace EasySave
                 return $"No backup job found with name {jobName}.";
             }
 
-            if (modelJob.State.State == "ACTIVE")
+            if (modelJob.State.State == BackupStates.ACTIVE)
             {
                 return "A backup is already running.";
             }
@@ -156,14 +157,14 @@ namespace EasySave
 
         private string StopBackup()
         {
-            var activeJob = BackupManager.JsonState.FirstOrDefault(s => s.State == "ACTIVE");
+            var activeJob = BackupManager.JsonState.FirstOrDefault(s => s.State == BackupStates.ACTIVE);
             if (activeJob == null)
             {
                 return "No active backup to stop.";
             }
 
             // Logic to stop the backup process
-            activeJob.State = "STOPPED";
+            activeJob.State = BackupStates.READY;
             return "Backup stopped.";
         }
 

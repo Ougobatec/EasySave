@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Security.RightsManagement;
+using EasySave.Enumerations;
 
 namespace EasySave.Models
 {
@@ -24,10 +25,15 @@ namespace EasySave.Models
         public string TargetFilePath { get; set; } = string.Empty;
 
         /// <summary>
+        /// The last directory where the backup was saved
+        /// </summary>
+        public string LastSaveDirectory { get; set; } = string.Empty;
+
+        /// <summary>
         /// The state of the backup
         /// </summary>
-        private string _state = "IDLE";
-        public string State
+        private BackupStates _state = BackupStates.READY;
+        public BackupStates State
         {
             get { return _state; }
             set
@@ -41,11 +47,6 @@ namespace EasySave.Models
         }
 
         /// <summary>
-        /// Indicates if the backup is paused
-        /// </summary>
-        public bool IsPaused { get; set; } = false;
-
-        /// <summary>
         /// The number of files to transfer
         /// </summary>
         public int TotalFilesToCopy { get; set; }
@@ -56,14 +57,14 @@ namespace EasySave.Models
         public long TotalFilesSize { get; set; }
 
         /// <summary>
-        /// List of files remaining to copy
-        /// </summary>
-        public List<string> RemainingFiles { get; set; } = new List<string>();
-
-        /// <summary>
         /// The number of files left to transfer
         /// </summary>
         public int NbFilesLeftToDo { get; set; }
+
+        /// <summary>
+        /// List of files remaining to copy
+        /// </summary>
+        public List<string> RemainingFiles { get; set; } = new List<string>();
 
         /// <summary>
         /// The progression of the backup

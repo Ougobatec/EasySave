@@ -177,7 +177,7 @@ namespace EasySave.Views
             {
                 try
                 {
-                    await BackupManager.ResumeBackupJobAsync(job);
+                    await BackupManager.ExecuteBackupJobAsync(job);
                 }
                 catch (Exception ex)
                 {
@@ -190,6 +190,24 @@ namespace EasySave.Views
         /// Button Pause click event
         /// </summary>
         private async void Button_Pause_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ModelJob job)
+            {
+                try
+                {
+                    await BackupManager.PauseBackupJobAsync(job);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Button Stop click event
+        /// </summary>
+        private async void Button_Stop_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is ModelJob job)
             {

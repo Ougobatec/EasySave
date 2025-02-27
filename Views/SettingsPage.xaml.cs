@@ -307,9 +307,9 @@ namespace EasySave.Views
 
             foreach (ModelJob job in BackupJobs)
             {
-                if (Directory.Exists(job.TargetDirectory)) // Verify if the folder exist
+                if (Directory.Exists(job.SourceDirectory)) // Verify if the folder exist
                 {
-                    foreach (string file in Directory.GetFiles(job.TargetDirectory, "*.*", SearchOption.AllDirectories))
+                    foreach (string file in Directory.GetFiles(job.SourceDirectory, "*.*", SearchOption.AllDirectories))
                     {
                         string extension = Path.GetExtension(file).ToLower();
                         if (!string.IsNullOrEmpty(extension))
