@@ -14,7 +14,7 @@
         <Grid Margin="0,60,0,0">
             <DataGrid Margin="10,0,10,10" Name="LogsDataGrid" ItemsSource="{Binding LogEntries}" SizeChanged="LogsDataGrid_SizeChanged" AutoGenerateColumns="False" IsReadOnly="True" SelectionUnit="Cell" HorizontalScrollBarVisibility="Disabled">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="Header_Date" Header="Horodatage" Binding="{Binding Timestamp}">
+                    <DataGridTextColumn x:Name="Header_Date" Header="Date" Binding="{Binding Timestamp}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -22,7 +22,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_BackupName" Header="Nom sauvegarde" Binding="{Binding BackupName}">
+                    <DataGridTextColumn x:Name="Header_BackupName" Header="Backup name" Binding="{Binding BackupName}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -30,7 +30,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_SourceDirectory" Header="Emplacement source" Binding="{Binding Source}">
+                    <DataGridTextColumn x:Name="Header_SourceDirectory" Header="Source directory" Binding="{Binding Source}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -38,7 +38,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_TargetDirectory" Header="Emplacement cible" Binding="{Binding Destination}">
+                    <DataGridTextColumn x:Name="Header_TargetDirectory" Header="Target directory" Binding="{Binding Destination}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -46,7 +46,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_Size" Header="Taille" Binding="{Binding Size}">
+                    <DataGridTextColumn x:Name="Header_SizeKo" Header="Size (Ko)" Binding="{Binding Size}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -54,7 +54,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_EncryptionTime" Header="Temps de transfert" Binding="{Binding EncryptionTime}">
+                    <DataGridTextColumn x:Name="Header_EncryptionTime" Header="Encryption time" Binding="{Binding EncryptionTime}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>
@@ -62,7 +62,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn x:Name="Header_TransferTime" Header="Temps de transfert" Binding="{Binding TransferTime}">
+                    <DataGridTextColumn x:Name="Header_TransferTime" Header="Transfer time" Binding="{Binding TransferTime}">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="TextWrapping" Value="Wrap"/>

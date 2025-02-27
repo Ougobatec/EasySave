@@ -37,7 +37,7 @@ namespace EasySave.Views
             Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
             Header_SourceDirectory.Header = ResourceManager.GetString("Text_SourceDirectory");
             Header_TargetDirectory.Header = ResourceManager.GetString("Text_TargetDirectory");
-            Header_Size.Header = ResourceManager.GetString("Text_Size");
+            Header_SizeKo.Header = ResourceManager.GetString("Text_SizeKo");
             Header_EncryptionTime.Header = ResourceManager.GetString("Text_EncryptionTime");
             Header_TransferTime.Header = ResourceManager.GetString("Text_TransferTime");
             DisplayLogs();

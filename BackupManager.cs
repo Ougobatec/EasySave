@@ -439,7 +439,7 @@ namespace EasySave
                 encryptionTime = TimeSpan.FromMilliseconds(FileManager.GetInstance().TransformFile());                                                      // Encrypt the file
             }
 
-            await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, source, destination, fileInfo.Length, encryptionTime, transferTime));           // Log the file transfer
+            await Logger<ModelLog>.GetInstance().Log(new ModelLog(job.Name, source, destination, (fileInfo.Length/1024), encryptionTime, transferTime));           // Log the file transfer
             return encryptionTime;                                                                                                                          // Return the encryption time
         }
 

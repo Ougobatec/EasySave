@@ -47,7 +47,7 @@ namespace EasySave.Views
             Header_Date.Header = ResourceManager.GetString("Text_Date");
             Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
             Header_Type.Header = ResourceManager.GetString("Text_Type");
-            Header_Size.Header = ResourceManager.GetString("Text_Size");
+            Header_SizeMo.Header = ResourceManager.GetString("Text_SizeMo");
 
             if (Job != null)
             {
@@ -233,7 +233,7 @@ namespace EasySave.Views
                             // Get the date of creation of the file
                             DirectoryInfo dirInfo = new(dir);
 
-                            SavesEntries.Add(new ModelSave(folderName, type, size, dirInfo.CreationTime));
+                            SavesEntries.Add(new ModelSave(folderName, type, (size/1024/1024), dirInfo.CreationTime));
                         }
                     }
                 }

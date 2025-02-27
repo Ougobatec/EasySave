@@ -403,11 +403,20 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Size.
+        ///   Recherche une chaîne localisée semblable à Size (Ko).
         /// </summary>
-        internal static string Text_Size {
+        internal static string Text_SizeKo {
             get {
-                return ResourceManager.GetString("Text_Size", resourceCulture);
+                return ResourceManager.GetString("Text_SizeKo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Size (Mo).
+        /// </summary>
+        internal static string Text_SizeMo {
+            get {
+                return ResourceManager.GetString("Text_SizeMo", resourceCulture);
             }
         }
         
