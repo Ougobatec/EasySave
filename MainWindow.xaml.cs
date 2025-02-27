@@ -21,7 +21,9 @@ namespace EasySave
         private Socket ServerSocket;
         private Socket ClientSocket;
         public ModelConnection ModelConnection { get; set; }
-
+        /// <summary>
+        /// MainWindow constructor
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -32,13 +34,17 @@ namespace EasySave
             EasySaveServer.ConnectionAccepted += OnConnectionAccepted;
             EasySaveServer.ConnectionStatusChanged += OnConnectionStatusChanged;
         }
-
+        /// <summary>
+        /// Get the MainWindow instance or create it if it doesn't exist
+        /// </summary>
         public static MainWindow GetInstance()
         {
             MainWindow_Instance ??= new MainWindow();
             return MainWindow_Instance;
         }
-
+        /// <summary>
+        /// Refresh the MainWindow content
+        /// </summary>
         public void Refresh()
         {
             Button_Quit.Content = ResourceManager.GetString("Button_Quit");
@@ -46,22 +52,30 @@ namespace EasySave
             Button_Settings.Content = ResourceManager.GetString("Button_Settings");
             Button_Logs.Content = ResourceManager.GetString("Button_Logs");
         }
-
+        /// <summary>
+        /// Button Home click event
+        /// </summary>
         private void Button_Home_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new HomePage());
         }
-
+        /// <summary>
+        /// Button Settings click event
+        /// </summary>
         private void Button_Settings_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new SettingsPage());
         }
-
+        /// <summary>
+        /// Button Logs click event
+        /// </summary>
         private void Button_Logs_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.NavigationService.Navigate(new LogsPage());
         }
-
+        /// <summary>
+        /// Button Quit click event
+        /// </summary>
         private void Button_Quit_Click(object sender, RoutedEventArgs e)
         {
             EasySaveServer.StopSocketServer(ClientSocket);
