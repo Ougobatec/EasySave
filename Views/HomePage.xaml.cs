@@ -148,7 +148,7 @@ namespace EasySave.Views
                             }
                             else if (ex.Message.Contains("Message_Running"))
                             {
-                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                             }
                             else
                             {
@@ -201,7 +201,7 @@ namespace EasySave.Views
                     }
                     else if (ex.Message.Contains("Message_NotRunning"))
                     {
-                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_NotRunning"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_NotRunning"), job.Name), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                     else
                     {
@@ -230,7 +230,7 @@ namespace EasySave.Views
                     }
                     else if (ex.Message.Contains("Message_AlreadyStopped"))
                     {
-                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AlreadyStopped"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AlreadyStopped"), job.Name), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                     else
                     {
@@ -259,7 +259,7 @@ namespace EasySave.Views
                 }
                 else if (ex.Message.Contains("Message_Running"))
                 {
-                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 else if (ex.Message.Contains("Message_DirectoryNotFound"))
                 {
@@ -271,7 +271,7 @@ namespace EasySave.Views
                 }
                 else if (ex.Message.Contains("Message_Paused"))
                 {
-                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_Paused"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_Paused"), job.Name), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 else
                 {

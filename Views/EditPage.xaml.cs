@@ -94,7 +94,7 @@ namespace EasySave.Views
                     try
                     {
                         await BackupManager.AddBackupJobAsync(job);
-                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess") ?? "Success: {0}", job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_AddSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
 
                         // Réinitialiser les champs après ajout
                         Textbox_BackupName.Text = "";
@@ -110,7 +110,7 @@ namespace EasySave.Views
                         }
                         else
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "Error: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
@@ -119,7 +119,7 @@ namespace EasySave.Views
                     try
                     {
                         await BackupManager.UpdateBackupJobAsync(job, Job);
-                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess") ?? "Update Success: {0}", job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(string.Format(ResourceManager.GetString("Message_UpdateSuccess"), job.Name), ResourceManager.GetString("MessageTitle_Success"), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     catch (Exception ex)
                     {
@@ -129,11 +129,11 @@ namespace EasySave.Views
                         }
                         else if (ex.Message.Contains("Message_Running"))
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Attention"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
                         else if (ex.Message.Contains("Message_NameExists"))
                         {
-                            MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                            MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {
