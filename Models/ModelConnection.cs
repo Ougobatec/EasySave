@@ -11,29 +11,21 @@ namespace EasySave.Models
     /// </summary>
     public class ModelConnection : INotifyPropertyChanged
     {
-        
-        public Socket Client { get; set; }
+        /// <summary>
+        /// The server socket
+        /// </summary>
+        public Socket? Server { get; set; } = null;
 
         /// <summary>
-        /// The name of the connection
+        /// The client socket
         /// </summary>
-        public string ConnectionName { get; set; } = "EasySaveServer";
-
-        /// <summary>
-        /// The IP address of the connection
-        /// </summary>
-        public IPAddress ConnectionIp { get; set; } =  IPAddress.Any;
-
-        /// <summary>
-        /// The port of the connection
-        /// </summary>
-        public int ConnectionPort { get; set; } = 12345;
+        public Socket? Client { get; set; } = null;
 
         /// <summary>
         /// The status of the server
         /// </summary>
-        private string _serverStatus = "Server INACTIVE";
-        public string ServerStatus
+        private bool _serverStatus = false;
+        public bool ServerStatus
         {
             get { return _serverStatus; }
             set
@@ -49,16 +41,16 @@ namespace EasySave.Models
         /// <summary>
         /// The status of the connection
         /// </summary>
-        private string _connectionStatus = "Disconnected";
-        public string ConnectionStatus
+        private bool _clientStatus = false;
+        public bool ClientStatus
         {
-            get { return _connectionStatus ; }
+            get { return _clientStatus ; }
             set
             {
-                if (_connectionStatus != value)
+                if (_clientStatus != value)
                 {
-                    _connectionStatus = value;
-                    OnPropertyChanged(nameof(ConnectionStatus));
+                    _clientStatus = value;
+                    OnPropertyChanged(nameof(ClientStatus));
                 }
             }
         }

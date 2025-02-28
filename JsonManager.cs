@@ -8,7 +8,6 @@ namespace EasySave
     /// </summary>
     public class JsonManager
     {
-        private static ServerManager ServerManager => ServerManager.GetInstance();
         /// <summary>
         /// Load data from desired json file into desired object
         /// <param name="filePath">Json file path</param>
@@ -46,21 +45,18 @@ namespace EasySave
             string? directoryPath = Path.GetDirectoryName(filePath);
             if (!string.IsNullOrEmpty(directoryPath))
             {
-                Directory.CreateDirectory(directoryPath);                                                       // Create directory if not exists
+                Directory.CreateDirectory(directoryPath);                                                           // Create directory if not exists
             }
 
             while (IsFileLocked(filePath))
             {
-                Task.Delay(100).Wait();                                                                         // Attendre 100 ms avant de réessayer
+                Task.Delay(100).Wait();                                                                             // Attendre 100 ms avant de réessayer
             }
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      // Serialize object to json
-            await File.WriteAllTextAsync(filePath, json);    
-            // Write json to file
-            if (ServerManager.ModelConnection.Client.Connected)
-            {
-                await ServerManager.SendConfigFileAsync(ServerManager.GetInstance().ModelConnection.Client);
-            }                                                
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });          // Serialize object to json
+            await File.WriteAllTextAsync(filePath, json);                                                           // Write json to file
+
+            ServerManager.GetInstance().SendConfigAsync(ServerManager.GetInstance().Connection.Client);             // Send json to client
         }
 
         /// <summary>
@@ -71,14 +67,14 @@ namespace EasySave
         {
             try
             {
-                using FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
-                stream.Close();
+                using FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);     // Try to open file
+                stream.Close();                                                                                         // Close file
             }
             catch (IOException)
             {
-                return true;
+                return true;                                                                                            // Return true if file is locked
             }
-            return false;
+            return false;                                                                                               // Return false if file is not locked
         }
     }
 }

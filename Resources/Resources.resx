@@ -183,12 +183,6 @@
   <data name="MessageTitle_Confirmation" xml:space="preserve">
     <value>Confirmation</value>
   </data>
-  <data name="Message_Execute" xml:space="preserve">
-    <value>Are you sure you want to execute the selected backups?</value>
-  </data>
-  <data name="Message_Delete" xml:space="preserve">
-    <value>Are you sure you want to delete the selected backups?</value>
-  </data>
   <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
@@ -278,5 +272,11 @@
   </data>
   <data name="Text_SizeMo" xml:space="preserve">
     <value>Size (Mo)</value>
+  </data>
+  <data name="Button_Stop" xml:space="preserve">
+    <value>Stop server</value>
+  </data>
+  <data name="Button_Start" xml:space="preserve">
+    <value>Start server</value>
   </data>
 </root>

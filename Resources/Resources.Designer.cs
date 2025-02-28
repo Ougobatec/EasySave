@@ -133,6 +133,24 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Start server.
+        /// </summary>
+        internal static string Button_Start {
+            get {
+                return ResourceManager.GetString("Button_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Stop server.
+        /// </summary>
+        internal static string Button_Stop {
+            get {
+                return ResourceManager.GetString("Button_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Submit.
         /// </summary>
         internal static string Button_Submit {
@@ -178,15 +196,6 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Are you sure you want to delete the selected backups?.
-        /// </summary>
-        internal static string Message_Delete {
-            get {
-                return ResourceManager.GetString("Message_Delete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; deleted successfully..
         /// </summary>
         internal static string Message_DeleteSuccess {
@@ -201,15 +210,6 @@ namespace EasySave.Resources {
         internal static string Message_DirectoryNotFound {
             get {
                 return ResourceManager.GetString("Message_DirectoryNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Are you sure you want to execute the selected backups?.
-        /// </summary>
-        internal static string Message_Execute {
-            get {
-                return ResourceManager.GetString("Message_Execute", resourceCulture);
             }
         }
         

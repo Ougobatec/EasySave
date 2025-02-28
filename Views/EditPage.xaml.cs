@@ -193,18 +193,16 @@ namespace EasySave.Views
         /// <summary>
         /// Display all saves in the EditPage
         /// </summary>
-        private Task DisplaySaves()
+        private async Task DisplaySaves()
         {
-            return Task.Run(() =>
+            await Task.Run(() =>
             {
                 // Stock all saves in a list
-                SavesEntries = [];
-
-                ObservableCollection<string> SavesName = [];
+                var savesEntries = new ObservableCollection<ModelSave>();
 
                 if (Job != null && !Directory.Exists(Job.TargetDirectory))
                 {
-                    Directory.CreateDirectory(Job.TargetDirectory);                                              //create directory if it doesn't exist
+                    Directory.CreateDirectory(Job.TargetDirectory); // create directory if it doesn't exist
                 }
 
                 // Go through each folders in the backUpJob target directory
@@ -233,11 +231,23 @@ namespace EasySave.Views
                             // Get the date of creation of the file
                             DirectoryInfo dirInfo = new(dir);
 
-                            SavesEntries.Add(new ModelSave(folderName, type, (size/1024/1024), dirInfo.CreationTime));
+                            // Add the save entry to the list
+                            savesEntries.Add(new ModelSave(folderName, type, (size / 1024 / 1024), dirInfo.CreationTime));
                         }
                     }
                 }
+
+                // Update the ObservableCollection on the UI thread
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SavesEntries.Clear();
+                    foreach (var save in savesEntries)
+                    {
+                        SavesEntries.Add(save);
+                    }
+                });
             });
         }
+
     }
 }

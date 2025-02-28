@@ -1,220 +1,216 @@
-﻿using System.ComponentModel;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using EasySave.Enumerations;
 using EasySave.Models;
-using Logger;
 
 namespace EasySave
 {
+    /// <summary>
+    /// Server manager class to handle the server connection
+    /// </summary>
     public class ServerManager
     {
-        public ModelConnection ModelConnection = new ModelConnection();
-
+        public ModelConnection Connection = new ModelConnection();                          // Connection model instance
         private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
-        private CancellationTokenSource _cancellationTokenSource;
+        private static ServerManager? ServerManager_Instance;                               // Server manager instance
+        private CancellationTokenSource? cancellationTokenSource;                           // Cancellation token source
 
-        public event EventHandler<Socket> ConnectionAccepted;
-        public event EventHandler<string> ConnectionStatusChanged;
-        private Socket ServerSocket;
-        private static readonly string ConfigFilePath = "Config\\config.json";                                          // Config file path
-        private static ServerManager? ServerManager_Instance;
-        private string _command;
-
-        // Liste des clients connectés
-        private List<Socket> _connectedClients = new List<Socket>();
-
-        private ServerManager()
-        {
-        }
-
+        /// <summary>
+        /// Get the ServerManager instance or create it if it doesn't exist
+        /// </summary>
         public static ServerManager GetInstance()
         {
             ServerManager_Instance ??= new ServerManager();     // Create backup manager instance if not exists
             return ServerManager_Instance;                      // Return backup manager instance
         }
 
-        public Socket StartSocketServer()
+        /// <summary>
+        /// Start the server
+        /// </summary>
+        public async Task StartServer()
         {
             try
             {
-                ServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint endPoint = new IPEndPoint(ModelConnection.ConnectionIp, ModelConnection.ConnectionPort);
-                ServerSocket.Bind(endPoint);
-                ServerSocket.Listen(5);
-                ModelConnection.ServerStatus = "Server ACTIVE";
-                _cancellationTokenSource = new CancellationTokenSource();
-                return ServerSocket;
+                cancellationTokenSource = new CancellationTokenSource();                                            // Create a token source
+                Connection.ServerStatus = true;                                                                     // Set the server status to true
+                Connection.Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);    // Create a new server socket
+                Connection.Server.Bind(new IPEndPoint(IPAddress.Any, 5000));                                        // Bind the server socket to the IP address and port
+                Connection.Server.Listen(1);                                                                        // Listen for incoming connections
+
+                Connection.Client = await Task.Run(() => Connection.Server.Accept());                               // Accept the client connection
+                Connection.ClientStatus = true;                                                                     // Set the client status to true
+
+                SendConfigAsync(Connection.Client);                                                                 // Send the configuration file to the client
+
+                await HandleClientAsync(Connection.Client, cancellationTokenSource.Token);                          // Handle the client connection
             }
-            catch (SocketException)
+            finally
             {
-                ModelConnection.ServerStatus = "Server ERROR";
-                throw;
+                DisconnectClient(Connection.Client);                                                                // Set the client status to false
             }
         }
 
-        public async Task AcceptConnectionAsync(Socket serverSocket)
+        /// <summary>
+        /// Stop the server
+        /// </summary>
+        public void StopServer()
         {
-            while (!_cancellationTokenSource.Token.IsCancellationRequested)
+            Task.Run(() =>
             {
                 try
                 {
-                    ModelConnection.Client = await Task.Run(() => serverSocket.Accept(), _cancellationTokenSource.Token);
-                    _connectedClients.Add(ModelConnection.Client); // Ajouter le client à la liste
-                    ConnectionAccepted?.Invoke(this, ModelConnection.Client);
-                    ModelConnection.ConnectionStatus = "Connected";
-                    ConnectionStatusChanged?.Invoke(this, "Connected");
+                    cancellationTokenSource?.Cancel();                          // Cancel the token source
+
+                    if (Connection.Client != null)
+                    {
+                        DisconnectClient(Connection.Client);                    // Disconnect the client
+                    }
+
+                    if (Connection.Server != null)
+                    {
+                        Connection.Server.Close();                              // Close the server socket
+                        Connection.Server = null;                               // Set the server socket to null
+                    }
+
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        Connection.ServerStatus = false;                        // Set the server status to false
+                        Connection.ClientStatus = false;                        // Set the client status to false
+                    });
                 }
-                catch (OperationCanceledException)
+                catch (Exception ex)
                 {
-                    // L'acceptation a été annulée
-                    break;
+                    // Do nothing
                 }
-                catch (SocketException ex) when (ex.SocketErrorCode == SocketError.Interrupted)
-                {
-                    // Handle the specific case where the accept call was interrupted
-                    break;
-                }
+            });
+        }
+
+        /// <summary>
+        /// Send the configuration file to the client
+        /// </summary>
+        public async void SendConfigAsync(Socket socket)
+        {
+            if (Connection.ClientStatus)
+            {
+                ModelConfig configContent = BackupManager.JsonConfig;                   // Load the configuration file
+                string jsonConfig = JsonSerializer.Serialize(configContent);            // Convert to JSON string
+                byte[] data = Encoding.UTF8.GetBytes(jsonConfig);                       // Convert to byte array
+
+                await socket.SendAsync(data, SocketFlags.None);                         // Send the byte array to the client
             }
         }
 
-        public async Task ListenToClient()
+        /// <summary>
+        /// Handle the client connection
+        /// <param name="socket">The client socket</param>
+        /// </summary>
+        private async Task HandleClientAsync(Socket socket, CancellationToken cancellationToken)
         {
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[1024];                                                                         // Create a buffer to store the data
+
             try
             {
-                while (ModelConnection.Client.Connected)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    int receivedBytes = ModelConnection.Client.Receive(buffer);
-                    if (receivedBytes == 0) break;
+                    int receivedBytes = await socket.ReceiveAsync(buffer, SocketFlags.None, cancellationToken);     // Receive the data from the client
+                    if (receivedBytes == 0) break;                                                                  // Break the loop if no data is received
 
-                    string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
-                    Console.WriteLine("Client: " + message);
+                    string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);                             // Convert the byte array to a string
 
-                    string response = await HandleClientCommandAsync(message);
-                    byte[] responseBytes = Encoding.UTF8.GetBytes(response);
-                    ModelConnection.Client.Send(responseBytes);
+                    string[] parts = message.Split(' ', 2);                                                         // Split the message into parts
+                    if (parts.Length < 2)
+                    {
+                        continue;                                                                                   // Continue the loop if the message is invalid
+                    }
+
+                    string command = parts[0];                                                                      // Get the command
+                    string backupName = parts[1];                                                                   // Get the value
+
+                    switch (command.ToUpper())
+                    {
+                        case "EXECUTE":
+                            ExecuteBackup(backupName);                                                              // Execute the backup
+                            break;
+                        case "PAUSE":
+                            PauseBackup(backupName);                                                                // Pause the backup
+                            break;
+                        case "STOP":
+                            StopBackup(backupName);                                                                 // Stop the backup
+                            break;
+                        case "EXIT":
+                            DisconnectClient(socket);                                                               // Disconnect the client
+                            break;
+                        default:
+                            break;
+                    }
                 }
-                StopSocketServer(ModelConnection.Client);
             }
-            catch (SocketException)
+            finally
             {
-                Console.WriteLine("Connexion perdue avec le client.");
-                ModelConnection.ConnectionStatus = "Disconnected";
-                ConnectionStatusChanged?.Invoke(this, "Disconnected");
+                DisconnectClient(socket);                                                                           // Disconnect the client
             }
         }
 
-        private async Task<string> HandleClientCommandAsync(string command)
-        {
-            var commandParts = command.Split(' ');
-            var mainCommand = commandParts[0].ToUpper();
-            var jobName = commandParts.Length > 1 ? commandParts[1] : string.Empty;
-
-            switch (mainCommand)
-            {
-                case "EXECUTE_BACKUP":
-                    return StartBackup(jobName);
-                case "STOP_BACKUP":
-                    return StopBackup();
-                case "GET_CONFIG":
-                    return await SendConfigFileAsync(ModelConnection.Client);
-                case "STATUS":
-                    return BackupManager.JsonState.Any(s => s.State == BackupStates.ACTIVE) ? "Backup is running." : "Backup is not running.";
-                default:
-                    return "Unknown command.";
-            }
-        }
-
-        public async Task<string> SendConfigFileAsync(Socket client)
+        /// <summary>
+        /// Disconnect the client
+        /// <param name="socket">The client socket</param>
+        /// </summary>
+        private void DisconnectClient(Socket socket)
         {
             try
             {
-                ModelConfig configContent = JsonManager.LoadJson(ConfigFilePath, new ModelConfig()); // Charger le fichier de configuration
-                string jsonConfig = JsonSerializer.Serialize(configContent); // Convertir en chaîne JSON
-                //SendMessageToAllClients(jsonConfig); // Envoyer la chaîne JSON à tous les clients connectés
-                await SendCommandAsync(client, jsonConfig); // Envoyer la chaîne JSON au client
-                return "";
+                socket.Shutdown(SocketShutdown.Both);   // Shutdown the client socket
+                socket.Close();                         // Close the client socket
+
+                Connection.ClientStatus = false;        // Set the client status to false
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return $"Error sending config file: {ex.Message}";
+                // Do nothing
             }
         }
 
-        public async Task SendCommandAsync(Socket socket, string command)
+        /// <summary>
+        /// Execute the backup
+        /// <param name="backupName">The name of the backup</param>
+        /// </summary>
+        private void ExecuteBackup(string backupName)
         {
-            if (socket.Connected)
+            ModelJob? job = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
+            if (job == null)
             {
-                _command = command;
-                socket.Send(Encoding.UTF8.GetBytes(command));
+                return;
             }
-            
+            Task.Run(async () => await BackupManager.ExecuteBackupJobAsync(job));
         }
 
-        private string StartBackup(string jobName)
+        /// <summary>
+        /// Pause the backup
+        /// <param name="backupName">The name of the backup</param>
+        /// </summary>
+        private void PauseBackup(string backupName)
         {
-            ModelJob? modelJob = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(jobName, StringComparison.OrdinalIgnoreCase));
-            if (modelJob == null)
+            ModelJob? job = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
+            if (job == null)
             {
-                return $"No backup job found with name {jobName}.";
+                return;
             }
-
-            if (modelJob.State.State == BackupStates.ACTIVE)
-            {
-                return "A backup is already running.";
-            }
-
-            Task.Run(async () => await BackupManager.ExecuteBackupJobAsync(modelJob));
-            return $"Backup job '{jobName}' started.";
+            Task.Run(async () => await BackupManager.PauseBackupJobAsync(job));
         }
 
-        private string StopBackup()
+        /// <summary>
+        /// Stop the backup
+        /// <param name="backupName">The name of the backup</param>
+        /// </summary>
+        private void StopBackup(string backupName)
         {
-            var activeJob = BackupManager.JsonState.FirstOrDefault(s => s.State == BackupStates.ACTIVE);
-            if (activeJob == null)
+            ModelJob? job = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
+            if (job == null)
             {
-                return "No active backup to stop.";
+                return;
             }
-
-            // Logic to stop the backup process
-            activeJob.State = BackupStates.READY;
-            return "Backup stopped.";
-        }
-
-        public void StopSocketServer(Socket socket)
-        {
-            if (socket != null)
-            {
-                _cancellationTokenSource?.Cancel();
-                if (socket.Connected)
-                {
-                    socket.Shutdown(SocketShutdown.Both);
-                }
-                socket.Close();
-                _connectedClients.Remove(socket); // Retirer le client de la liste
-            }
-            ModelConnection.ServerStatus = "Server INACTIVE";
-            ModelConnection.ConnectionStatus = "Disconnected";
-            ConnectionStatusChanged?.Invoke(this, "Disconnected");
-        }
-
-        // Méthode pour envoyer des messages à tous les clients connectés
-        public void SendMessageToAllClients(string message)
-        {
-            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
-            foreach (var client in _connectedClients)
-            {
-                if (client.Connected)
-                {
-                    client.Send(messageBytes);
-                }
-            }
+            Task.Run(async () => await BackupManager.StopBackupJobAsync(job));
         }
     }
 }
