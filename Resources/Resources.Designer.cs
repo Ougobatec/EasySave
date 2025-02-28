@@ -61,344 +61,533 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à A backup job with the same name already exists!.
+        ///   Recherche une chaîne localisée semblable à Add.
         /// </summary>
-        internal static string Error_DuplicateBackupJob {
+        internal static string Add_BusinessSoftware {
             get {
-                return ResourceManager.GetString("Error_DuplicateBackupJob", resourceCulture);
+                return ResourceManager.GetString("Add_BusinessSoftware", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à This field cannot be empty!.
+        ///   Recherche une chaîne localisée semblable à Create backup.
         /// </summary>
-        internal static string Error_Empty {
+        internal static string Button_Create {
             get {
-                return ResourceManager.GetString("Error_Empty", resourceCulture);
+                return ResourceManager.GetString("Button_Create", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Invalid type!.
+        ///   Recherche une chaîne localisée semblable à Delete backups.
         /// </summary>
-        internal static string Error_InvalidBackupType {
+        internal static string Button_Delete {
             get {
-                return ResourceManager.GetString("Error_InvalidBackupType", resourceCulture);
+                return ResourceManager.GetString("Button_Delete", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Invalid index: {0}.
+        ///   Recherche une chaîne localisée semblable à Execute backups.
         /// </summary>
-        internal static string Error_InvalidIndex {
+        internal static string Button_Execute {
             get {
-                return ResourceManager.GetString("Error_InvalidIndex", resourceCulture);
+                return ResourceManager.GetString("Button_Execute", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Invalid option!.
+        ///   Recherche une chaîne localisée semblable à Home.
         /// </summary>
-        internal static string Error_InvalidOption {
+        internal static string Button_Home {
             get {
-                return ResourceManager.GetString("Error_InvalidOption", resourceCulture);
+                return ResourceManager.GetString("Button_Home", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Cannot add more than 5 backup jobs!.
+        ///   Recherche une chaîne localisée semblable à Logs.
         /// </summary>
-        internal static string Error_MaxBackupJobs {
+        internal static string Button_Logs {
             get {
-                return ResourceManager.GetString("Error_MaxBackupJobs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Source directory not found for &apos;{0}&apos;: {1}.
-        /// </summary>
-        internal static string Error_SourceDirectoryNotFound {
-            get {
-                return ResourceManager.GetString("Error_SourceDirectoryNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Add a backup Job.
-        /// </summary>
-        internal static string Menu_AddBackupJob {
-            get {
-                return ResourceManager.GetString("Menu_AddBackupJob", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Change language.
-        /// </summary>
-        internal static string Menu_ChangeLanguage {
-            get {
-                return ResourceManager.GetString("Menu_ChangeLanguage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Change log format.
-        /// </summary>
-        internal static string Menu_ChangeLogFormat {
-            get {
-                return ResourceManager.GetString("Menu_ChangeLogFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Change settings.
-        /// </summary>
-        internal static string Menu_ChangeSettings {
-            get {
-                return ResourceManager.GetString("Menu_ChangeSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Delete a backup job.
-        /// </summary>
-        internal static string Menu_DeleteBackupJob {
-            get {
-                return ResourceManager.GetString("Menu_DeleteBackupJob", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à Execute a backup.
-        /// </summary>
-        internal static string Menu_ExecuteBackups {
-            get {
-                return ResourceManager.GetString("Menu_ExecuteBackups", resourceCulture);
+                return ResourceManager.GetString("Button_Logs", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Quit.
         /// </summary>
-        internal static string Menu_Quit {
+        internal static string Button_Quit {
             get {
-                return ResourceManager.GetString("Menu_Quit", resourceCulture);
+                return ResourceManager.GetString("Button_Quit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Save and return to menu.
+        ///   Recherche une chaîne localisée semblable à Settings.
         /// </summary>
-        internal static string Menu_SaveAndReturn {
+        internal static string Button_Settings {
             get {
-                return ResourceManager.GetString("Menu_SaveAndReturn", resourceCulture);
+                return ResourceManager.GetString("Button_Settings", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Update a backup job.
+        ///   Recherche une chaîne localisée semblable à Start server.
         /// </summary>
-        internal static string Menu_UpdateBackupJob {
+        internal static string Button_Start {
             get {
-                return ResourceManager.GetString("Menu_UpdateBackupJob", resourceCulture);
+                return ResourceManager.GetString("Button_Start", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Backup job &apos;{0}&apos; added..
+        ///   Recherche une chaîne localisée semblable à Stop server.
         /// </summary>
-        internal static string Message_BackupJobAdded {
+        internal static string Button_Stop {
             get {
-                return ResourceManager.GetString("Message_BackupJobAdded", resourceCulture);
+                return ResourceManager.GetString("Button_Stop", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Backup job &apos;{0}&apos; deleted..
+        ///   Recherche une chaîne localisée semblable à Submit.
         /// </summary>
-        internal static string Message_BackupJobDeleted {
+        internal static string Button_Submit {
             get {
-                return ResourceManager.GetString("Message_BackupJobDeleted", resourceCulture);
+                return ResourceManager.GetString("Button_Submit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à {0}: Name: {1}, Source: {2}, Target: {3}, Type: {4}..
+        ///   Recherche une chaîne localisée semblable à Error : &apos;{0}&apos;.
         /// </summary>
-        internal static string Message_BackupJobDetails {
+        internal static string Error {
             get {
-                return ResourceManager.GetString("Message_BackupJobDetails", resourceCulture);
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Backup job &apos;{0}&apos; executed..
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; added successfully..
         /// </summary>
-        internal static string Message_BackupJobExecuted {
+        internal static string Message_AddSuccess {
             get {
-                return ResourceManager.GetString("Message_BackupJobExecuted", resourceCulture);
+                return ResourceManager.GetString("Message_AddSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Backup job &apos;{0}&apos; updated..
+        ///   Recherche une chaîne localisée semblable à The business software is already in the list..
         /// </summary>
-        internal static string Message_BackupJobUpdated {
+        internal static string Message_AlreadyInListBusinessSoftware {
             get {
-                return ResourceManager.GetString("Message_BackupJobUpdated", resourceCulture);
+                return ResourceManager.GetString("Message_AlreadyInListBusinessSoftware", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Language set to &apos;{0}&apos;..
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is already stopped..
         /// </summary>
-        internal static string Message_LanguageSet {
+        internal static string Message_AlreadyStopped {
             get {
-                return ResourceManager.GetString("Message_LanguageSet", resourceCulture);
+                return ResourceManager.GetString("Message_AlreadyStopped", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Log format set to &apos;{0}&apos;..
+        ///   Recherche une chaîne localisée semblable à Business software is running. Please close it before starting a backup..
         /// </summary>
-        internal static string Message_LogFormatSet {
+        internal static string Message_BusinessSoftwareRunning {
             get {
-                return ResourceManager.GetString("Message_LogFormatSet", resourceCulture);
+                return ResourceManager.GetString("Message_BusinessSoftwareRunning", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Press ENTER to continue -----.
+        ///   Recherche une chaîne localisée semblable à Are you sure you want to delete the selected backups?.
         /// </summary>
-        internal static string Message_PressEnterToContinue {
+        internal static string Message_Delete {
             get {
-                return ResourceManager.GetString("Message_PressEnterToContinue", resourceCulture);
+                return ResourceManager.GetString("Message_Delete", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Settings saved..
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; deleted successfully..
         /// </summary>
-        internal static string Message_SettingsSaved {
+        internal static string Message_DeleteSuccess {
             get {
-                return ResourceManager.GetString("Message_SettingsSaved", resourceCulture);
+                return ResourceManager.GetString("Message_DeleteSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Type (Full/Differential): .
+        ///   Recherche une chaîne localisée semblable à Directory not found for backup &apos;{0}&apos;..
         /// </summary>
-        internal static string Prompt_BackupType {
+        internal static string Message_DirectoryNotFound {
             get {
-                return ResourceManager.GetString("Prompt_BackupType", resourceCulture);
+                return ResourceManager.GetString("Message_DirectoryNotFound", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Choose language (en/fr): .
+        ///   Recherche une chaîne localisée semblable à Are you sure you want to execute the selected backups?.
         /// </summary>
-        internal static string Prompt_ChooseLanguage {
+        internal static string Message_Execute {
             get {
-                return ResourceManager.GetString("Prompt_ChooseLanguage", resourceCulture);
+                return ResourceManager.GetString("Message_Execute", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Choose log format (json/xml): .
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; completed successfully..
         /// </summary>
-        internal static string Prompt_ChooseLogFormat {
+        internal static string Message_ExecuteSuccess {
             get {
-                return ResourceManager.GetString("Prompt_ChooseLogFormat", resourceCulture);
+                return ResourceManager.GetString("Message_ExecuteSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Choose an option: .
+        ///   Recherche une chaîne localisée semblable à Please fill in all fields..
         /// </summary>
-        internal static string Prompt_ChooseOption {
+        internal static string Message_Fill {
             get {
-                return ResourceManager.GetString("Prompt_ChooseOption", resourceCulture);
+                return ResourceManager.GetString("Message_Fill", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Backup Name: .
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; not found..
         /// </summary>
-        internal static string Prompt_JobName {
+        internal static string Message_JobNotFound {
             get {
-                return ResourceManager.GetString("Prompt_JobName", resourceCulture);
+                return ResourceManager.GetString("Message_JobNotFound", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Source directory: .
+        ///   Recherche une chaîne localisée semblable à A backup already has this name..
         /// </summary>
-        internal static string Prompt_SourceDirectory {
+        internal static string Message_NameExists {
             get {
-                return ResourceManager.GetString("Prompt_SourceDirectory", resourceCulture);
+                return ResourceManager.GetString("Message_NameExists", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Target directory: .
+        ///   Recherche une chaîne localisée semblable à You don&apos;t have enough space on the disk.
         /// </summary>
-        internal static string Prompt_TargetDirectory {
+        internal static string Message_NotEnoughSpace {
             get {
-                return ResourceManager.GetString("Prompt_TargetDirectory", resourceCulture);
+                return ResourceManager.GetString("Message_NotEnoughSpace", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Choose backups to execute (e.g., 1,2,3 or 1-3 or all) -----.
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is not running..
         /// </summary>
-        internal static string Title_ChooseBackupJobsToExecute {
+        internal static string Message_NotRunning {
             get {
-                return ResourceManager.GetString("Title_ChooseBackupJobsToExecute", resourceCulture);
+                return ResourceManager.GetString("Message_NotRunning", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Add a backup job -----.
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; has been paused..
         /// </summary>
-        internal static string Title_ChooseBackupJobToAdd {
+        internal static string Message_Paused {
             get {
-                return ResourceManager.GetString("Title_ChooseBackupJobToAdd", resourceCulture);
+                return ResourceManager.GetString("Message_Paused", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Delete a backup job -----.
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is active..
         /// </summary>
-        internal static string Title_ChooseBackupJobToDelete {
+        internal static string Message_Running {
             get {
-                return ResourceManager.GetString("Title_ChooseBackupJobToDelete", resourceCulture);
+                return ResourceManager.GetString("Message_Running", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Choose backup to update -----.
+        ///   Recherche une chaîne localisée semblable à Please select at least one backup..
         /// </summary>
-        internal static string Title_ChooseBackupJobToUpdate {
+        internal static string Message_Selection {
             get {
-                return ResourceManager.GetString("Title_ChooseBackupJobToUpdate", resourceCulture);
+                return ResourceManager.GetString("Message_Selection", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- Change settings -----.
+        ///   Recherche une chaîne localisée semblable à Please select a business software from the list..
         /// </summary>
-        internal static string Title_ChooseSettingToChange {
+        internal static string Message_SelectionBusinessSoftware {
             get {
-                return ResourceManager.GetString("Title_ChooseSettingToChange", resourceCulture);
+                return ResourceManager.GetString("Message_SelectionBusinessSoftware", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à ----- MENU -----.
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; updated successfully..
         /// </summary>
-        internal static string Title_Menu {
+        internal static string Message_UpdateSuccess {
             get {
-                return ResourceManager.GetString("Title_Menu", resourceCulture);
+                return ResourceManager.GetString("Message_UpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Attention.
+        /// </summary>
+        internal static string MessageTitle_Attention {
+            get {
+                return ResourceManager.GetString("MessageTitle_Attention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Confirmation.
+        /// </summary>
+        internal static string MessageTitle_Confirmation {
+            get {
+                return ResourceManager.GetString("MessageTitle_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Error.
+        /// </summary>
+        internal static string MessageTitle_Error {
+            get {
+                return ResourceManager.GetString("MessageTitle_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Succes.
+        /// </summary>
+        internal static string MessageTitle_Success {
+            get {
+                return ResourceManager.GetString("MessageTitle_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Remove.
+        /// </summary>
+        internal static string Remove_BusinessSoftware {
+            get {
+                return ResourceManager.GetString("Remove_BusinessSoftware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup name.
+        /// </summary>
+        internal static string Text_BackupName {
+            get {
+                return ResourceManager.GetString("Text_BackupName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Date.
+        /// </summary>
+        internal static string Text_Date {
+            get {
+                return ResourceManager.GetString("Text_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Encryption time.
+        /// </summary>
+        internal static string Text_EncryptionTime {
+            get {
+                return ResourceManager.GetString("Text_EncryptionTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Language.
+        /// </summary>
+        internal static string Text_Language {
+            get {
+                return ResourceManager.GetString("Text_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Limit size file (Mo).
+        /// </summary>
+        internal static string Text_LimitSize {
+            get {
+                return ResourceManager.GetString("Text_LimitSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Log Format.
+        /// </summary>
+        internal static string Text_LogFormat {
+            get {
+                return ResourceManager.GetString("Text_LogFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Modify.
+        /// </summary>
+        internal static string Text_Modify {
+            get {
+                return ResourceManager.GetString("Text_Modify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Size (Ko).
+        /// </summary>
+        internal static string Text_SizeKo {
+            get {
+                return ResourceManager.GetString("Text_SizeKo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Size (Mo).
+        /// </summary>
+        internal static string Text_SizeMo {
+            get {
+                return ResourceManager.GetString("Text_SizeMo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Source directory.
+        /// </summary>
+        internal static string Text_SourceDirectory {
+            get {
+                return ResourceManager.GetString("Text_SourceDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à State.
+        /// </summary>
+        internal static string Text_State {
+            get {
+                return ResourceManager.GetString("Text_State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Target directory.
+        /// </summary>
+        internal static string Text_TargetDirectory {
+            get {
+                return ResourceManager.GetString("Text_TargetDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Transfert time.
+        /// </summary>
+        internal static string Text_TransferTime {
+            get {
+                return ResourceManager.GetString("Text_TransferTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Type.
+        /// </summary>
+        internal static string Text_Type {
+            get {
+                return ResourceManager.GetString("Text_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select the source directory.
+        /// </summary>
+        internal static string Title_BrowseSource {
+            get {
+                return ResourceManager.GetString("Title_BrowseSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select the target directory.
+        /// </summary>
+        internal static string Title_BrowseTarget {
+            get {
+                return ResourceManager.GetString("Title_BrowseTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Create a backupJob.
+        /// </summary>
+        internal static string Title_Edit {
+            get {
+                return ResourceManager.GetString("Title_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Encrypted extensions.
+        /// </summary>
+        internal static string Title_EncryptedExtension {
+            get {
+                return ResourceManager.GetString("Title_EncryptedExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select the backups to modify or execute.
+        /// </summary>
+        internal static string Title_Home {
+            get {
+                return ResourceManager.GetString("Title_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Logs.
+        /// </summary>
+        internal static string Title_Logs {
+            get {
+                return ResourceManager.GetString("Title_Logs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Priority extensions.
+        /// </summary>
+        internal static string Title_PriorityExtension {
+            get {
+                return ResourceManager.GetString("Title_PriorityExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Saves list.
+        /// </summary>
+        internal static string Title_SavesList {
+            get {
+                return ResourceManager.GetString("Title_SavesList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Settings.
+        /// </summary>
+        internal static string Title_Settings {
+            get {
+                return ResourceManager.GetString("Title_Settings", resourceCulture);
             }
         }
     }

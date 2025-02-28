@@ -1,0 +1,33 @@
+﻿<Window x:Class="EasySave.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasySave"
+        mc:Ignorable="d"
+        Title="EasySave" MinWidth="926" MinHeight="428">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Padding="0,0,0,48"/>
+
+        <Grid Background="#FFFFFF" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
+                <Button x:Name="Button_Quit" Content="Quit" Background="Red" Foreground="White" Style="{StaticResource ButtonStyle}" Click="Button_Quit_Click"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <TextBlock x:Name="TextBlock_ServerStatus" Text="{Binding ServerStatus, StringFormat='Server : {0}'}" VerticalAlignment="Center" Margin="5"/>
+                <TextBlock x:Name="TextBlock_ClientStatus" Text="{Binding ClientStatus, StringFormat='Client : {0}'}" VerticalAlignment="Center" Margin="5"/>
+                <ToggleButton x:Name="ToggleButton_Server" Content="Start Server" Checked="ToggleButton_Server_Checked" Unchecked="ToggleButton_Server_Unchecked" VerticalAlignment="Center" Margin="5" Padding="8,4"/>
+                <Button x:Name="Button_Home" Content="Home" Style="{StaticResource ButtonStyle}" Click="Button_Home_Click"/>
+                <Button x:Name="Button_Settings" Content="Settings" Style="{StaticResource ButtonStyle}" Click="Button_Settings_Click"/>
+                <Button x:Name="Button_Logs" Content="Logs" Style="{StaticResource ButtonStyle}" Click="Button_Logs_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
