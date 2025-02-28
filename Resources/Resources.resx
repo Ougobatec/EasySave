@@ -171,7 +171,7 @@
   <data name="MessageTitle_Success" xml:space="preserve">
     <value>Succes</value>
   </data>
-  <data name="Message_BusinessSoftware" xml:space="preserve">
+  <data name="Message_BusinessSoftwareRunning" xml:space="preserve">
     <value>Business software is running. Please close it before starting a backup.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
@@ -195,8 +195,8 @@
   <data name="Text_BackupName" xml:space="preserve">
     <value>Backup name</value>
   </data>
-  <data name="Text_Size" xml:space="preserve">
-    <value>Size</value>
+  <data name="Text_SizeKo" xml:space="preserve">
+    <value>Size (Ko)</value>
   </data>
   <data name="Text_TransferTime" xml:space="preserve">
     <value>Transfert time</value>
@@ -252,9 +252,6 @@
   <data name="Message_JobNotFound" xml:space="preserve">
     <value>Backup '{0}' not found.</value>
   </data>
-  <data name="Message_AlreadyActive" xml:space="preserve">
-    <value>Backup '{0}' is already active.</value>
-  </data>
   <data name="Message_NotEnoughSpace" xml:space="preserve">
     <value>You don't have enough space on the disk</value>
   </data>
@@ -275,5 +272,11 @@
   </data>
   <data name="Title_BrowseTarget" xml:space="preserve">
     <value>Select the target directory</value>
+  </data>
+  <data name="Message_Running" xml:space="preserve">
+    <value>Backup '{0}' is active.</value>
+  </data>
+  <data name="Text_SizeMo" xml:space="preserve">
+    <value>Size (Mo)</value>
   </data>
 </root>

@@ -53,12 +53,13 @@ namespace EasySave.Views
             if (BackupJobsListView.View is GridView gridView)
             {
                 double totalWidth = BackupJobsListView.ActualWidth - SystemParameters.VerticalScrollBarWidth;
-                gridView.Columns[0].Width = totalWidth * 0.2;  // 20% for "Backup name"
-                gridView.Columns[1].Width = totalWidth * 0.25; // 25% for "Source directory"
-                gridView.Columns[2].Width = totalWidth * 0.25; // 25% for "Target directory"
-                gridView.Columns[3].Width = totalWidth * 0.1;  // 10% for "Type"
-                gridView.Columns[4].Width = totalWidth * 0.1;  // 10% for "Modify"
-                gridView.Columns[5].Width = totalWidth * 0.1;  // 10% for "State"
+                gridView.Columns[0].Width = totalWidth * 0.10;  // 20% for "Backup name"
+                gridView.Columns[1].Width = totalWidth * 0.23;  // 25% for "Source directory"
+                gridView.Columns[2].Width = totalWidth * 0.23;  // 25% for "Target directory"
+                gridView.Columns[3].Width = totalWidth * 0.08;  // 10% for "Type"
+                gridView.Columns[4].Width = totalWidth * 0.08;  // 10% for "Modify"
+                gridView.Columns[5].Width = totalWidth * 0.12;  // 10% for "State"
+                gridView.Columns[6].Width = totalWidth * 0.16;  // 10% for "Actions"
             }
         }
 
@@ -87,47 +88,39 @@ namespace EasySave.Views
         {
             try
             {
-                if (BusinessSoftwareChecker.IsBusinessSoftwareRunning())
+                var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
+
+                if (selectedItems.Count == 0)
                 {
-                    MessageBox.Show(ResourceManager.GetString("Message_BusinessSoftware") ?? "Business software is running.", ResourceManager.GetString("MessageTitle_Attention") ?? "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(ResourceManager.GetString("Message_Selection") ?? "Please select a job.", ResourceManager.GetString("MessageTitle_Attention") ?? "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
-                else
+
+                var jobsToExecute = new List<ModelJob>(selectedItems);
+                var result = MessageBox.Show(ResourceManager.GetString("Message_Execute") ?? "Do you want to execute the selected jobs?", ResourceManager.GetString("MessageTitle_Confirmation") ?? "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
                 {
-                    var selectedItems = BackupJobsListView.SelectedItems.Cast<ModelJob>().ToList();
-
-                    if (selectedItems.Count == 0)
+                    var backupTasks = jobsToExecute.Select(async job =>
                     {
-                        MessageBox.Show(ResourceManager.GetString("Message_Selection") ?? "Please select a job.", ResourceManager.GetString("MessageTitle_Attention") ?? "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
-                    }
-
-                    var jobsToExecute = new List<ModelJob>(selectedItems);
-                    var result = MessageBox.Show(ResourceManager.GetString("Message_Execute") ?? "Do you want to execute the selected jobs?", ResourceManager.GetString("MessageTitle_Confirmation") ?? "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        var backupTasks = jobsToExecute.Select(async job =>
+                        try
                         {
-                            try
+                            await BackupManager.ExecuteBackupJobAsync(job);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess") ?? "Job {0} executed successfully.", job.Name), ResourceManager.GetString("MessageTitle_Success") ?? "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex.Message.Contains("Message_DirectoryNotFound"))
                             {
-                                await BackupManager.ExecuteBackupJobAsync(job);
-                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_ExecuteSuccess") ?? "Job {0} executed successfully.", job.Name), ResourceManager.GetString("MessageTitle_Success") ?? "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                MessageBox.Show(string.Format(ResourceManager.GetString("Message_DirectoryNotFound") ?? "Directory not found for job {0}.", job.Name), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                if (ex.Message.Contains("Message_DirectoryNotFound"))
-                                {
-                                    MessageBox.Show(string.Format(ResourceManager.GetString("Message_DirectoryNotFound") ?? "Directory not found for job {0}.", job.Name), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                }
-                                else
-                                {
-                                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                }
+                                MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
-                        });
+                        }
+                    });
 
-                        await Task.WhenAll(backupTasks);
-                        BackupJobsListView.Items.Refresh();
-                    }
+                    await Task.WhenAll(backupTasks);
                 }
             }
             catch (Exception ex)
@@ -158,22 +151,74 @@ namespace EasySave.Views
                     {
                         try
                         {
-                            BackupJobs.Remove(job);
                             await BackupManager.DeleteBackupJobAsync(job);
                             MessageBox.Show(string.Format(ResourceManager.GetString("Message_DeleteSuccess") ?? "Job {0} deleted successfully.", job.Name), ResourceManager.GetString("MessageTitle_Success") ?? "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            BackupJobs.Remove(job);
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                    DisplayBackupJobs();
-                    //BackupJobsListView.Items.Refresh();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Button Play click event
+        /// </summary>
+        private async void Button_Play_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ModelJob job)
+            {
+                try
+                {
+                    await BackupManager.ExecuteBackupJobAsync(job);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Button Pause click event
+        /// </summary>
+        private async void Button_Pause_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ModelJob job)
+            {
+                try
+                {
+                    await BackupManager.PauseBackupJobAsync(job);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Button Stop click event
+        /// </summary>
+        private async void Button_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ModelJob job)
+            {
+                try
+                {
+                    await BackupManager.StopBackupJobAsync(job);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "An error occurred: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error") ?? "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
