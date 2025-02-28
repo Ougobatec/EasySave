@@ -84,7 +84,7 @@ namespace EasySave
 
         public async Task ListenToClient()
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             try
             {
                 while (ModelConnection.Client.Connected)

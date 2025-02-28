@@ -45,8 +45,12 @@ namespace EasySave
             }
 
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      // Serialize object to json
-            await File.WriteAllTextAsync(filePath, json);                                                       // Write json to file
-            await ServerManager.SendConfigFileAsync(ServerManager.GetInstance().ModelConnection.Client);                                    // Update config file path
+            await File.WriteAllTextAsync(filePath, json);    
+            // Write json to file
+            if (ServerManager.ModelConnection.Client.Connected)
+            {
+                await ServerManager.SendConfigFileAsync(ServerManager.GetInstance().ModelConnection.Client);
+            }                                                
         }
     }
 }
