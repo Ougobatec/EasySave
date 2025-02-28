@@ -84,7 +84,7 @@ namespace EasySave.Models
         }
 
         /// <summary>
-        /// The speed of the backup
+        /// The event to notify the change of a property
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 

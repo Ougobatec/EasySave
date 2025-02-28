@@ -21,7 +21,7 @@ namespace EasySave
                 {
                     while (IsFileLocked(filePath))
                     {
-                        Task.Delay(100).Wait(); // Attendre 100 ms avant de réessayer
+                        Task.Delay(100).Wait();                                     // Attendre 100 ms avant de réessayer
                     }
 
                     var json = File.ReadAllText(filePath);                          // Read json from file
@@ -50,7 +50,7 @@ namespace EasySave
 
             while (IsFileLocked(filePath))
             {
-                Task.Delay(100).Wait(); // Attendre 100 ms avant de réessayer
+                Task.Delay(100).Wait();                                                                         // Attendre 100 ms avant de réessayer
             }
 
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      // Serialize object to json

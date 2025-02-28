@@ -220,14 +220,14 @@ namespace EasySave.Views
                             size = Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
 
                             // Get the type of the save
-                            string type = "X";
+                            BackupTypes type = BackupTypes.Full;
                             if (folderName.Contains("Diff"))
                             {
-                                type = "Differential";
+                                type = BackupTypes.Differential;
                             }
                             else if (folderName.Contains("Full"))
                             {
-                                type = "Full";
+                                type = BackupTypes.Full;
                             }
 
                             // Get the date of creation of the file

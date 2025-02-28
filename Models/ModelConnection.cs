@@ -1,20 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EasySave.Models
 {
+    /// <summary>
+    /// Model to describe the connection settings of the application
+    /// </summary>
     public class ModelConnection : INotifyPropertyChanged
     {
-        
+        /// <summary>
+        /// The name of the connection
+        /// </summary>
         public string ConnectionName { get; set; } = "EasySaveServer";
+
+        /// <summary>
+        /// The IP address of the connection
+        /// </summary>
         public IPAddress ConnectionIp { get; set; } =  IPAddress.Any;
+
+        /// <summary>
+        /// The port of the connection
+        /// </summary>
         public int ConnectionPort { get; set; } = 12345;
 
+        /// <summary>
+        /// The status of the server
+        /// </summary>
         private string _serverStatus = "Server INACTIVE";
         public string ServerStatus
         {
@@ -29,6 +40,9 @@ namespace EasySave.Models
             }
         }
 
+        /// <summary>
+        /// The status of the connection
+        /// </summary>
         private string _connectionStatus = "Disconnected";
         public string ConnectionStatus
         {
@@ -42,7 +56,16 @@ namespace EasySave.Models
                 }
             }
         }
+
+        /// <summary>
+        /// The event to notify the change of a property
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// Notify the change of a property
+        /// <param name="propertyName">the name of the property</param>
+        /// </summary>
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
