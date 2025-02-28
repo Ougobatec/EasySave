@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace EasySave.Models
 {
@@ -8,6 +11,9 @@ namespace EasySave.Models
     /// </summary>
     public class ModelConnection : INotifyPropertyChanged
     {
+        
+        public Socket Client { get; set; }
+
         /// <summary>
         /// The name of the connection
         /// </summary>

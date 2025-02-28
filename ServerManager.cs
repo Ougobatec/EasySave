@@ -3,10 +3,12 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using EasySave.Enumerations;
 using EasySave.Models;
+using Logger;
 
 namespace EasySave
 {
@@ -21,11 +23,21 @@ namespace EasySave
         public event EventHandler<string> ConnectionStatusChanged;
         private Socket ServerSocket;
         private static readonly string ConfigFilePath = "Config\\config.json";                                          // Config file path
-
+        private static ServerManager? ServerManager_Instance;
         private string _command;
 
         // Liste des clients connectés
-        private readonly List<Socket> _connectedClients = new List<Socket>();
+        private List<Socket> _connectedClients = new List<Socket>();
+
+        private ServerManager()
+        {
+        }
+
+        public static ServerManager GetInstance()
+        {
+            ServerManager_Instance ??= new ServerManager();     // Create backup manager instance if not exists
+            return ServerManager_Instance;                      // Return backup manager instance
+        }
 
         public Socket StartSocketServer()
         {
@@ -52,9 +64,10 @@ namespace EasySave
             {
                 try
                 {
-                    Socket clientSocket = await Task.Run(() => serverSocket.Accept(), _cancellationTokenSource.Token);
-                    _connectedClients.Add(clientSocket); // Ajouter le client à la liste
-                    ConnectionAccepted?.Invoke(this, clientSocket);
+                    ModelConnection.Client = await Task.Run(() => serverSocket.Accept(), _cancellationTokenSource.Token);
+                    _connectedClients.Add(ModelConnection.Client); // Ajouter le client à la liste
+                    ConnectionAccepted?.Invoke(this, ModelConnection.Client);
+                    ModelConnection.ConnectionStatus = "Connected";
                     ConnectionStatusChanged?.Invoke(this, "Connected");
                 }
                 catch (OperationCanceledException)
@@ -70,14 +83,14 @@ namespace EasySave
             }
         }
 
-        public async Task ListenToClient(Socket client)
+        public async Task ListenToClient()
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             try
             {
-                while (client.Connected)
+                while (ModelConnection.Client.Connected)
                 {
-                    int receivedBytes = client.Receive(buffer);
+                    int receivedBytes = ModelConnection.Client.Receive(buffer);
                     if (receivedBytes == 0) break;
 
                     string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
@@ -85,13 +98,14 @@ namespace EasySave
 
                     string response = await HandleClientCommandAsync(message);
                     byte[] responseBytes = Encoding.UTF8.GetBytes(response);
-                    client.Send(responseBytes);
+                    ModelConnection.Client.Send(responseBytes);
                 }
-                StopSocketServer(client);
+                StopSocketServer(ModelConnection.Client);
             }
             catch (SocketException)
             {
                 Console.WriteLine("Connexion perdue avec le client.");
+                ModelConnection.ConnectionStatus = "Disconnected";
                 ConnectionStatusChanged?.Invoke(this, "Disconnected");
             }
         }
@@ -109,7 +123,7 @@ namespace EasySave
                 case "STOP_BACKUP":
                     return StopBackup();
                 case "GET_CONFIG":
-                    return await SendConfigFileAsync();
+                    return await SendConfigFileAsync(ModelConnection.Client);
                 case "STATUS":
                     return BackupManager.JsonState.Any(s => s.State == BackupStates.ACTIVE) ? "Backup is running." : "Backup is not running.";
                 default:
@@ -117,25 +131,30 @@ namespace EasySave
             }
         }
 
-        private async Task<string> SendConfigFileAsync()
+        public async Task<string> SendConfigFileAsync(Socket client)
         {
             try
             {
-                string configContent = await File.ReadAllTextAsync(ConfigFilePath);
-                SendMessageToAllClients(configContent);
-                return "Config file sent.";
+                ModelConfig configContent = JsonManager.LoadJson(ConfigFilePath, new ModelConfig()); // Charger le fichier de configuration
+                string jsonConfig = JsonSerializer.Serialize(configContent); // Convertir en chaîne JSON
+                //SendMessageToAllClients(jsonConfig); // Envoyer la chaîne JSON à tous les clients connectés
+                await SendCommandAsync(client, jsonConfig); // Envoyer la chaîne JSON au client
+                return "";
             }
             catch (Exception ex)
             {
                 return $"Error sending config file: {ex.Message}";
             }
         }
-       
 
         public async Task SendCommandAsync(Socket socket, string command)
         {
-            _command = command;
-            socket.Send(Encoding.UTF8.GetBytes(command));
+            if (socket.Connected)
+            {
+                _command = command;
+                socket.Send(Encoding.UTF8.GetBytes(command));
+            }
+            
         }
 
         private string StartBackup(string jobName)
@@ -181,6 +200,7 @@ namespace EasySave
                 _connectedClients.Remove(socket); // Retirer le client de la liste
             }
             ModelConnection.ServerStatus = "Server INACTIVE";
+            ModelConnection.ConnectionStatus = "Disconnected";
             ConnectionStatusChanged?.Invoke(this, "Disconnected");
         }
 
@@ -196,6 +216,5 @@ namespace EasySave
                 }
             }
         }
-        
     }
 }

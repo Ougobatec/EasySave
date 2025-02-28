@@ -8,6 +8,7 @@ namespace EasySave
     /// </summary>
     public class JsonManager
     {
+        private static ServerManager ServerManager => ServerManager.GetInstance();
         /// <summary>
         /// Load data from desired json file into desired object
         /// <param name="filePath">Json file path</param>
@@ -54,7 +55,12 @@ namespace EasySave
             }
 
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      // Serialize object to json
-            await File.WriteAllTextAsync(filePath, json);                                                       // Write json to file
+            await File.WriteAllTextAsync(filePath, json);    
+            // Write json to file
+            if (ServerManager.ModelConnection.Client.Connected)
+            {
+                await ServerManager.SendConfigFileAsync(ServerManager.GetInstance().ModelConnection.Client);
+            }                                                
         }
 
         /// <summary>
