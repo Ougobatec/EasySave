@@ -119,7 +119,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn x:Name="Header_Size" Header="Size" Binding="{Binding Size}">
+                        <DataGridTextColumn x:Name="Header_SizeMo" Header="Size (Mo)" Binding="{Binding Size}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

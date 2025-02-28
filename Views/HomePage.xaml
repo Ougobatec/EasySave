@@ -70,6 +70,17 @@
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
+                            <GridViewColumn x:Name="Header_Actions" Header="Actions" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Play" CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}" Click="Button_Play_Click"/>
+                                            <Button Content="Pause" CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}" Click="Button_Pause_Click"/>
+                                            <Button Content="Stop" CommandParameter="{Binding}" Style="{StaticResource ButtonStyle}" Click="Button_Stop_Click"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>

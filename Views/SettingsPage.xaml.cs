@@ -70,7 +70,7 @@ namespace EasySave.Views
         /// <summary>
         /// Setting changed event
         /// </summary>
-        private async void Setting_Changed(object sender, SelectionChangedEventArgs? e = null)
+        private void Setting_Changed(object sender, SelectionChangedEventArgs? e = null)
         {
             if (sender is ComboBox comboBox)
             {
@@ -78,7 +78,7 @@ namespace EasySave.Views
                 {
                     if (comboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content != null)
                     {
-                        await BackupManager.ChangeSettingsAsync("language", selectedItem.Content.ToString() ?? string.Empty);
+                        BackupManager.ChangeSettingsAsync("language", selectedItem.Content.ToString() ?? string.Empty);
                         Thread.CurrentThread.CurrentUICulture = new CultureInfo(BackupManager.JsonConfig.Language.ToString());
                     }
                 }
@@ -86,7 +86,7 @@ namespace EasySave.Views
                 {
                     if (comboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content != null)
                     {
-                        await BackupManager.ChangeSettingsAsync("logFormat", selectedItem.Content.ToString() ?? string.Empty);
+                        BackupManager.ChangeSettingsAsync("logFormat", selectedItem.Content.ToString() ?? string.Empty);
                     }
                 }
             }
@@ -102,7 +102,7 @@ namespace EasySave.Views
                             LitsExtensions.Add(extension);
                         }
                     }
-                    await BackupManager.ChangeSettingsAsync("PriorityFiles", string.Empty, LitsExtensions);
+                    BackupManager.ChangeSettingsAsync("PriorityFiles", string.Empty, LitsExtensions);
                 }
                 else if (button.Name.Contains("Encrypted"))
                 {
@@ -113,11 +113,11 @@ namespace EasySave.Views
                             LitsExtensions.Add(extension);
                         }
                     }
-                    await BackupManager.ChangeSettingsAsync("EncryptedFiles", string.Empty, LitsExtensions);
+                    BackupManager.ChangeSettingsAsync("EncryptedFiles", string.Empty, LitsExtensions);
                 }
                 else if (button.Name.Contains("Add_BusinessSoftwareButton"))
                 {
-                    await BackupManager.ChangeSettingsAsync("Add_BusinessSoftware", TextBox_BusinessSoftwares.Text);
+                    BackupManager.ChangeSettingsAsync("Add_BusinessSoftware", TextBox_BusinessSoftwares.Text);
                     // We remove the text in the input after adding a business software
                     TextBox_BusinessSoftwares.Text = "";
                 }
@@ -125,11 +125,11 @@ namespace EasySave.Views
                 {
                     if (!string.IsNullOrEmpty(TextBox_BusinessSoftwares.Text))
                     {
-                        await BackupManager.ChangeSettingsAsync("Remove_BusinessSoftware", TextBox_BusinessSoftwares.Text);
+                        BackupManager.ChangeSettingsAsync("Remove_BusinessSoftware", TextBox_BusinessSoftwares.Text);
                     }
                     if (BusinessSoftwaresListBox.SelectedItem != null)
                     {
-                        await BackupManager.ChangeSettingsAsync("Remove_BusinessSoftware", BusinessSoftwaresListBox.SelectedItem?.ToString() ?? string.Empty);
+                        BackupManager.ChangeSettingsAsync("Remove_BusinessSoftware", BusinessSoftwaresListBox.SelectedItem?.ToString() ?? string.Empty);
                         // We remove the selected item from the list
                         if (BusinessSoftwaresListBox.SelectedItem != null)
                         {
@@ -307,9 +307,9 @@ namespace EasySave.Views
 
             foreach (ModelJob job in BackupJobs)
             {
-                if (Directory.Exists(job.TargetDirectory)) // Verify if the folder exist
+                if (Directory.Exists(job.SourceDirectory)) // Verify if the folder exist
                 {
-                    foreach (string file in Directory.GetFiles(job.TargetDirectory, "*.*", SearchOption.AllDirectories))
+                    foreach (string file in Directory.GetFiles(job.SourceDirectory, "*.*", SearchOption.AllDirectories))
                     {
                         string extension = Path.GetExtension(file).ToLower();
                         if (!string.IsNullOrEmpty(extension))

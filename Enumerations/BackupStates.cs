@@ -8,7 +8,7 @@
         /// <summary>
         /// The backup has not been started
         /// </summary>  
-        INACTIVE,
+        READY,
 
         /// <summary>
         /// The backup is currently running
@@ -18,16 +18,6 @@
         /// <summary>
         /// The backup has been stopped
         /// </summary>
-        PAUSED,
-
-        /// <summary>
-        /// The backup is finished
-        /// </summary>  
-        END,
-
-        /// <summary>
-        /// The backup has failed
-        /// </summary>
-        ERROR
+        PAUSED
     }
 }

@@ -19,6 +19,11 @@ namespace EasySave
             {
                 try
                 {
+                    while (IsFileLocked(filePath))
+                    {
+                        Task.Delay(100).Wait();                                     // Attendre 100 ms avant de réessayer
+                    }
+
                     var json = File.ReadAllText(filePath);                          // Read json from file
                     return JsonSerializer.Deserialize<T>(json) ?? defaultValue;     // Deserialize json to object
                 }
@@ -40,11 +45,36 @@ namespace EasySave
             string? directoryPath = Path.GetDirectoryName(filePath);
             if (!string.IsNullOrEmpty(directoryPath))
             {
-                Directory.CreateDirectory(directoryPath);                                                       // Create directory if not exists
+                Directory.CreateDirectory(directoryPath);                                                           // Create directory if not exists
             }
 
-            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });      // Serialize object to json
-            await File.WriteAllTextAsync(filePath, json);                                                       // Write json to file
+            while (IsFileLocked(filePath))
+            {
+                Task.Delay(100).Wait();                                                                             // Attendre 100 ms avant de réessayer
+            }
+
+            var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });          // Serialize object to json
+            await File.WriteAllTextAsync(filePath, json);                                                           // Write json to file
+
+            ServerManager.GetInstance().SendConfigAsync(ServerManager.GetInstance().Connection.Client);             // Send json to client
+        }
+
+        /// <summary>
+        /// Check if a file is locked
+        /// <param name="filePath">File path</param>
+        /// </summary>
+        private static bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None);     // Try to open file
+                stream.Close();                                                                                         // Close file
+            }
+            catch (IOException)
+            {
+                return true;                                                                                            // Return true if file is locked
+            }
+            return false;                                                                                               // Return false if file is not locked
         }
     }
 }
