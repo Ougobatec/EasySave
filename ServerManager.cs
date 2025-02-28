@@ -11,10 +11,9 @@ namespace EasySave
     /// </summary>
     public class ServerManager
     {
-        public ModelConnection Connection = new ModelConnection();                          // Connection model instance
-        private static BackupManager BackupManager => BackupManager.GetInstance();          // Backup manager instance
-        private static ServerManager? ServerManager_Instance;                               // Server manager instance
-        private CancellationTokenSource? cancellationTokenSource;                           // Cancellation token source
+        public ModelConnection Connection = new ModelConnection();  // Connection model instance
+        private static ServerManager? ServerManager_Instance;       // Server manager instance
+        private CancellationTokenSource? cancellationTokenSource;   // Cancellation token source
 
         /// <summary>
         /// Get the ServerManager instance or create it if it doesn't exist
@@ -93,7 +92,7 @@ namespace EasySave
         {
             if (Connection.ClientStatus)
             {
-                ModelConfig configContent = BackupManager.JsonConfig;                   // Load the configuration file
+                ModelConfig configContent = BackupManager.GetInstance().JsonConfig;     // Load the configuration file
                 string jsonConfig = JsonSerializer.Serialize(configContent);            // Convert to JSON string
                 byte[] data = Encoding.UTF8.GetBytes(jsonConfig);                       // Convert to byte array
 
@@ -177,12 +176,12 @@ namespace EasySave
         /// </summary>
         private void ExecuteBackup(string backupName)
         {
-            ModelJob? job = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
+            ModelJob? job = BackupManager.GetInstance().JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
             if (job == null)
             {
                 return;
             }
-            Task.Run(async () => await BackupManager.ExecuteBackupJobAsync(job));
+            Task.Run(async () => await BackupManager.GetInstance().ExecuteBackupJobAsync(job));
         }
 
         /// <summary>
@@ -191,12 +190,12 @@ namespace EasySave
         /// </summary>
         private void PauseBackup(string backupName)
         {
-            ModelJob? job = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
+            ModelJob? job = BackupManager.GetInstance().JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
             if (job == null)
             {
                 return;
             }
-            Task.Run(async () => await BackupManager.PauseBackupJobAsync(job));
+            Task.Run(async () => await BackupManager.GetInstance().PauseBackupJobAsync(job));
         }
 
         /// <summary>
@@ -205,12 +204,12 @@ namespace EasySave
         /// </summary>
         private void StopBackup(string backupName)
         {
-            ModelJob? job = BackupManager.JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
+            ModelJob? job = BackupManager.GetInstance().JsonConfig.BackupJobs.FirstOrDefault(j => j.Name.Equals(backupName, StringComparison.OrdinalIgnoreCase));
             if (job == null)
             {
                 return;
             }
-            Task.Run(async () => await BackupManager.StopBackupJobAsync(job));
+            Task.Run(async () => await BackupManager.GetInstance().StopBackupJobAsync(job));
         }
     }
 }

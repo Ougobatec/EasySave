@@ -123,16 +123,25 @@ namespace EasySave.Views
                     }
                     catch (Exception ex)
                     {
-                        if (ex.Message.Contains("Message_NameExists"))
+                        if (ex.Message.Contains("Message_JobNotFound"))
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_JobNotFound"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else if (ex.Message.Contains("Message_Running"))
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else if (ex.Message.Contains("Message_NameExists"))
                         {
                             MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
                         else
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "Error: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
+                NavigationService.Navigate(new HomePage());
             }
             catch (Exception ex)
             {

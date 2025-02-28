@@ -279,4 +279,19 @@
   <data name="Button_Start" xml:space="preserve">
     <value>Start server</value>
   </data>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Are you sure you want to delete the selected backups?</value>
+  </data>
+  <data name="Message_Execute" xml:space="preserve">
+    <value>Are you sure you want to execute the selected backups?</value>
+  </data>
+  <data name="Message_AlreadyStopped" xml:space="preserve">
+    <value>Backup '{0}' is already stopped.</value>
+  </data>
+  <data name="Message_NotRunning" xml:space="preserve">
+    <value>Backup '{0}' is not running.</value>
+  </data>
+  <data name="Message_Paused" xml:space="preserve">
+    <value>Backup '{0}' has been paused.</value>
+  </data>
 </root>

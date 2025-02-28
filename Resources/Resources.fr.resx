@@ -279,4 +279,19 @@
   <data name="Button_Start" xml:space="preserve">
     <value>Démarer le serveur</value>
   </data>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?</value>
+  </data>
+  <data name="Message_Execute" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir exécuter les sauvegardes sélectionnées ?</value>
+  </data>
+  <data name="Message_AlreadyStopped" xml:space="preserve">
+    <value>La sauvegarde '{0}' est déjà arrêtée.</value>
+  </data>
+  <data name="Message_NotRunning" xml:space="preserve">
+    <value>La sauvegarde  '{0}' n'est pas en cours d'exécution.</value>
+  </data>
+  <data name="Message_Paused" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été suspendue.</value>
+  </data>
 </root>

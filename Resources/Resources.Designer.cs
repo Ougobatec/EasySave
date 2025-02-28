@@ -187,11 +187,29 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is already stopped..
+        /// </summary>
+        internal static string Message_AlreadyStopped {
+            get {
+                return ResourceManager.GetString("Message_AlreadyStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Business software is running. Please close it before starting a backup..
         /// </summary>
         internal static string Message_BusinessSoftwareRunning {
             get {
                 return ResourceManager.GetString("Message_BusinessSoftwareRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Are you sure you want to delete the selected backups?.
+        /// </summary>
+        internal static string Message_Delete {
+            get {
+                return ResourceManager.GetString("Message_Delete", resourceCulture);
             }
         }
         
@@ -210,6 +228,15 @@ namespace EasySave.Resources {
         internal static string Message_DirectoryNotFound {
             get {
                 return ResourceManager.GetString("Message_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Are you sure you want to execute the selected backups?.
+        /// </summary>
+        internal static string Message_Execute {
+            get {
+                return ResourceManager.GetString("Message_Execute", resourceCulture);
             }
         }
         
@@ -255,6 +282,24 @@ namespace EasySave.Resources {
         internal static string Message_NotEnoughSpace {
             get {
                 return ResourceManager.GetString("Message_NotEnoughSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is not running..
+        /// </summary>
+        internal static string Message_NotRunning {
+            get {
+                return ResourceManager.GetString("Message_NotRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; has been paused..
+        /// </summary>
+        internal static string Message_Paused {
+            get {
+                return ResourceManager.GetString("Message_Paused", resourceCulture);
             }
         }
         
