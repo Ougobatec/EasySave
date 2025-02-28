@@ -171,7 +171,7 @@
   <data name="MessageTitle_Success" xml:space="preserve">
     <value>Succès</value>
   </data>
-  <data name="Message_BusinessSoftware" xml:space="preserve">
+  <data name="Message_BusinessSoftwareRunning" xml:space="preserve">
     <value>Un logiciel métier est en cours d'exécution. Veuillez le fermer avant de lancer une sauvegarde.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
@@ -183,20 +183,14 @@
   <data name="MessageTitle_Confirmation" xml:space="preserve">
     <value>Confirmation</value>
   </data>
-  <data name="Message_Execute" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir executer les sauvegardes sélectionnées ?</value>
-  </data>
-  <data name="Message_Delete" xml:space="preserve">
-    <value>Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?</value>
-  </data>
   <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
   <data name="Text_BackupName" xml:space="preserve">
     <value>Nom de sauvegarde</value>
   </data>
-  <data name="Text_Size" xml:space="preserve">
-    <value>Taille</value>
+  <data name="Text_SizeKo" xml:space="preserve">
+    <value>Taille (Ko)</value>
   </data>
   <data name="Text_TransferTime" xml:space="preserve">
     <value>Temps de transfert</value>
@@ -252,9 +246,6 @@
   <data name="Message_JobNotFound" xml:space="preserve">
     <value>La sauvegarde '{0}' n'a pas été trouvée.</value>
   </data>
-  <data name="Message_AlreadyActive" xml:space="preserve">
-    <value>La sauvegarde '{0}' est déjà active.</value>
-  </data>
   <data name="Message_NotEnoughSpace" xml:space="preserve">
     <value>Vous n'avez pas assez d'espace sur le disque</value>
   </data>
@@ -275,5 +266,32 @@
   </data>
   <data name="Title_BrowseTarget" xml:space="preserve">
     <value>Sélectionnez le répertoire cible</value>
+  </data>
+  <data name="Message_Running" xml:space="preserve">
+    <value>La sauvegarde '{0}' est active.</value>
+  </data>
+  <data name="Text_SizeMo" xml:space="preserve">
+    <value>Taille (Mo)</value>
+  </data>
+  <data name="Button_Stop" xml:space="preserve">
+    <value>Arrêter le serveur</value>
+  </data>
+  <data name="Button_Start" xml:space="preserve">
+    <value>Démarer le serveur</value>
+  </data>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir supprimer les sauvegardes sélectionnées ?</value>
+  </data>
+  <data name="Message_Execute" xml:space="preserve">
+    <value>Êtes-vous sûr de vouloir exécuter les sauvegardes sélectionnées ?</value>
+  </data>
+  <data name="Message_AlreadyStopped" xml:space="preserve">
+    <value>La sauvegarde '{0}' est déjà arrêtée.</value>
+  </data>
+  <data name="Message_NotRunning" xml:space="preserve">
+    <value>La sauvegarde  '{0}' n'est pas en cours d'exécution.</value>
+  </data>
+  <data name="Message_Paused" xml:space="preserve">
+    <value>La sauvegarde '{0}' a été suspendue.</value>
   </data>
 </root>

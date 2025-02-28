@@ -133,6 +133,24 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Start server.
+        /// </summary>
+        internal static string Button_Start {
+            get {
+                return ResourceManager.GetString("Button_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Stop server.
+        /// </summary>
+        internal static string Button_Stop {
+            get {
+                return ResourceManager.GetString("Button_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Submit.
         /// </summary>
         internal static string Button_Submit {
@@ -160,15 +178,6 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is already active..
-        /// </summary>
-        internal static string Message_AlreadyActive {
-            get {
-                return ResourceManager.GetString("Message_AlreadyActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à The business software is already in the list..
         /// </summary>
         internal static string Message_AlreadyInListBusinessSoftware {
@@ -178,11 +187,20 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is already stopped..
+        /// </summary>
+        internal static string Message_AlreadyStopped {
+            get {
+                return ResourceManager.GetString("Message_AlreadyStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Business software is running. Please close it before starting a backup..
         /// </summary>
-        internal static string Message_BusinessSoftware {
+        internal static string Message_BusinessSoftwareRunning {
             get {
-                return ResourceManager.GetString("Message_BusinessSoftware", resourceCulture);
+                return ResourceManager.GetString("Message_BusinessSoftwareRunning", resourceCulture);
             }
         }
         
@@ -264,6 +282,33 @@ namespace EasySave.Resources {
         internal static string Message_NotEnoughSpace {
             get {
                 return ResourceManager.GetString("Message_NotEnoughSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is not running..
+        /// </summary>
+        internal static string Message_NotRunning {
+            get {
+                return ResourceManager.GetString("Message_NotRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; has been paused..
+        /// </summary>
+        internal static string Message_Paused {
+            get {
+                return ResourceManager.GetString("Message_Paused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup &apos;{0}&apos; is active..
+        /// </summary>
+        internal static string Message_Running {
+            get {
+                return ResourceManager.GetString("Message_Running", resourceCulture);
             }
         }
         
@@ -403,11 +448,20 @@ namespace EasySave.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Size.
+        ///   Recherche une chaîne localisée semblable à Size (Ko).
         /// </summary>
-        internal static string Text_Size {
+        internal static string Text_SizeKo {
             get {
-                return ResourceManager.GetString("Text_Size", resourceCulture);
+                return ResourceManager.GetString("Text_SizeKo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Size (Mo).
+        /// </summary>
+        internal static string Text_SizeMo {
+            get {
+                return ResourceManager.GetString("Text_SizeMo", resourceCulture);
             }
         }
         

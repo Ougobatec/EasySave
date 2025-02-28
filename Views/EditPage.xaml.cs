@@ -47,7 +47,7 @@ namespace EasySave.Views
             Header_Date.Header = ResourceManager.GetString("Text_Date");
             Header_BackupName.Header = ResourceManager.GetString("Text_BackupName");
             Header_Type.Header = ResourceManager.GetString("Text_Type");
-            Header_Size.Header = ResourceManager.GetString("Text_Size");
+            Header_SizeMo.Header = ResourceManager.GetString("Text_SizeMo");
 
             if (Job != null)
             {
@@ -123,16 +123,25 @@ namespace EasySave.Views
                     }
                     catch (Exception ex)
                     {
-                        if (ex.Message.Contains("Message_NameExists"))
+                        if (ex.Message.Contains("Message_JobNotFound"))
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_JobNotFound"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else if (ex.Message.Contains("Message_Running"))
+                        {
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Message_Running"), job.Name), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else if (ex.Message.Contains("Message_NameExists"))
                         {
                             MessageBox.Show(ResourceManager.GetString("Message_NameExists"), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
                         else
                         {
-                            MessageBox.Show(string.Format(ResourceManager.GetString("Error") ?? "Error: {0}", ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(string.Format(ResourceManager.GetString("Error"), ex.Message), ResourceManager.GetString("MessageTitle_Error"), MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
+                NavigationService.Navigate(new HomePage());
             }
             catch (Exception ex)
             {
@@ -193,18 +202,16 @@ namespace EasySave.Views
         /// <summary>
         /// Display all saves in the EditPage
         /// </summary>
-        private Task DisplaySaves()
+        private async Task DisplaySaves()
         {
-            return Task.Run(() =>
+            await Task.Run(() =>
             {
                 // Stock all saves in a list
-                SavesEntries = [];
-
-                ObservableCollection<string> SavesName = [];
+                var savesEntries = new ObservableCollection<ModelSave>();
 
                 if (Job != null && !Directory.Exists(Job.TargetDirectory))
                 {
-                    Directory.CreateDirectory(Job.TargetDirectory);                                              //create directory if it doesn't exist
+                    Directory.CreateDirectory(Job.TargetDirectory); // create directory if it doesn't exist
                 }
 
                 // Go through each folders in the backUpJob target directory
@@ -220,24 +227,36 @@ namespace EasySave.Views
                             size = Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
 
                             // Get the type of the save
-                            string type = "X";
+                            BackupTypes type = BackupTypes.Full;
                             if (folderName.Contains("Diff"))
                             {
-                                type = "Differential";
+                                type = BackupTypes.Differential;
                             }
                             else if (folderName.Contains("Full"))
                             {
-                                type = "Full";
+                                type = BackupTypes.Full;
                             }
 
                             // Get the date of creation of the file
                             DirectoryInfo dirInfo = new(dir);
 
-                            SavesEntries.Add(new ModelSave(folderName, type, size, dirInfo.CreationTime));
+                            // Add the save entry to the list
+                            savesEntries.Add(new ModelSave(folderName, type, (size / 1024 / 1024), dirInfo.CreationTime));
                         }
                     }
                 }
+
+                // Update the ObservableCollection on the UI thread
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SavesEntries.Clear();
+                    foreach (var save in savesEntries)
+                    {
+                        SavesEntries.Add(save);
+                    }
+                });
             });
         }
+
     }
 }

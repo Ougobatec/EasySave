@@ -171,7 +171,7 @@
   <data name="MessageTitle_Success" xml:space="preserve">
     <value>Succes</value>
   </data>
-  <data name="Message_BusinessSoftware" xml:space="preserve">
+  <data name="Message_BusinessSoftwareRunning" xml:space="preserve">
     <value>Business software is running. Please close it before starting a backup.</value>
   </data>
   <data name="MessageTitle_Attention" xml:space="preserve">
@@ -183,20 +183,14 @@
   <data name="MessageTitle_Confirmation" xml:space="preserve">
     <value>Confirmation</value>
   </data>
-  <data name="Message_Execute" xml:space="preserve">
-    <value>Are you sure you want to execute the selected backups?</value>
-  </data>
-  <data name="Message_Delete" xml:space="preserve">
-    <value>Are you sure you want to delete the selected backups?</value>
-  </data>
   <data name="Title_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
   <data name="Text_BackupName" xml:space="preserve">
     <value>Backup name</value>
   </data>
-  <data name="Text_Size" xml:space="preserve">
-    <value>Size</value>
+  <data name="Text_SizeKo" xml:space="preserve">
+    <value>Size (Ko)</value>
   </data>
   <data name="Text_TransferTime" xml:space="preserve">
     <value>Transfert time</value>
@@ -252,9 +246,6 @@
   <data name="Message_JobNotFound" xml:space="preserve">
     <value>Backup '{0}' not found.</value>
   </data>
-  <data name="Message_AlreadyActive" xml:space="preserve">
-    <value>Backup '{0}' is already active.</value>
-  </data>
   <data name="Message_NotEnoughSpace" xml:space="preserve">
     <value>You don't have enough space on the disk</value>
   </data>
@@ -275,5 +266,32 @@
   </data>
   <data name="Title_BrowseTarget" xml:space="preserve">
     <value>Select the target directory</value>
+  </data>
+  <data name="Message_Running" xml:space="preserve">
+    <value>Backup '{0}' is active.</value>
+  </data>
+  <data name="Text_SizeMo" xml:space="preserve">
+    <value>Size (Mo)</value>
+  </data>
+  <data name="Button_Stop" xml:space="preserve">
+    <value>Stop server</value>
+  </data>
+  <data name="Button_Start" xml:space="preserve">
+    <value>Start server</value>
+  </data>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Are you sure you want to delete the selected backups?</value>
+  </data>
+  <data name="Message_Execute" xml:space="preserve">
+    <value>Are you sure you want to execute the selected backups?</value>
+  </data>
+  <data name="Message_AlreadyStopped" xml:space="preserve">
+    <value>Backup '{0}' is already stopped.</value>
+  </data>
+  <data name="Message_NotRunning" xml:space="preserve">
+    <value>Backup '{0}' is not running.</value>
+  </data>
+  <data name="Message_Paused" xml:space="preserve">
+    <value>Backup '{0}' has been paused.</value>
   </data>
 </root>

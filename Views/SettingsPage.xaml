@@ -5,37 +5,42 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasySave.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="600" d:DesignWidth="800"
       Title="SettingsPage">
 
-    <Grid Background="#F0F0F0">
-        <TextBlock x:Name="Title_Settings" Text="Settings" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+    <Grid Background="#F9F9F9">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock x:Name="Title_Settings" Text="Settings" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,30"/>
+                <!-- Paramètre Langue -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <TextBlock x:Name="Text_Language" Text="Language" VerticalAlignment="Center" Width="150"/>
+                    <ComboBox x:Name="ComboBox_Language" Width="120" SelectionChanged="Setting_Changed">
+                        <ComboBoxItem Content="fr"/>
+                        <ComboBoxItem Content="en"/>
+                    </ComboBox>
+                </StackPanel>
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <TextBlock x:Name="Text_Language" Text="Language" Margin="0,0,10,0"/>
-                <ComboBox x:Name="ComboBox_Language" Width="120" SelectionChanged="Setting_Changed">
-                    <ComboBoxItem Content="fr"/>
-                    <ComboBoxItem Content="en"/>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-                <TextBlock x:Name="Text_LogFormat" Text="Log Format" Margin="0,0,10,0"/>
-                <ComboBox x:Name="ComboBox_LogFormat" Width="120" SelectionChanged="Setting_Changed">
-                    <ComboBoxItem Content="json"/>
-                    <ComboBoxItem Content="xml"/>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-                <TextBlock x:Name="Text_LimitSize" Text="Limit zize file (Mo)" Margin="0,0,10,0"/>
-                <TextBox x:Name="TextBox_LimitSize" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" TextChanged="Limit_size_fileTextBox_TextChanged"/>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+                <!-- Paramètre Format de log -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <TextBlock x:Name="Text_LogFormat" Text="Log Format" VerticalAlignment="Center" Width="150"/>
+                    <ComboBox x:Name="ComboBox_LogFormat" Width="120" SelectionChanged="Setting_Changed">
+                        <ComboBoxItem Content="json"/>
+                        <ComboBoxItem Content="xml"/>
+                    </ComboBox>
+                </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                <!-- Paramètre Limite de taille de fichier -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <TextBlock x:Name="Text_LimitSize" Text="Limit size file (MB)" VerticalAlignment="Center" Width="150"/>
+                    <TextBox x:Name="TextBox_LimitSize" Width="120" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" TextChanged="Limit_size_fileTextBox_TextChanged"/>
+                </StackPanel>
 
-                    <StackPanel Orientation="Vertical" Margin="0,40,20,0">
-                        <TextBlock x:Name="Title_PriorityExtension" Text="Priority extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,20">
+                    <!-- Extension Prioritaires -->
+                    <StackPanel Orientation="Vertical" Margin="20,0">
+                        <TextBlock x:Name="Title_PriorityExtension" Text="Priority Extension" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -44,7 +49,7 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- ListBox des extensions disponibles -->
-                            <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailablePriorityExtensions}" Width="100" Height="100" Grid.Column="0"/>
+                            <ListBox x:Name="AvailableExtensionsListBox" ItemsSource="{Binding AvailablePriorityExtensions}" Width="120" Height="150" Grid.Column="0"/>
 
                             <!-- Boutons de déplacement -->
                             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
@@ -55,12 +60,14 @@
                             </StackPanel>
 
                             <!-- ListBox des extensions sélectionnées -->
-                            <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedPriorityExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
+                            <ListBox x:Name="SelectedExtensionsListBox" ItemsSource="{Binding SelectedPriorityExtensions}" Width="120" Height="150" Grid.Column="2"/>
                         </Grid>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical" Margin="20,40,0,0">
-                        <TextBlock x:Name="Title_EncryptedExtension" Text="Encrypted extension" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <!-- Extension Cryptées -->
+                    <StackPanel Orientation="Vertical" Margin="20,0">
+                        <TextBlock x:Name="Title_EncryptedExtension" Text="Encrypted Extension" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -69,7 +76,7 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- ListBox des extensions disponibles -->
-                            <ListBox x:Name="AvailableEncryptExtensionsListBox" ItemsSource="{Binding AvailableEncryptedExtensions}" Width="100" Height="100" Grid.Column="0"/>
+                            <ListBox x:Name="AvailableEncryptExtensionsListBox" ItemsSource="{Binding AvailableEncryptedExtensions}" Width="120" Height="150" Grid.Column="0"/>
 
                             <!-- Boutons de déplacement -->
                             <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
@@ -80,37 +87,38 @@
                             </StackPanel>
 
                             <!-- ListBox des extensions sélectionnées -->
-                            <ListBox x:Name="SelectedEncryptExtensionsListBox" ItemsSource="{Binding SelectedEncryptedExtensions}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
+                            <ListBox x:Name="SelectedEncryptExtensionsListBox" ItemsSource="{Binding SelectedEncryptedExtensions}" Width="120" Height="150" Grid.Column="2"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
 
-                    <StackPanel Orientation="Vertical" Margin="0,40,0,0">
-                        <TextBlock x:Name="Title_BusinessSoftwares" Text="Business softwares" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                            <StackPanel Orientation="Vertical" Margin="0,0,20,0">
-                                <TextBlock x:Name="Text_BusinessSoftwares" Text="Business Software" Height="20" HorizontalAlignment="Center"/>
-                                <TextBox x:Name="TextBox_BusinessSoftwares" Width="120" Height="20" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left"/>
-                            </StackPanel>
-                            <Grid HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+                <!-- Logiciels métiers -->
+                <StackPanel Orientation="Vertical" Margin="0,40,0,40">
+                    <TextBlock x:Name="Title_BusinessSoftwares" Text="Business Softwares" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
 
-                                <!-- ListBox des extensions sélectionnées -->
-                                <ListBox x:Name="BusinessSoftwaresListBox" ItemsSource="{Binding BusinessSoftwares}" Width="100" Height="100" Grid.Column="2" SelectionMode="Single"/>
-                            </Grid>
-                            <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,10,0">
-                                <Button x:Name="Add_BusinessSoftwareButton" Content="Add" Width="70" Click="Add_BusinessSoftware"/>
-                                <Button x:Name="Remove_BusinessSoftwareButton" Content="Remove" Width="70" Click="Remove_BusinessSoftware" Margin="0,5,0,0"/>
-                            </StackPanel>
-                        </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                        <TextBox x:Name="TextBox_BusinessSoftwares" Width="210" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="10,0,0,0"/>
                     </StackPanel>
+
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- ListBox des logiciels métiers -->
+                        <ListBox x:Name="BusinessSoftwaresListBox" ItemsSource="{Binding BusinessSoftwares}" Width="120" Height="150" Grid.Column="2" SelectionMode="Single"/>
+
+                        <!-- Boutons d'ajout/suppression -->
+                        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,10,0">
+                            <Button x:Name="Add_BusinessSoftwareButton" Content="Add" Width="80" Click="Add_BusinessSoftware"/>
+                            <Button x:Name="Remove_BusinessSoftwareButton" Content="Remove" Width="80" Click="Remove_BusinessSoftware" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
+
             </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
